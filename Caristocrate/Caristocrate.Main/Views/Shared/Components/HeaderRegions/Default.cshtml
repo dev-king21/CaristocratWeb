@@ -1,0 +1,39 @@
+﻿@using Caristocrate.Common.Models
+@model RegionsModel.Response
+
+@{
+
+    string UserRegionIDs = ViewData["UserRegionIDs"].ToString();
+
+}
+
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+            foreach (var item in Model.data)
+            {
+                if (UserRegionIDs.Contains(item.id.ToString()))
+                {
+                    <div onclick="flagchktoggle(this)" regionid="@item.id" class="round mbpx-10 active-check">
+                        @*<input value="@item.id" class="chkflag" type="checkbox" id="checkbox" />*@
+                        <label for="checkbox" class="chk"></label>
+                        <img style="width:20%; height:20%;" src='@item.flag' alt="*" class="lang-flag">
+                        <p>@item.name</p>
+                    </div>
+                }
+                else
+                {
+                    <div onclick="flagchktoggle(this)" regionid="@item.id" class="round mbpx-10">
+                        @*<input value="@item.id" class="chkflag" type="checkbox" id="checkbox" />*@
+                        <label for="checkbox" class="chk"></label>
+                        <img style="width:20%; height:20%;" src='@item.flag' alt="*" class="lang-flag">
+                        <p>@item.name</p>
+                    </div>
+                }
+            }
+        }
+    }
+}

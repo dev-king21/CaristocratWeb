@@ -1,0 +1,41 @@
+﻿@using Caristocrate.Common
+@using Microsoft.AspNetCore.Http
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //string encryptionKey = "E546C8DF278CD5931069B522E695D4F2";
+}
+
+<div class="profile_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">My Account</a></li>
+                    @*<li class="dropMenu">
+                        <a href="@Url.Action("MyTradeIns", "Customer")">My Trade Ins</a>
+                        <div class="subMenu">
+                            <ul>
+                                <li><a href="@Url.Action("MyTradeIns", "Customer", new { data= General.EncryptString("categoryID=28", encryptionKey) })">Luxury New Cars</a></li>
+                                <li><a href="@Url.Action("MyTradeIns", "Customer", new { data= General.EncryptString("categoryID=25", encryptionKey) })">The Outlet Mall</a></li>
+                                <li><a href="@Url.Action("MyTradeIns", "Customer", new { data= General.EncryptString("categoryID=26", encryptionKey) })">Approved Pre-Owned</a></li>
+                                <li><a href="@Url.Action("MyTradeIns", "Customer", new { data= General.EncryptString("categoryID=27", encryptionKey) })">Classic Cars</a></li>
+                            </ul>
+                        </div>
+                    </li>*@
+                    @*<li><a href="javascript:;">Reviews Posted</a></li>*@
+                    <li><a href="@Url.Action("MyTradeIns", "Customer")">My Trade Ins</a></li>
+                    <li><a href="@Url.Action("MyEvaluations", "Customer")">My Evaluations</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 text-right">
+                <ul>
+                    @*<li><a href="@Url.Action("Notification", "Customer")"><span class="icon-notification"></span> Notifications</a></li>*@
+                    <li><a href="@Url.Action("Setting", "Customer")"><span class="icon-make"></span> Settings</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@RenderBody()
+

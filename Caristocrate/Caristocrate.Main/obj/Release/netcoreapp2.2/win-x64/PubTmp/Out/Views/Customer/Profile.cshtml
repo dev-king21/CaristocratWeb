@@ -1,0 +1,373 @@
+﻿@using Caristocrate.Common.Models
+@model CustProfileModel.Response
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpcontext
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "profilePage dashPages";
+    string profilecompletion = httpcontext.HttpContext.Session.GetString("UserProfileCompletion").ToString();
+}
+
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/profile-banner.jpg")');">
+        <div class="container">
+            <div class="profile_wid">
+                <div onclick="ProfileImageClick()" class="img_wrap profileImage" style="cursor: pointer; background-image: url('@Model.data.details.image_url');"></div>
+                <input type="file" style="display:none;" id="fuUserProfileImage" onchange="uploadImage(this)" />
+                <div class="content">
+                    <h2>@Model.data.name</h2>
+                    <div class="progress">
+                        @if (httpcontext.HttpContext.Session.GetString("UserProfileCompletion").ToString() == "100")
+                        {
+                            <div class="progress-bar" role="progressbar" style="background:green; width: @profilecompletion%" aria-valuenow="@profilecompletion" aria-valuemin="0" aria-valuemax="100"></div>
+                        }
+                        else
+                        {
+                            <div class="progress-bar" role="progressbar" style="width: @profilecompletion%" aria-valuenow="@profilecompletion" aria-valuemin="0" aria-valuemax="100"></div>
+                        }
+                    </div>
+                    <p>Your Profile is @profilecompletion% Completed</p>
+                </div>
+            </div>
+        </div>
+    </figure>
+</section>
+
+<section class="main_sec">
+    <div class="container clearfix">
+        <div class="row">
+            <div class="col-md-7">
+                <h2 class="page-title">User Profile</h2>
+                <div class="profileForm">
+                    <div class="field">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-user1 icon"></span>
+                                <label>Full Name</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input id="txtUserName" type="text" name="" value="@Model.data.name" placeholder="Name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-email icon"></span>
+                                <label>Email Address</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input id="UserEmail" readonly="readonly" type="text" name="" value="@Model.data.email" placeholder="Emaill">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field" id="PhoneNumberField">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-call icon"></span>
+                                <input type="text" class="pncode phone" name="">
+                            </div>
+                            <div class="col-md-8">
+                                <input type="hidden" id="hdnUserPhoneCOde" />
+                                <input type="text" name="" id="txtUserPhone" value="@Model.data.details.phone" placeholder="Number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-model-year icon"></span>
+                                <label>Date of Birth</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="txtuserdateofbirth" name="" value="@Model.data.details.dob" placeholder="Date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-icon-9 icon"></span>
+                                <label>Nationality</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="txtUserNationality" name="" value="@Model.data.details.nationality" placeholder="Nationality">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-briefcase icon"></span>
+                                <label>Profession</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="txtUserProfession" name="" value="@Model.data.details.profession" placeholder="Profession">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="icon-gender icon"></span>
+                                <label>Gender</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input style="width:10%" type="radio" class="chkUserGender" @(Model.data.details.gender == 10 ? "checked" : "") name="chkUserGender" value="10" placeholder="Gender">
+                                <span style="width:10%">Male</span>
+                                <input style="width:10%" type="radio" class="chkUserGender" @(Model.data.details.gender == 20 ? "checked" : "") name="chkUserGender" value="20" placeholder="Gender">
+                                <span style="width:10%">Female</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bottom_content">
+                    <h3 class="page-title">About Me</h3>
+                    @*<p>@Model.data.details.about</p>*@
+                    <div class="icon_field note_msg"><textarea name="" id="txtUserAbout" placeholder="About Me">@Model.data.details.about</textarea></div>
+                </div>
+                <div class="loaderdiv" style="display:none; padding:10px;">
+                    <img style="margin-left:90%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                </div>
+                <button type="submit" class="custBtn" onclick="UpdateProfile(this)">Update</button>
+            </div>
+
+            <div class="col-md-5" style="display:none;">
+                <div class="profile_tabs">
+                    <ul class="course_links">
+                        <li><a href="#course1">Onsite Courses</a></li>
+                        <li class="current"><a href="#course2">Online Courses</a></li>
+                    </ul>
+                    <div class="course_tab" id="course1">
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course_tab" id="course2">
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+
+                        <div class="courseRow">
+                            <figure class="img_wrap" style="background-image: url('assets/images/course-img1.jpg');"></figure>
+                            <div class="content">
+                                <h3>Live Virtual Finishing School</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<input type="hidden" id="hdnPhoneCode" value="" />
+
+<script type="text/javascript">
+
+    function UpdateProfile($this) {
+        var txtUserName = $("#txtUserName").val();
+        var txtUserPhone = $("#txtUserPhone").val();
+        var hdnUserPhoneCOde = $("#hdnUserPhoneCOde").val();
+        var txtuserdateofbirth = $("#txtuserdateofbirth").val();
+        var txtUserNationality = $("#txtUserNationality").val();
+        var txtUserProfession = $("#txtUserProfession").val();
+        var chkUserGender = $(".chkUserGender:checked").val();
+        var txtUserAbout = $("#txtUserAbout").val();
+
+
+        $($this).hide();
+        $(".loaderdiv").show();
+
+        var formData = new FormData();
+        formData.append('image', $('#fuUserProfileImage')[0].files[0]);
+        formData.append('name', txtUserName);
+        formData.append('phone', txtUserPhone);
+        formData.append('country_code', hdnUserPhoneCOde);
+        formData.append('dob', txtuserdateofbirth);
+        formData.append('nationality', txtUserNationality);
+        formData.append('profession', txtUserProfession);
+        formData.append('gender', chkUserGender);
+        formData.append('about', txtUserAbout);
+
+        var _url = '@Url.Action("UpdateProfile", "Customer")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (result) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                if (result == "Success") {
+                    notify("Profile Updated", "success");
+                }
+            },
+            error: function (jqXHR) {
+
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                window.location.reload();
+            }
+        });
+    }
+
+    function ProfileImageClick() {
+        $("#fuUserProfileImage").trigger("click");
+    }    
+
+    function uploadImage($this) {
+        var filename = $($this).val();
+        if (filename != "") {
+            var path = filename;
+            filename = path.replace(/^.*\\/, "");
+
+            var formData = new FormData();
+            formData.append('file', $($this)[0].files[0]);
+
+            var baseurl = window.location.origin;
+            var fullpath = baseurl + "/uploads/" + filename;
+            debugger;
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'POST',
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                url: '@Url.Action("FileUpload", "Car")',
+                success: function (data) {
+                    if (data != "") {
+                        $(".profileImage").css('background-image', 'url(' + fullpath + ')');
+                    }
+                }, complete: function (data) {
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+
+        $(".pncode").on("countrychange", function (e, countryData) {
+            $("#hdnUserPhoneCOde").val("+" + countryData.dialCode)
+        });
+
+        $("#txtuserdateofbirth").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        setTimeout(function () {
+            if ('@Model.data.details.country_code' != null) {
+                if ('@Model.data.details.country_code.ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@Model.data.details.country_code.ToString().Replace("+","")') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $("#hdnPhoneCode").val(countrycode);
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 5000);
+
+
+
+    });
+
+</script>

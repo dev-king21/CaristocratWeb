@@ -1,0 +1,33 @@
+﻿@using Caristocrate.Common.Models
+@model PagesModel.Response
+@{
+    ViewData["Title"] = "About";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page aboutPage";
+}
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/about-banner.jpg")');">
+        <div class="container">
+            <div class="banner_text">
+                <h1><span>About Caristocrat</span></h1>
+            </div>
+        </div>
+    </figure>
+</section>
+
+
+<section class="about_sec mainSec">
+    <div class="container">
+        @if (Model != null)
+        {
+            if (Model.data != null)
+            {
+                if (Model.data.Where(a => a.slug == "about") != null)
+                {
+                    <h2 class="page_title">@Model.data.Where(a => a.slug == "about").FirstOrDefault().title</h2>
+                    @Html.Raw(Model.data.Where(a => a.slug == "about").FirstOrDefault().content)
+                }
+            }
+        }
+    </div>
+</section>

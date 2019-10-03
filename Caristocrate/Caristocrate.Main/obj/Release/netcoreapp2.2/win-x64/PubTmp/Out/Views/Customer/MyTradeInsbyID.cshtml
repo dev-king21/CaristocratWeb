@@ -1,0 +1,312 @@
+﻿@using Caristocrate.Common.Models
+@model CustTradeInByIDModel.Response
+@{
+    ViewData["Title"] = "My Trade Ins";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "inner-page MyTradeIns versionthree";
+}
+<style type="text/css">
+    .showBtn {
+        min-width: 200px !important;
+    }
+
+    .banner_sec {
+        position: sticky !important;
+    }
+</style>
+
+
+<section class="banner_sec">
+    @if (Model.data.my_car.media != null)
+    {
+        if (Model.data.my_car.media.Count > 0)
+        {
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9 padding0">
+                        <div class="car_detail_slider4">
+                            @foreach (var subitem in Model.data.my_car.media)
+                            {
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');"></figure>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="car_detail_slider_nav4">
+                            @foreach (var subitem in Model.data.my_car.media)
+                            {
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');"></figure>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</section>
+
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">Home</a></li>
+                    <li><a href="@Url.Action("MyTradeIns", "Customer")">My Trade Ins</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="main_sec">
+    <div class="container">
+        <div class="headBar">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">
+                        <a target="_blank" style="text-decoration: underline; color:inherit;" href="@(Model.data.my_car.category.id == 28 ? Url.Action("CarDetailbyID", "Car", new { brand = Model.data.my_car.car_model.brand.slug, model = Model.data.my_car.car_model.slug, id = Model.data.my_car.id }) : Url.Action("PreOwnedCarDetailbyID", "Car", new { brand = Model.data.my_car.car_model.brand.slug, model = Model.data.my_car.car_model.slug, id = Model.data.my_car.id }))">
+                            @Model.data.my_car.name
+                        </a></h2>
+                    <ul class="head_otns">
+                        <li>Model:  @Model.data.my_car.year</li>
+                        @if (Model.data.my_car.kilometer != null)
+                        {
+                            <li>@Model.data.my_car.kilometer km</li>
+                        }
+                        @if (Model.data.my_car.chassis != null)
+                        {
+                            <li>Chassis: @Model.data.my_car.chassis</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="topOffers">
+
+            @if (Model.data.offer_details != null)
+            {
+                if (Model.data.offer_details.Count > 0)
+                {
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h2 class="mb-3">Dealer Details</h2>
+                        </div>
+
+                        @*@if (Model.data.is_expired == true)
+                            {*@
+                        @foreach (var item in Model.data.offer_details)
+                        {
+
+                            <div class="col-md-4" style="margin-top:10px">
+                                @*<figure class="img_wrap" style="background-image: url('@(item.user.showroom_details != null ? item.user.showroom_details.logo_url : "")');"></figure>*@
+                                <figure>
+                                    <img src="@(item.user.showroom_details != null ? item.user.showroom_details.logo_url : "")" alt="" class="img-fluid">
+                                </figure>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="content">
+                                    <h2>@(item.user.showroom_details != null ? item.user.showroom_details.name : "")</h2>
+
+                                    @if (item.amount != null)
+                                    {
+                                        <p class="offer_price">Offered Price <strong>@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "" )</strong></p>
+                                    }
+                                    else if (item.amount == null && Model.data.is_expired == true)
+                                    {
+                                        <p class="offer_price">No offer Available</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="offer_price">Waiting for Offer</p>
+                                    }
+                                    <ul class="offer_call">
+                                        <li><label>Call</label> <a onclick="TradeInShowNumber('@(item.user.showroom_details != null ? item.user.showroom_details.phone : "")', 2)" href="javascript:;" class="showBtn">Show Phone Number</a></li>
+                                        <li><label>Email</label> <a onclick="TradeInShowNumber('@(item.user.showroom_details != null ? item.user.showroom_details.email : "")', 1)" href="javascript:;" class="showBtn">Show Email</a></li>
+                                    </ul>
+                                    <!-- <a href="javascript:;" class="callBtn"><span class="icon-call2"></span></a> -->
+                                </div>
+                            </div>
+
+                        }
+                        @*}
+                            else
+                            {
+                                <div class="row" style="width:100%;">
+                                    <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Offer</div>
+                                </div>
+                            }*@
+                    </div>
+                }
+                else
+                {
+                    <div class="row" style="width:100%;">
+                        <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Offer</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row" style="width:100%;">
+                    <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Offer</div>
+                </div>
+            }
+
+        </div>
+
+
+        <div class="topOffers">
+
+            @if (Model.data.trade_against != null)
+            {
+
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h2 class="mb-3">My Car</h2>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <figure class="img_wrap" style="background-image: url('@(Model.data.trade_against.media.Count > 0 ? Model.data.trade_against.media.FirstOrDefault().file_url : "" )');"></figure>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="content">
+                            <h2>@Model.data.trade_against.car_model.brand.name @Model.data.trade_against.car_model.name</h2>
+                            <p class="offer_price">
+                                Model <strong>@Model.data.trade_against.year</strong>
+                                @*| Chassis <strong>@(Model.data.trade_against.chassis == null ? "-" : Model.data.trade_against.chassis)</strong>*@
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+
+    </div>
+</section>
+
+<div class="modal fade loginModal" id="TradeInShowPhoneEmail" tabindex="-1" role="dialog" aria-labelledby="TradeInShowPhoneEmail" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <div class="form">
+                        <label style="width:100%; text-align:center; word-break:break-all;" id="MessageTradeInShowPhoneEmail"></label>
+                    </div>
+                </div>
+                <div class="foot">
+                    <button data-dismiss="modal" aria-label="Close" class="custBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade loginModal" id="TradeInShowPhoneNumber" tabindex="-1" role="dialog" aria-labelledby="TradeInShowPhoneNumber" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>*@
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <div class="form">
+                        <label style="width:100%; text-align:center; word-break:break-all;" id="MessageTradeInShowPhoneNumber"></label>
+                    </div>
+                </div>
+                <div class="foot">
+                    <button data-dismiss="modal" aria-label="Close" class="custBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function TradeInShowNumber(message, type) {
+
+        if (type == 1) {
+            $("#MessageTradeInShowPhoneEmail").text(message);
+            $('#TradeInShowPhoneEmail').modal('show');
+        }
+        else {
+            $("#MessageTradeInShowPhoneNumber").text(message);
+            $('#TradeInShowPhoneNumber').modal('show');
+        }
+
+    }
+
+    $(document).ready(function () {
+        var bannercount = $(".car_detail_slider4").find("figure").length;
+        if (bannercount > 1) {
+            $('.car_detail_slider4').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                dots: false,
+                centerMode: true,
+                centerPadding: '0',
+                asNavFor: '.car_detail_slider_nav4',
+                responsive: [
+                    {
+                        breakpoint: 1367,
+                        settings: {
+                            centerPadding: '0',
+                        }
+                    },
+                    {
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                        }
+                    }
+                ]
+            });
+
+
+        }
+
+        $('.car_detail_slider_nav4').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.car_detail_slider4',
+            dots: false,
+            centerMode: true,
+            arrows: true,
+            vertical: true,
+            centerPadding: '0',
+
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 1367,
+                    settings: {
+                        slidesToShow: 2,
+                        centerPadding: '0',
+                    }
+                },
+                {
+                    breakpoint: 1025,
+                    settings: {
+                        slidesToShow: 4,
+                        centerPadding: '0',
+                    }
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 2,
+                        vertical: false,
+                    }
+                }
+            ]
+        });
+    })
+</script>
+

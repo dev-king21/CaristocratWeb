@@ -1,0 +1,39 @@
+﻿@using Caristocrate.Common.Models
+@model CustMyCars.Response
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+            
+                <div class="swiper-wrapper">
+                    @foreach (var item in Model.data)
+                    {
+                        <div class="join_slide swiper-slide">
+                            <a onclick="OPenCustEditPopup(this, '@item.id')" href="javascript:;">
+                                <figure class="img_wrap" style="background-image: url('@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : "")');"></figure>
+                                <h3>@item.car_model.brand.name @item.car_model.name</h3>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                @*<div class="joinPrev custArrow"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+                <div class="joinNext custArrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-scrollbar"></div>*@
+
+                <div class="row parent_br">
+                    <div class="col swiper-scrollbar"></div>
+                    <div class="col arrowSection">
+                        <div class="joinPrev custArrow"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+                        <div class="joinNext custArrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+
+                </div>
+            
+        }
+    }
+}

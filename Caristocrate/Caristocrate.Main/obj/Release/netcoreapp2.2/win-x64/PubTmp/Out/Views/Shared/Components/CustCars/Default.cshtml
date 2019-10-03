@@ -1,0 +1,27 @@
+﻿@using Caristocrate.Common.Models
+@model CustMyCars.Response
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+            <div class=" autoLife">
+                @foreach (var item in Model.data)
+                {
+                    <div class="row mb-4">
+                        <a style="width:100%;" href="javascript:;" onclick="TradeInthisCar(this, '@item.id')">
+                            <div class="col-md-12">
+                                <figure class="img_wrap" style="background-image: url('@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : "")');"></figure>
+                                <div class="content">
+                                    <h2>@item.car_model.brand.name @item.car_model.name</h2>
+                                    <p>Chassis @item.chassis</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    }
+}

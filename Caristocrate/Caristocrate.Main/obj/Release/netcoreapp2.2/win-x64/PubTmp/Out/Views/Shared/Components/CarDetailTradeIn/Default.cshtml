@@ -1,0 +1,277 @@
+﻿@using Caristocrate.Common.Models
+@{
+    CustMyCars.Response CustMyCarsObj = ViewData["CustMyCarsObj"] as CustMyCars.Response;
+
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response getCarTypeobj = ViewData["getCarTypeobj"] as CarType.Response;
+    RegionalSpecificationModel.Response regionalSpecificationModelObj = ViewData["regionalSpecificationModelObj"] as RegionalSpecificationModel.Response;
+    CarAttributesModel.Response InteriorColorObj = ViewData["InteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response ExteriorColorObj = ViewData["ExteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response AccidentObj = ViewData["AccidentObj"] as CarAttributesModel.Response;
+}
+
+
+<div class="evaluate_new">
+    @{
+        string divclass = "act";
+        string anchorstyle = "none";
+
+        if (CustMyCarsObj != null)
+        {
+            if (CustMyCarsObj.data != null)
+            {
+                if (CustMyCarsObj.data.Count > 0)
+                {
+                    divclass = "";
+                    anchorstyle = "block";
+                }
+            }
+        }
+    }
+
+    <a href="javascript:;" style="@("display:" + anchorstyle)" class="carDetailForm"><i>+</i> <p>Add New Car <span> Enter the details of your car</span></p></a>
+    <div class="evalute_form car_detail_form @divclass">
+
+        <a style="@("display:" + anchorstyle)" href="javascript:;" class="close"> X </a>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="icon_field"><span class="icon-user1"></span><label>Full Name</label><input id="txtUserNameMC" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Full Name"></div>
+            </div>
+            <div class="col-md-6">
+                @if (ViewData["UserEmail"].ToString() != "")
+                {
+                    <div class="icon_field"><span class="icon-msg"></span><label>Email Address</label><input id="txtEmailMC" readonly="readonly" type="text" name="" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" placeholder="Email Address"></div>
+                }
+                else
+                {
+                    <div class="icon_field"><span class="icon-msg"></span><label>Email Address</label><input id="txtEmailMC" type="text" name="" placeholder="Email Address"></div>
+                }
+            </div>
+
+
+
+            <div class="col-md-12" id="PSPhoneCodeFIeld">
+                <div class="icon_field">
+                    <span class="icon-call icon"></span>
+                    <label class="phoneno">Phone Number</label>
+                    <input id="txtPhoneNoMC" type="text" class="pncode phone" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" name="" placeholder="Phone Number">
+                </div>
+            </div>
+
+
+
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-make"></span><label>Make</label><div class="select_parent">
+                        <select class="ddlMake" id="dllMakeMC" onchange="GetModels(this)">
+                            <option value="0">Make</option>
+                            @if (getMake.success == true)
+                            {
+                                foreach (var item in getMake.data.ToList())
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-icon-5"></span><label>Model</label><div class="select_parent">
+                        <select class="ddlModel" id="ddlModelMC">
+                            <option value="0">Model</option>
+                            @if (getModel.success == true)
+                            {
+                                foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                {
+                                    <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="icon_field clearfix"><span class="icon-icon-6"></span><label>Version</label><input id="ddlVersionMC" type="text" name="" placeholder="Version"></div>
+            </div>
+            @*<div class="col-md-3">
+                    <div class="icon_field"><span class="icon-icon-6"></span><label>Year</label><input id="ddlYearMC" type="text" name="" placeholder="Year"></div>
+                </div>*@
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-icon-6"></span><label>Year</label><div class="select_parent">
+                        <select class="ddlYear" id="ddlYearMC">
+                            <option value="0">Year</option>
+                            @for (int i = 2005; i <= DateTime.Now.Year; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field"><span class="icon-icon-7"></span><label>KM</label><input type="text" id="txtKMMC" name="" placeholder="KM"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field"><span class="icon-icon-8"></span><label>Chassis</label><input type="text" id="txtChassisMC" name="" placeholder="Chassis"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-icon-9"></span><label>Regional specs</label><div class="select_parent">
+                        <select id="ddlRegionalSpecsMC">
+                            <option value="0">Regional specs</option>
+                            @if (regionalSpecificationModelObj.success == true)
+                            {
+                                foreach (var item in regionalSpecificationModelObj.data.ToList())
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-icon-10"></span><label>Exterior Color</label><div class="select_parent">
+                        <select id="ddlExteriorColorMC">
+                            <option value="0">Exterior Color</option>
+                            @if (ExteriorColorObj.success == true)
+                            {
+                                foreach (var item in ExteriorColorObj.data.option_array)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-icon-11"></span><label>Interior Color</label><div class="select_parent">
+                        <select id="ddlInteriorColorMC">
+                            <option value="0">Interior Color</option>
+                            @if (InteriorColorObj.success == true)
+                            {
+                                foreach (var item in InteriorColorObj.data.option_array)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field clearfix">
+                    <span class="icon-icon-17"></span><label>Accident?</label><div class="select_parent">
+                        <select id="ddlAccidentMC">
+                            <option value="0">Accident?</option>
+                            @if (AccidentObj.success == true)
+                            {
+                                foreach (var item in AccidentObj.data.option_array)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="icon_field"><span class="icon-icon-14"></span><label>Warranty Remaining</label><input id="txtWarrantyRemMC" class="numericonly" type="text" name="" placeholder="Warranty Remaining (In Month)"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="icon_field"><span><img src="@Url.Content("~/assets/images/serivec-icon.png")" alt=""></span><label>Service Remaining</label><input class="numericonly" id="txtServiceRemMC" type="text" name="" placeholder="Service Remaining (In Month)"></div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="upload_container">
+                    <p>Upload images</p>
+                    <br />
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fufrontMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Front</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuBackMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Back</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRightMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Right Side</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuLeftMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Left Side</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuInteriorMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Interior</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRegistrationCardMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Registration Card</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="icon_field note_msg"><textarea id="txtNotesMC" name="" placeholder="Additional notes (if any)"></textarea></div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="loaderdiv" style="display:none; padding:10px;">
+                    <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                </div>
+                <div class="row">
+                    <input style="margin-top: .5%;" type="checkbox" class="chkTermsConditions" /> &nbsp; I have read and agreed with the term of use
+                </div>
+                <button type="submit" onclick="AddMyCar(this)">Add Car</button>
+                @*<p><strong>Disclaimer!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi hendrerit et mi at dictum. Ut fringilla eros id urna auctor pulvinar. Etiam felis ligula, aliquet et feugiat vel, finibusarcu. Suspendisse ligula dolor</p>*@
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="women_sec carDetailsPage" id="carDetailsPage">
+
+</div>

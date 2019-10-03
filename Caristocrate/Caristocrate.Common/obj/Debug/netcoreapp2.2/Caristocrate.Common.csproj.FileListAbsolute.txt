@@ -1,0 +1,21 @@
+D:\Root\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Caristocrate.Common.deps.json
+D:\Root\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Caristocrate.Common.dll
+D:\Root\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Caristocrate.Common.pdb
+D:\Root\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.dll
+D:\Root\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Http.xml
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.csprojAssemblyReference.cache
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.csproj.CoreCompileInputs.cache
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.AssemblyInfoInputs.cache
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.AssemblyInfo.cs
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.csproj.CopyComplete
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.dll
+D:\Root\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.pdb
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Caristocrate.Common.deps.json
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Caristocrate.Common.dll
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\bin\Debug\netcoreapp2.2\Caristocrate.Common.pdb
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.csproj.CoreCompileInputs.cache
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.AssemblyInfoInputs.cache
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.AssemblyInfo.cs
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.dll
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.pdb
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\obj\Debug\netcoreapp2.2\Caristocrate.Common.csprojAssemblyReference.cache

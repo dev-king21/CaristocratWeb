@@ -1,0 +1,585 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="shortcut icon" href="/favicon-32x32.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=11">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    @if (IsSectionDefined("HeadMeta"))
+    {
+        @RenderSection("HeadMeta")
+    }
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href='@Url.Content("~/assets/css/lib.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/assets/fonts/style.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/assets/css/style.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/assets/css/style2.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/assets/css/responsive.css")'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" />
+    <script src='@Url.Content("/assets/js/jquery-2.1.1.min.js")'></script>
+    <link rel="stylesheet" href='@Url.Content("~/assets/css/pagination.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/assets/css/star-rating.css")'>
+    <link rel="stylesheet" href='@Url.Content("~/assets/themes/krajee-svg/theme.css")'>
+
+    <script type="text/javascript">
+        function formatcurrency(value) {
+            value = accounting.formatMoney(value);
+            value = value.replace("$", "");
+            value = value.replace(".00", "")
+            return value;
+        }
+
+        function RemoveallComma(my_string) {
+            my_string = my_string.toString();
+
+            if (my_string != "") {
+                my_string = my_string.replace(/,/g, "");
+            }
+            return my_string
+        }
+
+    </script>
+
+    <!--[if lt IE 9]>
+        <script src="assets/js/html5.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        [data-notify="container"] {
+            z-index: 1050 !important;
+        }
+
+        .Subscriberloaderdiv {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        #exampleModalCenter button.close {
+            top: 40px !important;
+        }
+
+        .range_slider_row.first .irs--flat .irs-min {
+            display: block !important;
+        }
+
+        .range_slider_row .irs--flat .irs-min, .range_slider_row .irs--flat .irs-max {
+            top: 30px !important;
+        }
+    </style>
+    <!-- Facebook Pixel Code -->
+
+    <script>
+
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2271538956434138');
+        fbq('track', 'PageView');
+
+    </script>
+
+    <noscript>
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=2271538956434138&ev=PageView&noscript=1" />
+    </noscript>
+
+    <!-- End Facebook Pixel Code -->
+</head>
+
+<body class="@ViewBag.BodyClass">
+    <!-- Global site tag (
+       .js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130448979-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-130448979-3');
+    </script>
+
+
+    <script>window._peq = window._peq || []; window._peq.push(["init"]);</script>
+    <script src="https://clientcdn.pushengage.com/core/2e7d060f50ab42c0dcc3619ebf323832.js" async></script>
+
+
+
+
+
+    <div class="custom_alert success" id="SuccessAlert" style="display: none">
+        <button type="button" class="close SuccessAlertClose">
+            <i class="fa fa-close"></i>
+        </button>
+        <p style="display:inline-block"><i class="fa fa-check"></i></p><p class="Successalerttext" style="display:inline-block"></p>
+    </div>
+    <div class="custom_alert erorr" id="WarningAlert" style="display: none">
+        <button type="button" class="close WarningAlertClose">
+            <i class="fa fa-close"></i>
+        </button>
+        <p style="display:inline-block"><i class="fa fa-warning"></i></p> <p class="Warningalerttext" style="display:inline-block"></p>
+    </div>
+
+    <div class="modal fade loginModal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                    <div class="content">
+                        <h2>Login your account</h2>
+                        <p>Glad you could join again, Please enter your details to login</p>
+
+                        <div class="form">
+                            <div class="field">
+                                <span class="icon-msg"></span>
+                                <input id="txtLoginUserName" type="email" name="" placeholder="Email Address">
+                            </div>
+                            <div class="field">
+                                <span class="icon-lock"></span>
+                                <input id="txtLoginPassword" type="password" name="" placeholder="Password">
+                                <span class="icon-eye" onclick="showpassword(this, 1)" style="text-decoration:line-through; cursor:pointer;"></span>
+                            </div>
+
+                            <h3>Trouble Loggin in?</h3>
+                            <p><a href="@Url.Action("ForgotPassword", "Account")">Click here</a> to retrieve your password.</p>
+
+                            <span id="loginmessage"></span>
+                            <br />
+                            <div class="LoginSubmitloaderdiv" style="display:none; padding:10px;">
+                                <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                            </div>
+                            <button onclick="Login(this)" class="custBtn">SIGN IN</button>
+                        </div>
+                    </div>
+                    <div class="foot">
+                        <p>Don’t have an account? <a href="@Url.Action("Register", "Account")">Register here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade loginModal" id="ShowAlert" tabindex="-1" role="dialog" aria-labelledby="ShowAlert" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="head">
+                        <p style="background-color:black; height:30px;"></p>
+                    </div>
+                    <div class="content">
+                        <div class="form">
+                            <label style="width:100%; text-align:center; word-break:break-all;" id="AlertMessage"></label>
+                        </div>
+                    </div>
+                    <div class="foot">
+                        <button data-dismiss="modal" aria-label="Close" class="custBtn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-bg"></div>
+    <noscript>
+        <div id="jqcheck"><i></i></div>
+    </noscript>
+
+    @{ Html.RenderPartial("_Header"); }
+
+
+    <div class="loading" style="display:none">
+        <a href="/" class="logo"><img src="@Url.Content("~/assets/images/logo_loader.png")" alt="" class="img-responsive"></a>
+        <div class="loading-text">
+            <span class="loading-text-words">L</span>
+            <span class="loading-text-words">O</span>
+            <span class="loading-text-words">A</span>
+            <span class="loading-text-words">D</span>
+            <span class="loading-text-words">I</span>
+            <span class="loading-text-words">N</span>
+            <span class="loading-text-words">G</span>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    @Html.Partial("_Footer")
+
+    <script src='@Url.Content("~/assets/js/xlib.js")'></script>
+    <script src='@Url.Content("~/assets/js/countryCode.js")'></script>
+    <script src='@Url.Content("~/assets/js/bootstrap-notify.min.js")'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src='@Url.Content("~/assets/js/script.js")'></script>
+    <script src='@Url.Content("~/assets/js/pagination.min.js")'></script>
+    <script src='@Url.Content("~/assets/js/accounting.min.js")'></script>
+    <script src='@Url.Content("~/assets/js/star-rating.js")'></script>
+    <script src='@Url.Content("~/assets/themes/krajee-svg/theme.js")'></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.phone').keypress(function (event) {
+                var keycode = event.which;
+                if (!(event.shiftKey == false && (keycode == 46 || keycode == 8 || keycode == 37 || keycode == 39 || (keycode >= 48 && keycode <= 57)))) {
+                    event.preventDefault();
+                }
+            });
+            $('.numericonly').keypress(function (event) {
+                var keycode = event.which;
+                if (!(event.shiftKey == false && (keycode == 46 || keycode == 8 || keycode == 37 || keycode == 39 || (keycode >= 48 && keycode <= 57)))) {
+                    event.preventDefault();
+                }
+            });
+
+            GetHeaderRegion();
+
+        });
+
+        function titleCase(str) {
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                // You do not need to check if i is larger than splitStr length, as your for does that for you
+                // Assign it back to the array
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+            }
+            // Directly return the joined string
+            return splitStr.join(' ');
+        }
+
+        function HideSearch2($this) {
+            $($this).parents('.searchBar2').removeClass('show');
+        }
+        function ShowSearch2($this) {
+            $('.searchBar2').toggleClass('show');
+            $(".txtMainSearch2").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    var searchword = $(this).val();
+                    if (searchword != "") {
+                        MainSearchResult(searchword);
+                    }
+                }
+            });
+        }
+        function HideSearch($this) {
+            $($this).parents('.searchBar').removeClass('show');
+        }
+        function ShowSearch($this) {
+            $('.searchBar').toggleClass('show');
+            $(".txtMainSearch").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    var searchword = $(this).val();
+                    if (searchword != "") {
+                        MainSearchResult(searchword);
+                    }
+                }
+            });
+        }
+
+        function MainSearchResult(searchword) {
+            var baseurl = window.location.origin;
+            window.location.href = baseurl + "/Home/MainSearch?searchword=" + searchword;
+        }
+
+        function notify(message, type) {
+            //$.notify({
+            //    // options
+            //    message: message
+            //}, {
+            //        // settings
+            //        type: type
+            //    });
+
+            if (type == "success") {
+                $('body').addClass('overlaynew');
+                $('.custom_alert.success').fadeIn('');
+                $(".Successalerttext").text(message);
+            }
+            else if (type == "danger") {
+                $('body').addClass('overlaynew');
+                $('.custom_alert.erorr').fadeIn('');
+                $(".Warningalerttext").text(message);
+            }
+
+
+        }
+
+        function MarkBannersViewed($this, id) {
+
+            var url = $($this).attr("url");
+
+            var data = {};
+            data.banner_id = id;
+            data.type = 10;
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("MarkBannerViewPost", "Car")',
+                data: data,
+                success: function (data) {
+                    if (data == "success") {
+
+                    }
+                }, complete: function () {
+                    //window.open(url, '_blank');
+                    //window.open(url + "?printerFriendly=true", "toolbar=1,scrollbars=1,location=0,statusbar=0,menubar=1,resizable=1,width=800,height=600,left = 240,top = 212");
+                    //$($this).siblings("a").trigger("click");
+                }
+            });
+
+        }
+
+        $(window).bind("load", function () {
+            //if ($("#hdnPhoneCode").length > 0 && $(".pncode").length > 0) {
+            //    var isoCode = $("#hdnPhoneCode").val();
+            //    if (isoCode != "") {
+            //        $(".pncode").intlTelInput("setCountry", isoCode);
+            //    }
+            //}
+            //$(".pncode").intlTelInput("setCountry", "ae");
+
+            setTimeout(function () {
+                if ($(".pncode").length > 0) {
+                    $(".pncode").intlTelInput("setCountry", "ae");
+                }
+            }, 2000);
+        });
+
+        function ShowAlert(message) {
+            $("#AlertMessage").text(message);
+            $('#ShowAlert').modal('show');
+        }
+
+        function Login($this) {
+            $("#loginmessage").text("");
+            var txtLoginUserName = $("#txtLoginUserName").val()
+            var txtLoginPassword = $("#txtLoginPassword").val()
+
+            if (txtLoginUserName == "") {
+                $("#txtLoginUserName").css("border", "1px solid red")
+            }
+            else {
+
+                $("#txtLoginUserName").css("border", "none")
+
+                if (txtLoginPassword == "") {
+                    $("#txtLoginPassword").css("border", "1px solid red")
+                }
+                else {
+
+
+                    $(".LoginSubmitloaderdiv").show();
+                    $($this).hide();
+
+                    $("#txtLoginPassword").css("border", "none")
+
+                    var data = {};
+                    data.email = txtLoginUserName;
+                    data.password = txtLoginPassword;
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("LoginPost", "Account")',
+                        data: data,
+                        success: function (data) {
+                            if (data == "Logged in successfully") {
+                                //notify(data, "success");
+                                $("#loginmessage").text("Logged in successfully")
+
+                                if ($("#EvaluationForm").length > 0) {
+                                    window.location.reload();
+                                }
+                                else {
+                                    window.location.href = '@Url.Action("MyAccount", "Customer")';
+                                }
+                            }
+                            else if (data == "Email Verification Required")
+                            {
+                                var link = '@Url.Action("EmailVerficationfromLogin", "Account", new { email = "-1"})';
+                                link = link.replace("-1", txtLoginUserName);
+                                window.location.href = link;
+                                //notify(data, "danger");
+                            }
+                            else if (data == "User deactivated, please contact admin.")
+                            {
+                                notify("User account has been deactivated, please contact admin", "danger");
+                            }
+                            else {
+                                notify("Incorrect Email Address or Password", "danger");
+                                $("#loginmessage").text("Incorrect Email Address or Password")
+                            }
+                        }, complete: function () {
+                            $(".LoginSubmitloaderdiv").hide();
+                            $($this).show();
+                        }
+                    });
+
+                }
+            }
+
+        }
+
+
+        function validatetoemail(my_email) {
+            var filter = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+            if (filter.test(my_email)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function flagchktoggle($this) {
+
+            $('.chk .active-check').toggleClass('active-check');
+            $($this).toggleClass('active-check');
+            createRegionCookie($this);
+        }
+
+
+        function createRegionCookie($this) {
+
+            var regionIDs = "";
+            $($this).parents(".language-dropdown").find(".active-check").each(function () {
+                var regionid = $(this).attr("regionid");
+                regionIDs = regionid + ",";
+            });
+
+            if (regionIDs != "") {
+                regionIDs = regionIDs.substring(0, regionIDs.length - 1);
+            }
+
+            var data = {};
+            data.regionIDs = regionIDs;
+
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'GET',
+                url: '@Url.Action("CreateRegionCookie", "Home")',
+                data: data,
+                success: function (data) {
+
+                }, complete: function () {
+
+                }
+            });
+        }
+
+        function GetHeaderRegion() {
+            $('#ddllanguage1').html('');
+            $('#ddllanguage2').html('');
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'GET',
+                url: '@Url.Action("HeaderRegions", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    $('#ddllanguage1').html(data);
+                    $('#ddllanguage2').html(data);
+                }, complete: function () {
+
+                    $('.language-dropdown').click(function (e) {
+                        $(this).addClass('d-block');
+                        e.stopPropagation();
+                    });
+
+                    //$('body').click(function (e) {
+                    //    $(".language-dropdown").removeClass('d-block');
+                    //    e.stopPropagation();
+                    //});
+
+                    $(".menuarrow").click(function (e) {
+                        $(".language-dropdown").toggleClass('d-block');
+                        e.stopPropagation();
+                        $(this).parent("li").children(".subMenu").toggle();
+                        $(this).toggleClass("fa fa-angle-down fa fa-angle-up");
+                    });
+
+                }
+            });
+        }
+
+
+        function Subscriber($this) {
+
+
+
+            var txtSubscriber = $("#txtSubscriber").val();
+
+            if (txtSubscriber == "") {
+                notify("Provide your Email address", "danger");
+            }
+            else {
+
+                if (validatetoemail(txtSubscriber)) {
+
+                    $($this).hide();
+                    $(".Subscriberloaderdiv").show();
+
+                    var data = {};
+                    data.email = txtSubscriber;
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("UserSubscription", "Home")',
+                        data: data,
+                        success: function (data) {
+                            if (data == "Success") {
+                                $("#txtSubscriber").val("");
+                                notify("Successfully Subscribed", "success");
+                            }
+                            else if (data == "Validation Error")
+                            {
+                                $("#txtSubscriber").val("");
+                                notify("You have already been subscribed", "success");
+                            }
+                            $($this).show();
+                            $(".Subscriberloaderdiv").hide();
+                        },
+                        complete: function (data) {
+                            $($this).show();
+                            $(".Subscriberloaderdiv").hide();
+                        }
+                    });
+                }
+                else {
+                    notify("Provide valid Email address", "danger");
+                }
+            }
+        }
+
+        function showpassword($this, type) {
+
+            if ($("#txtLoginPassword").val() != "") {
+                if ($("#txtLoginPassword").attr("type") == "text") {
+                    $("#txtLoginPassword").attr("type", "password");
+                    $($this).css("text-decoration", "line-through");
+                }
+                else {
+                    $("#txtLoginPassword").attr("type", "text");
+                    $($this).css("text-decoration", "none");
+                }
+            }
+
+        }
+
+    </script>
+
+
+</body>
+</html>

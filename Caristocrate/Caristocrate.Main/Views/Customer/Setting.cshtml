@@ -1,0 +1,137 @@
+﻿@{
+    ViewData["Title"] = "Setting";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "dashPages settingPage";
+
+    int UserNotificationFlag = Convert.ToInt32(ViewData["UserNotificationFlag"].ToString());
+}
+
+<div class="modal fade addCarModal deletPop" id="deleteAccount" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="head">
+                <h5>Deactivate Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+            </div>
+            <div class="modal-body">
+                <p class="page-info">Are you sure you want to completely deactivate your account? Once you deactivate you will not be able to access the account with the same credentials again on this website.</p>
+                <textarea placeholder="Enter Reason"></textarea>
+                <div class="text-right">
+                    <a href="javascript:;" onclick="DeactivateAccount(this)" class="custBtn black">Yes</a>
+                    <a href="javascript:;"  class="custBtn black">No</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="main_sec setting_sec">
+    <div class="container">
+        <h2 class="page-title text-center">Settings</h2>
+        <p class="page-info text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="field" style="display:none">
+                    <a href="javascript:;"><span class="icon-notification"></span> Notifications</a>
+                    <div class="toggleParent">
+                        @*@if (UserNotificationFlag == 1)
+        {
+            <input type="checkbox" checked="checked" id="toggle" class="offscreen" /> <label for="toggle" class="switch"></label>
+        }
+        else
+        {
+            <input type="checkbox" id="toggle" class="offscreen" /> <label for="toggle" class="switch"></label>
+        }*@
+                        <input type="checkbox" id="toggle" class="offscreen" /> <label for="toggle" class="switch"></label>
+                    </div>
+                </div>
+                <div class="field">
+                    <a href="@Url.Action("ChangePassword", "Customer")"><span class="icon-lock"></span> Change Password</a>
+                </div>
+                <div class="field">
+                    <a href="@Url.Action("Profile", "Customer")"><span class="icon-circle-user"></span> Edit Profile <span class="icon-edit"></span></a>
+                </div>
+                <div class="field">
+                    <a href="javascript:;" data-toggle="modal" data-target="#deleteAccount"><span class="icon-delete"></span>Deactivate Account</a>
+                </div>
+                <div class="field">
+                    <a href="@Url.Action("Logout", "Account")"><span class="icon-log-out"></span> Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script type="text/javascript">
+    function closeDownloadBrochureModal() {
+        $("#deleteAccount").find(".close").click();
+    }
+
+    function DeactivateAccount($this) {
+        var data = {};
+        data.status = 0
+
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("DeactivateAccount", "Customer")',
+            success: function (data) {
+
+                if (data == "Success") {
+                    notify("Your account has been deactivated", "success");
+                    $("#deleteAccount").find(".close").click();
+                    window.location.href = '@Url.Action("Logout", "Account")';
+                }
+
+            }, complate: function () {
+                $("#deleteAccount").find(".close").click();
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        if ('@UserNotificationFlag' == 0) {
+            $("#toggle").click();
+        }
+
+        $('#toggle').on('change', function () {
+            var flag = 0;
+            if ($(this).is(':checked')) {
+                console.log("checked");
+                flag = 0;
+            }
+            else if (!$(this).is(':checked')) {
+                console.log("checked");
+                flag = 1;
+            }
+
+
+            var data = {};
+            data.flag = flag
+
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'GET',
+                data: data,
+                url: '@Url.Action("UpdateCustomerPushNotificationFlag", "Customer")',
+                success: function (data) {
+                    console.log(data);
+                },
+            });
+
+
+        });
+    });
+
+
+
+
+
+</script>

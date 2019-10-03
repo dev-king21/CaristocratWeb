@@ -1,0 +1,281 @@
+﻿@using Caristocrate.Common.Models;
+@model CarType.Response
+@{
+    ViewData["Title"] = "Professional Comparison";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page resultPage";
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+    AdvertisementBannersModel.Response AdvertisementBannersobj = ViewData["AdvertisementBannersobj"] as AdvertisementBannersModel.Response;
+}
+
+<style type="text/css">
+    #ValidationMessage {
+        text-align: center;
+        color: black;
+        animation: ValidationMessage 5s 1;
+        -webkit-animation: ValidationMessage 5s 1;
+        animation-fill-mode: forwards;
+        animation-delay: 10s;
+        -webkit-animation-delay: 5s; /* Safari and Chrome */
+        -webkit-animation-fill-mode: forwards;
+    }
+
+        #ValidationMessage span {
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 15px;
+            color: red;
+        }
+
+    @@keyframes ValidationMessage {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @@-webkit-keyframes ValidationMessage {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+</style>
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (AdvertisementBannersobj != null)
+        {
+            if (AdvertisementBannersobj.data != null)
+            {
+                if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 60).ToList().Count > 0)
+                {
+                    foreach (var item in AdvertisementBannersobj.data.Where(a => a.banner_type_id == 60).OrderByDescending(a => a.media_type))
+                    {
+                        if (item.media_type == "20")
+                        {
+                            <div class="slide">
+                                <iframe width="100%" height="100%" src="@item.video_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var subitem in item.banner_images.OrderBy(x => Guid.NewGuid()))
+                            {
+                                <div class="slide">
+                                    <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                        <div class="container">
+                                            <div class="banner_text">
+                                                <h1>@item.title</h1>
+                                                <p>@item.description</p>
+                                                @if (item.is_read_more == 1)
+                                                {
+                                                    <a onclick="MarkBannersViewed(this, '@item.id')" url="@item.source_url" href="@item.source_url" target="_blank" class="custBtn">readmore</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                            <div class="container">
+                                <div class="banner_text">
+                                    <h1>Welcome To<span>Caristocrat</span></h1>
+                                    @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                                @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                            @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+
+
+    </div>
+    @if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 60).ToList().Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+@*<section class="banner_sec">
+    @if (categories != null)
+    {
+        foreach (var item in categories.data.Where(x => x.slug == "the-consultant"))
+        {
+            foreach (var subitem in item.child_category.Where(a => a.slug == "compare").Take(1))
+            {
+                <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1><span>@subitem.name</span></h1>
+                            <p>@subitem.subtitle</p>
+                        </div>
+                    </div>
+                </figure>
+            }
+        }
+    }
+    else
+    {
+        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/compare-result-banner.jpg")');">
+            <div style="display:none" class="container">
+                <div class="banner_text">
+                    <h1><span>Luxury Market</span></h1>
+                    <p>Your luxury cars search ends here</p>
+                </div>
+            </div>
+        </figure>
+    }
+</section>*@
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    @*<li><a href="@Url.Action("CompareCar", "Car")">Compare Any Car</a></li>*@
+                    <li><a href="javascript:;">Professional Comparison</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="result_sec">
+    <div class="container">
+
+        <div class="list_head">
+            <h2>Professional Comparison</h2>
+            <p class="result_text">Professional comparison of cars from the same segments</p>
+        </div>
+
+        @*@if (ViewData["ValidationMessage"] != null)
+            {
+                if (ViewData["ValidationMessage"].ToString() != "")
+                {
+                    <div class="row" id="ValidationMessage">
+                        <span style="">@ViewData["ValidationMessage"].ToString()</span>
+                    </div>
+                }
+            }*@
+
+        <div class="row segment_row">
+            @if (Model != null)
+            {
+                if (Model.data != null)
+                {
+                    if (Model.data.Count > 0)
+                    {
+                        foreach (var item in Model.data)
+                        {
+                            if (item.child_types != null)
+                            {
+                                if (item.child_types.Count > 0)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="segmentBox">
+                                            @*<a href="@Url.Action("CompareSegmentResult", "Car", new { id = item.id })">*@
+                                            <figure>
+                                                <img src="@item.un_selected_icon" class="img-fluid" alt="">
+                                            </figure>
+                                            <h2>@item.name</h2>
+                                            <ul>
+
+                                                @foreach (var subiten in item.child_types)
+                                                {
+                                                    <li>
+                                                        <a style="display:none" href="@Url.Action("CompareSegmentResult", "Car", new { id = subiten.slug })" class="anchorSegmentresult"></a>
+                                                        <a href="javascript:;" onclick="CheckCompareSegmentCarCount(this, '@subiten.id')">@subiten.name</a>
+                                                    </li>
+                                                }
+
+                                            </ul>
+                                            @*</a>*@
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        </div>
+
+        <div class="row cta_row" style="display:none;">
+            <div class="col-md-12">
+                <img src='@Url.Content("~/assets/images/cta-img.jpg")' class="img-fluid" alt="">
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script type="text/javascript">
+    function CheckCompareSegmentCarCount($this, id) {
+
+        $('.loading').fadeIn();
+
+        var data = {};
+        data.id = id;
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'GET',
+                data: data,
+                url: '@Url.Action("CheckCompareSegmentCarCount", "Car")',
+                success: function (data) {
+                    if (data < 2) {
+                        notify("There is no car to compare", "danger")
+                    }
+                    else {
+                        debugger;
+                        $($this).siblings("a").trigger("click");
+                        window.location.href = $($this).siblings("a").attr("href")
+                    }
+                }, complete: function () {
+                    $('.loading').fadeOut('');
+                }
+            });
+    }
+</script>

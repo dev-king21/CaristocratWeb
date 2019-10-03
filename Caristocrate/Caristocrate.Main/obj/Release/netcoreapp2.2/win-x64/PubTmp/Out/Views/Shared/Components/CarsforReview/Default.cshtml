@@ -1,0 +1,55 @@
+﻿@using Caristocrate.Common.Models
+@model GetCars.Response
+
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+            foreach (var item in Model.data.Select((x, i) => new { Data = x, Index = i }))
+            {
+                <div class="col-md-6 bx Ratingchildlisting" sortno="@(item.Index + 1)" reviews="@item.Data.review_count" ratings="@Math.Round(item.Data.average_rating)" rowno="@(item.Index + 1)">
+                    <a href="@Url.Action("ReviewsbyID","Car", new { brand = item.Data.car_model.brand.slug, model = item.Data.car_model.slug, carid = item.Data.slug })">
+                        <div class="filter_carBox">
+                            <figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().file_url');">
+                                @*@if (item.Data.is_featured == 1)
+                                    {
+                                        <div class="sale">Featured</div>
+                                    }*@
+                            </figure>
+                            <article>
+                                <div class="car_dtl clearfix">
+                                    <p>@item.Data.name <span>@item.Data.year</span></p>
+                                </div>
+                                @{
+                                    decimal ratingcount = Math.Round(item.Data.average_rating);
+                                    <div class="rating">
+                                        @*<input id="input-1" name="input-1" value="@item.Data.average_rating" class="rating-loading rating">*@
+                                        <input id="input-id" name="input-name" value="@item.Data.average_rating" type="number" hoverEnabled=0 class="rating" min=0 max=5 step=0.1 data-size="lg">
+                                        @*@for (int j = 1; j <= ratingcount; j++)
+                                            {<i class="fa fa-star fill"></i>}
+                                            @for (int j = 1; j <= 5 - ratingcount; j++)
+                                            {<i class="fa fa-star"></i>}*@
+                                    </div>
+                                }
+                            </article>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+        }
+    }
+    else
+    {
+        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+    }
+}
+else
+{
+    <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+}

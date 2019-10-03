@@ -1,0 +1,1264 @@
+﻿@using Caristocrate.Common.Models
+@model CustMyCars.Response
+@{
+    ViewData["Title"] = "My Account";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "dashPages";
+    GetCars.Response favcars = ViewData["CustFavCarsObj"] as GetCars.Response;
+    CustProfileModel.Response profileobj = ViewData["profileobj"] as CustProfileModel.Response;
+    CustNews.Response custnewsObj = ViewData["custnewsObj"] as CustNews.Response;
+
+
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response getCarTypeobj = ViewData["getCarTypeobj"] as CarType.Response;
+    RegionalSpecificationModel.Response regionalSpecificationModelObj = ViewData["regionalSpecificationModelObj"] as RegionalSpecificationModel.Response;
+    CarAttributesModel.Response InteriorColorObj = ViewData["InteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response ExteriorColorObj = ViewData["ExteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response AccidentObj = ViewData["AccidentObj"] as CarAttributesModel.Response;
+}
+
+
+<style type="text/css">
+    .uploadInnerdiv {
+        display: inline-block;
+        vertical-align: middle;
+        height: 100px;
+        text-align: center;
+        width: 15%;
+    }
+
+        .uploadInnerdiv a {
+            text-align: center;
+        }
+
+        .uploadInnerdiv .uploadInnerDivSpan {
+            text-align: center;
+            width: 100%;
+        }
+
+    .uploadBtn {
+        background-image: url('');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+        .uploadBtn span {
+            opacity: 0.5;
+        }
+
+    .upload_container i {
+        display: inline-block;
+        font-style: normal;
+        background: #f44336;
+        width: 23px;
+        height: 23px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        position: absolute;
+        right: -5px;
+        top: -5px;
+        color: #fff;
+        text-align: center;
+        line-height: 17px;
+        cursor: pointer;
+    }
+
+    .uploadBtn {
+        width: 100px !important;
+    }
+</style>
+
+<div class="modal fade addCarModal largeModal" id="EditCarModalApp" tabindex="-1" role="dialog"></div>
+
+<div class="modal fade addCarModal largeModal" id="addCarModalApp" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="head">
+                <h5>Add Your Own Car</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div style="display:none">
+                        <div class="col-md-6">
+                            <div class="icon_field"><span class="icon-user1"></span><input id="txtUserNameMC" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Full Name"></div>
+                        </div>
+                        <div class="col-md-6">
+                            @if (ViewData["UserEmail"].ToString() != "")
+                            {
+                                <div class="icon_field"><span class="icon-msg"></span><input id="txtEmailMC" readonly="readonly" type="text" name="" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" placeholder="Email Address"></div>
+                            }
+                            else
+                            {
+                                <div class="icon_field"><span class="icon-msg"></span><input id="txtEmailMC" type="text" name="" placeholder="Email Address"></div>
+                            }
+                        </div>
+                        <div class="col-md-12" id="PSPhoneCodeFIeld">
+                            <div class="icon_field">
+                                <span class="icon-call icon"></span>
+                                <input id="txtPhoneNoMC" type="text" class="pncode phone" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" name="" placeholder="Phone Number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-make"></span>
+                            <label>Make</label>
+                            <select class="ddlMake" id="dllMakeMC" onchange="GetModels(this)">
+                                <option value="0">Make</option>
+                                @if (getMake.success == true)
+                                {
+                                    foreach (var item in getMake.data.ToList())
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-icon-5"></span>
+                            <label>Model</label>
+                            <select class="ddlModel" id="ddlModelMC">
+                                <option value="0">Model</option>
+                                @if (getModel.success == true)
+                                {
+                                    foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                    {
+                                        <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-icon-6"></span><label>Year</label>
+                            <select class="ddlVersion" id="ddlYearMC">
+                                <option value="0">Year</option>
+                                @for (int i = 2005; i <= DateTime.Now.Year; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    @*<div class="col-md-4">
+                            <div class="field">
+                                <span class="icon-icon-6"></span>
+                                <input id="ddlYearMC" name="" placeholder="Year">
+                            </div>
+                        </div>*@
+
+                    <div class="col-md-4">
+                        <div class="field">
+                            <span class="icon-icon-6"></span><label>Version</label>
+                            <input id="ddlVersionMC" name="" placeholder="Version">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="field">
+                            <span class="icon-icon-7"></span><label>KM</label>
+                            <input type="text" id="txtKMMC" name="" placeholder="KM">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="field">
+                            <span class="icon-icon-8"></span><label>Chassis</label>
+                            <input type="text" id="txtChassisMC" name="" placeholder="Chassis">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-icon-9"></span><label>Regional specs</label>
+                            <select id="ddlRegionalSpecsMC">
+                                <option value="0">Regional specs</option>
+                                @if (regionalSpecificationModelObj.success == true)
+                                {
+                                    foreach (var item in regionalSpecificationModelObj.data.ToList())
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-icon-10"></span><label>Exterior Color</label>
+                            <select id="ddlExteriorColorMC">
+                                <option value="0">Exterior Color</option>
+                                @if (ExteriorColorObj.success == true)
+                                {
+                                    foreach (var item in ExteriorColorObj.data.option_array)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-icon-11"></span><label>Interior Color</label>
+                            <select id="ddlInteriorColorMC">
+                                <option value="0">Interior Color</option>
+                                @if (InteriorColorObj.success == true)
+                                {
+                                    foreach (var item in InteriorColorObj.data.option_array)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="select_parent">
+                            <span class="icon-icon-17"></span><label>Accident?</label>
+                            <select id="ddlAccidentMC">
+                                <option value="0">Accident?</option>
+                                @if (AccidentObj.success == true)
+                                {
+                                    foreach (var item in AccidentObj.data.option_array)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="field">
+                            <span class="icon-icon-14"></span><label>Warranty Remaining</label>
+                            <input id="txtWarrantyRemMC" class="numericonly" type="text" name="" placeholder="Warranty Remaining (In Month)">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="field">
+                            <span><img src="@Url.Content("~/assets/images/serivec-icon.png")" alt=""></span><label>Service Remaining</label>
+                            <input id="txtServiceRemMC" class="numericonly" type="text" name="" placeholder="Service Remaining (In Month)">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="upload_container">
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fufrontMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Front</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuBackMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Back</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRightMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Right Side</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuLeftMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Left Side</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuInteriorMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Interior</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 uploadInnerdiv">
+                        <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRegistrationCardMC" type="file" name=""></a>
+                        <br />
+                        <div class="uploadInnerDivSpan">
+                            <span class="uploadInnerspan">Registration Card</span>
+                            <br />
+                            <span class="uploadedimagename"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carNote">
+                    <textarea name="" id="txtNotesMC" placeholder="Additional notes (if any)"></textarea>
+                    <div class="row text-right">
+                        <span>
+                            <input style="margin-top: .5%;" type="checkbox" class="chkTermsConditions" /> &nbsp; I have read and agreed with the term of use
+                        </span>
+                    </div>
+                    @*<p class="diclaimerText"><strong>Disclaimer!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi hendrerit et mi at dictum. Ut fringilla eros id urna auctor pulvinar. Etiam felis ligula, aliquet et feugiat vel, finibusarcu. Suspendisse ligula dolor</p>*@
+                </div>
+
+
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <div class="loaderdiv" style="display:none; padding:10px;">
+                            <img style="margin-left:90%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                        </div>
+                        @*<div class="row">
+                            <input style="margin-top: .5%;" type="checkbox" class="chkTermsConditions" /> &nbsp; I have read and agreed with the term of use
+                        </div>*@
+                        <button type="submit" onclick="AddMyCar(this)" class="custBtn">Add Your Car</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">Home</a></li>
+                    <li><a href="javascript:;">My Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="main_sec joinClub_sec">
+    <div class="container">
+        <div class="headBar">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="page-title">Your Listed Cars</h2>
+                </div>
+                <div class="col-md-6 text-right">
+                    <a href="javascript:;" class="custBtn" data-toggle="modal" data-target="#addCarModalApp">Add A Car</a>
+                </div>
+            </div>
+        </div>
+        <div class="join_slider swiper-container" id="accountareaMyCars">
+
+        </div>
+        @*@if (Model != null)
+            {
+                if (Model.data != null)
+                {
+                    if (Model.data.Count > 0)
+                    {
+                        <div class="join_slider swiper-container">
+                            <div class="swiper-wrapper">
+                                @foreach (var item in Model.data)
+                                {
+                                    <div class="join_slide swiper-slide">
+                                        <figure class="img_wrap" style="background-image: url('@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : "")');"></figure>
+                                        <h3>@item.car_model.brand.name @item.car_model.name</h3>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="joinPrev custArrow"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+                            <div class="joinNext custArrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-scrollbar"></div>
+                        </div>
+                    }
+                }
+            }*@
+
+        <div class="join_text_middle">
+            @if (profileobj != null)
+            {
+                if (profileobj.data != null)
+                {
+                    if (profileobj.data.details != null)
+                    {
+                        if (profileobj.data.details.about != null)
+                        {
+                            <h2 class="page-title">About Me</h2>
+                            <p class="page-info">@profileobj.data.details.about</p>
+                        }                        
+                    }                    
+                }                
+            }
+        </div>
+
+        <div class="fav_sec">
+            <h2 class="page-title">My Favourites</h2>
+            <div class="fav_tab">
+                <ul class="fav_tabs_links clearfix">
+                    <li class="current"><a href="#join1">Cars</a></li>
+                    <li><a href="#join2">Autolife</a></li>
+                    <li><a href="#join3">Car Education</a></li>
+                    <li><a href="#join4">For Women Only</a></li>
+                </ul>
+
+                <div class="fav_tab_content myCars" id="join1">
+                    <div class="row">
+                        @if (favcars != null)
+                        {
+                            if (favcars.data != null)
+                            {
+                                if (favcars.data.Count > 0)
+                                {
+                                    foreach (var item in favcars.data)
+                                    {
+                                        <div class="col-md-4">
+                                            <a href="@(item.category.id == 28 ? Url.Action("CarDetail", "Car", new { brand = item.car_model.brand.slug, model = item.car_model.slug, id = item.slug }) : Url.Action("PreOwnedCarDetail", "Car", new { brand = item.car_model.brand.slug, model = item.car_model.slug, id = item.slug }))">
+                                                <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');">
+                                                    <div class="content">
+                                                        <h3>@item.name</h3>
+                                                        <div class="row">
+                                                            <div class="col-6 my-auto"><span class="year">@item.year</span></div>
+                                                            <div class="col-6 text-right"><span class="price">@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "")</span></div>
+                                                        </div>
+                                                    </div>
+                                                </figure>
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                }
+                            }
+                            else
+                            {
+                                    <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                            }
+                        }
+                        else
+                        {
+                                    <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="fav_tab_content autoLife" id="join2">
+                    @if (custnewsObj != null)
+                    {
+                        if (custnewsObj.data != null)
+                        {
+                            if (custnewsObj.data.Count > 0)
+                            {
+                                foreach (var item in custnewsObj.data.Where(x => x.slug == "auto-life"))
+                                {
+                                    if (item.news != null)
+                                    {
+                                        if (item.news.Count > 0)
+                                        {
+                                            foreach (var subitem in item.news)
+                                            {
+                                                <div class="row mb-4">
+                                                    <a style="width:100% !important" href="@(Url.Action("NewsbyID", "Car", new { id = subitem.id, categoryID = subitem.category_id }))">
+                                                        <div class="col-md-12">
+                                                            <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');"></figure>
+                                                            <div class="content">
+                                                                @*<a href="javascript:;" onclick="MarkFavourite('@subitem.id', 30, this)" class="@(subitem.is_favorite == true ? "heartBtn act" : "heartBtn")"><span class="icon-heart1"></span></a>*@
+                                                                <h2>@(subitem.headline.Length > 50 ? subitem.headline.Substring(0, 50) + "..." : subitem.headline)</h2>
+                                                                <p>@(Html.Raw(subitem.description.Length > 200 ? subitem.description.Substring(0, 200) + "..." : subitem.description))</p>
+                                                                <ul class="posted_dtl">
+                                                                    <li><span class="icon-icon-6"></span>@(Convert.ToDateTime(subitem.created_at).ToString("MMMM dd, yyyy hh:mm tt"))</li>
+                                                                    <li><span class="icon-eye"></span> @subitem.views_count</li>
+                                                                    <li><span class="icon-heart1"></span>@subitem.like_count</li>
+                                                                    <li><span class="icon-text"></span>@subitem.comments_count</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="row mb-4">
+                                                <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="row mb-4">
+                                            <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <div class="row mb-4">
+                                    <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row mb-4">
+                                <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                        </div>
+                    }
+                </div>
+
+                <div class="fav_tab_content autoLife" id="join3">
+                    @if (custnewsObj != null)
+                    {
+                        if (custnewsObj.data != null)
+                        {
+                            if (custnewsObj.data.Count > 0)
+                            {
+                                foreach (var item in custnewsObj.data.Where(x => x.slug == "careducation"))
+                                {
+                                    if (item.news != null)
+                                    {
+                                        if (item.news.Count > 0)
+                                        {
+                                            foreach (var subitem in item.news)
+                                            {
+                                                <div class="row mb-4">
+                                                    <a style="width:100% !important" href="@(Url.Action("NewsbyID", "Car", new { id = subitem.id, categoryID = subitem.category_id }))">
+                                                        <div class="col-md-12">
+                                                            <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');"></figure>
+                                                            <div class="content">
+                                                                @*<a href="javascript:;" onclick="MarkFavourite('@subitem.id', 30, this)" class="@(subitem.is_favorite == true ? "heartBtn act" : "heartBtn")"><span class="icon-heart1"></span></a>*@
+                                                                <h2>@(subitem.headline.Length > 50 ? subitem.headline.Substring(0, 50) + "..." : subitem.headline)</h2>
+                                                                <p>@(Html.Raw(subitem.description.Length > 200 ? subitem.description.Substring(0, 200) + "..." : subitem.description))</p>
+                                                                <ul class="posted_dtl">
+                                                                    <li><span class="icon-icon-6"></span>@(Convert.ToDateTime(subitem.created_at).ToString("MMMM dd, yyyy hh:mm tt"))</li>
+                                                                    <li><span class="icon-eye"></span> @subitem.views_count</li>
+                                                                    <li><span class="icon-heart1"></span>@subitem.like_count</li>
+                                                                    <li><span class="icon-text"></span>@subitem.comments_count</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="row mb-4">
+                                                <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="row mb-4">
+                                            <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <div class="row mb-4">
+                                    <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row mb-4">
+                                <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                        </div>
+                    }
+                </div>
+
+                <div class="fav_tab_content autoLife" id="join4">
+                    @if (custnewsObj != null)
+                    {
+                        if (custnewsObj.data != null)
+                        {
+                            if (custnewsObj.data.Count > 0)
+                            {
+                                foreach (var item in custnewsObj.data.Where(x => x.slug == "for-women-only"))
+                                {
+                                    if (item.news != null)
+                                    {
+                                        if (item.news.Count > 0)
+                                        {
+                                            foreach (var subitem in item.news)
+                                            {
+                                                <div class="row mb-4">
+                                                    <a style="width:100% !important" href="@(Url.Action("NewsbyID", "Car", new { id = subitem.id, categoryID = subitem.category_id }))">
+                                                        <div class="col-md-12">
+                                                            <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');"></figure>
+                                                            <div class="content">
+                                                                @*<a href="javascript:;" onclick="MarkFavourite('@subitem.id', 30, this)" class="@(subitem.is_favorite == true ? "heartBtn act" : "heartBtn")"><span class="icon-heart1"></span></a>*@
+                                                                <h2>@(subitem.headline.Length > 50 ? subitem.headline.Substring(0, 50) + "..." : subitem.headline)</h2>
+                                                                <p>@(Html.Raw(subitem.description.Length > 200 ? subitem.description.Substring(0, 200) + "..." : subitem.description))</p>
+                                                                <ul class="posted_dtl">
+                                                                    <li><span class="icon-icon-6"></span>@(Convert.ToDateTime(subitem.created_at).ToString("MMMM dd, yyyy hh:mm tt"))</li>
+                                                                    <li><span class="icon-eye"></span> @subitem.views_count</li>
+                                                                    <li><span class="icon-heart1"></span>@subitem.like_count</li>
+                                                                    <li><span class="icon-text"></span>@subitem.comments_count</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="row mb-4">
+                                                <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="row mb-4">
+                                            <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <div class="row mb-4">
+                                    <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row mb-4">
+                                <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div style="text-align:center; width:100%; font-weight:bold;">You have not added anything in your favorites</div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<script type="text/javascript">
+
+    function OPenCustEditPopup($this, Mycarid) {
+        $('.loading').fadeIn();
+        var data = {};
+        data.id = Mycarid;
+        $.ajax({
+            dataType: "html",
+            async: true,
+            data: data,
+            type: 'GET',
+            url: '@Url.Action("CustEditMyCar", "Customer")',
+            success: function (data) {
+                $('#EditCarModalApp').html(data);
+                $("#EditCarModalApp").modal("show");
+
+            }, complete: function () {
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+
+    function uploadImage($this) {
+        var filename = $($this).val();
+        if (filename != "") {
+            var path = filename;
+            filename = path.replace(/^.*\\/, "");
+            //$($this).parents(".uploadInnerdiv").find(".uploadedimagename").text(filename);
+
+            var formData = new FormData();
+            formData.append('file', $($this)[0].files[0]);
+
+            var baseurl = window.location.origin;
+            var fullpath = baseurl + "/uploads/" + filename;
+            debugger;
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'POST',
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                url: '@Url.Action("FileUpload", "Car")',
+                success: function (data) {
+                    if (data != "") {                        
+                        $($this).parents(".uploadInnerdiv").find("a.uploadbtnAnchor").css('background-image', 'url(' + fullpath + ')');
+                    }
+                }, complete: function (data) {
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        BindCars();
+
+
+        $("#ddlModelMC").find("option").each(function () {
+            $(this).hide();
+        });
+
+        setTimeout(function () {
+            if ('@ViewData["UserCountryCode"]' != null) {
+                if ('@ViewData["UserCountryCode"].ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@ViewData["UserCountryCode"].ToString()') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 10000);
+    });
+
+    function AddMyCar($this) {
+
+        var txtUserNameMC = $("#txtUserNameMC").val();
+        var txtEmailMC = $("#txtEmailMC").val();
+        var txtPhoneNoMC = $("#txtPhoneNoMC").val();
+        var PSPhoneCodeFIeld = $("#PSPhoneCodeFIeld").find(".selected-dial-code").text();;
+        var dllMakeMC = $("#dllMakeMC").val();
+        var ddlModelMC = $("#ddlModelMC").val();
+        var ddlYearMC = $("#ddlYearMC").val();
+        var ddlVersionMC = $("#ddlVersionMC").val();
+        var txtKMMC = $("#txtKMMC").val();
+        var txtChassisMC = $("#txtChassisMC").val();
+        var ddlRegionalSpecsMC = $("#ddlRegionalSpecsMC").val();
+        var ddlExteriorColorMC = $("#ddlExteriorColorMC").val();
+        var ddlInteriorColorMC = $("#ddlInteriorColorMC").val();
+        var ddlAccidentMC = $("#ddlAccidentMC").val();
+        var txtWarrantyRemMC = $("#txtWarrantyRemMC").val();
+        var txtServiceRemMC = $("#txtServiceRemMC").val();
+        var txtNotesMC = $("#txtNotesMC").val();
+        
+
+        var validationcount = 0;
+        if (txtUserNameMC == "") {
+            $("#txtUserNameMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtUserNameMC").css("border", "none"); }
+
+        if (txtEmailMC == "") {
+            $("#txtEmailMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailMC").css("border", "none"); }
+
+        if (txtPhoneNoMC == "") {
+            $("#txtPhoneNoMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneNoMC").css("border", "none"); }
+
+        if (dllMakeMC == "0") {
+            $("#dllMakeMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#dllMakeMC").css("border", "none"); }
+
+        if (ddlModelMC == "0") {
+            $("#ddlModelMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlModelMC").css("border", "none"); }
+
+        if (ddlYearMC == "0") {
+            $("#ddlYearMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlYearMC").css("border", "none"); }
+
+        if (ddlRegionalSpecsMC == "0") {
+            $("#ddlRegionalSpecsMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlRegionalSpecsMC").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv").show();
+
+        var formData = new FormData();
+        formData.append('front', $('#fufrontMC')[0].files[0]);
+        formData.append('Back', $('#fuBackMC')[0].files[0]);
+        formData.append('Right', $('#fuRightMC')[0].files[0]);
+        formData.append('Left', $('#fuLeftMC')[0].files[0]);
+        formData.append('Interior', $('#fuInteriorMC')[0].files[0]);
+        formData.append('RegCard', $('#fuRegistrationCardMC')[0].files[0]);
+        formData.append('username', txtUserNameMC);
+        formData.append('email', txtEmailMC);
+        formData.append('countrycode', PSPhoneCodeFIeld);
+        formData.append('phone', txtPhoneNoMC);
+        formData.append('makeid', dllMakeMC);
+        formData.append('modelid', ddlModelMC);
+        formData.append('year', ddlYearMC);
+        formData.append('version_app', ddlVersionMC);
+        formData.append('KM', txtKMMC);
+        formData.append('Chassis', txtChassisMC);
+        formData.append('regionalSpecid', ddlRegionalSpecsMC);
+        formData.append('exteriorcolorid', ddlExteriorColorMC);
+        formData.append('interiorcolorid', ddlInteriorColorMC);
+        formData.append('accidentid', ddlAccidentMC);
+        formData.append('warrantyrem', txtWarrantyRemMC);
+        formData.append('servicerem', txtServiceRemMC);
+        formData.append('notes', txtNotesMC);
+
+        var json = "";
+        var array = [];
+
+        var output = {}
+
+        if (ddlExteriorColorMC != "0") {
+            output = {};
+            output[4] = parseInt(ddlExteriorColorMC);
+            array.push(output);
+        }
+        if (ddlInteriorColorMC != "0") {
+            output = {};
+            output[3] = parseInt(ddlInteriorColorMC);
+            array.push(output);
+        }
+        if (ddlAccidentMC != "0") {
+            output = {};
+            output[23] = parseInt(ddlAccidentMC);
+            array.push(output);
+        }
+        if (txtWarrantyRemMC != "") {
+            output = {};
+            output[5] = parseInt(txtWarrantyRemMC);
+            array.push(output);
+        }
+        if (txtServiceRemMC != "") {
+            output = {};
+            output[6] = parseInt(txtServiceRemMC);
+            array.push(output);
+        }
+
+
+        json = JSON.stringify(array);
+        formData.append('car_attributes', json);
+
+        var _url = '@Url.Action("AddMyCarfromAccountArea", "Customer")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (result) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                if (result == "Success") {
+                    notify("You added your car successfully!", "success");
+                }
+            },
+            error: function (jqXHR) {
+
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv").hide();
+                BindCars();
+
+                RestAllCarFields();
+                //$(".addCarModalApp").find(".close").trigger("click");
+            }
+        });
+
+    }
+
+    function DeletethisMedia(id, $this) {
+
+        var deletedimages = $("#hdnDeletedMediaFiles").val();
+        $("#hdnDeletedMediaFiles").val(id + "," + deletedimages);
+        $($this).parent().remove();
+    }
+
+    function UpdateMyCar($this) {
+        debugger;
+        var txtUserNameMC = $("#txtUserNameMCU").val();
+        var txtEmailMC = $("#txtEmailMCU").val();
+        var txtPhoneNoMC = $("#txtPhoneNoMCU").val();
+        var PSPhoneCodeFIeld = $("#txtPhoneCodeMCU").val();
+        var dllMakeMC = $("#dllMakeMCU").val();
+        var ddlModelMC = $("#ddlModelMCU").val();
+        var ddlYearMC = $("#ddlYearMCU").val();
+        var ddlVersionMC = $("#ddlVersionMCU").val();
+        var txtKMMC = $("#txtKMMCU").val();
+        var txtChassisMC = $("#txtChassisMCU").val();
+        var ddlRegionalSpecsMC = $("#ddlRegionalSpecsMCU").val();
+        var ddlExteriorColorMC = $("#ddlExteriorColorMCU").val();
+        var ddlInteriorColorMC = $("#ddlInteriorColorMCU").val();
+        var ddlAccidentMC = $("#ddlAccidentMCU").val();
+        var txtWarrantyRemMC = $("#txtWarrantyRemMCU").val();
+        var txtServiceRemMC = $("#txtServiceRemMCU").val();
+        var txtNotesMC = $("#txtNotesMCU").val();
+        var hdnMyCarUpdateID = $("#hdnMyCarUpdateID").val();
+        var hdnDeletedMediaFiles = $("#hdnDeletedMediaFiles").val();
+
+        var validationcount = 0;
+        if (txtUserNameMC == "") {
+            $("#txtUserNameMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtUserNameMCU").css("border", "none"); }
+
+        if (txtEmailMC == "") {
+            $("#txtEmailMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailMCU").css("border", "none"); }
+
+        if (txtPhoneNoMC == "") {
+            $("#txtPhoneNoMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneNoMCU").css("border", "none"); }
+
+        if (dllMakeMC == "0") {
+            $("#dllMakeMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#dllMakeMCU").css("border", "none"); }
+
+        if (ddlModelMC == "0") {
+            $("#ddlModelMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlModelMCU").css("border", "none"); }
+
+        if (ddlYearMC == "0") {
+            $("#ddlYearMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlYearMCU").css("border", "none"); }
+
+        if (ddlRegionalSpecsMC == "0") {
+            $("#ddlRegionalSpecsMCU").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlRegionalSpecsMCU").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv").show();
+
+        var formData = new FormData();
+        formData.append('front', $('#fufrontMCU')[0].files[0]);
+        formData.append('Back', $('#fuBackMCU')[0].files[0]);
+        formData.append('Right', $('#fuRightMCU')[0].files[0]);
+        formData.append('Left', $('#fuLeftMCU')[0].files[0]);
+        formData.append('Interior', $('#fuInteriorMCU')[0].files[0]);
+        formData.append('RegCard', $('#fuRegistrationCardMCU')[0].files[0]);
+        formData.append('username', txtUserNameMC);
+        formData.append('email', txtEmailMC);
+        formData.append('countrycode', PSPhoneCodeFIeld);
+        formData.append('phone', txtPhoneNoMC);
+        formData.append('makeid', dllMakeMC);
+        formData.append('modelid', ddlModelMC);
+        formData.append('year', ddlYearMC);
+        formData.append('version_app', ddlVersionMC);
+        formData.append('KM', txtKMMC);
+        formData.append('Chassis', txtChassisMC);
+        formData.append('regionalSpecid', ddlRegionalSpecsMC);
+        formData.append('exteriorcolorid', ddlExteriorColorMC);
+        formData.append('interiorcolorid', ddlInteriorColorMC);
+        formData.append('accidentid', ddlAccidentMC);
+        formData.append('warrantyrem', txtWarrantyRemMC);
+        formData.append('servicerem', txtServiceRemMC);
+        formData.append('notes', txtNotesMC);
+        
+
+        var json = "";
+        var array = [];
+
+        var output = {}
+
+        if (ddlExteriorColorMC != "0") {
+            output = {};
+            output[4] = parseInt(ddlExteriorColorMC);
+            array.push(output);
+        }
+        if (ddlInteriorColorMC != "0") {
+            output = {};
+            output[3] = parseInt(ddlInteriorColorMC);
+            array.push(output);
+        }
+        if (ddlAccidentMC != "0") {
+            output = {};
+            output[23] = parseInt(ddlAccidentMC);
+            array.push(output);
+        }
+        if (txtWarrantyRemMC != "") {
+            output = {};
+            output[5] = parseInt(txtWarrantyRemMC);
+            array.push(output);
+        }
+        if (txtServiceRemMC != "") {
+            output = {};
+            output[6] = parseInt(txtServiceRemMC);
+            array.push(output);
+        }
+
+
+        json = JSON.stringify(array);
+        formData.append('car_attributes', json);
+
+        if (hdnDeletedMediaFiles != "") {
+            hdnDeletedMediaFiles = hdnDeletedMediaFiles.substring(0, hdnDeletedMediaFiles.length - 1);
+        }
+
+        formData.append('isUpdate', 1);
+        formData.append('deleted_images', hdnDeletedMediaFiles);
+        formData.append('carid', hdnMyCarUpdateID);
+        debugger;
+
+        var _url = '@Url.Action("AddMyCarfromAccountArea", "Customer")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (result) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                if (result == "Success") {
+                    notify("Your Car Successfully Updated", "success");
+                }
+            },
+            error: function (jqXHR) {
+
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv").hide();
+                //BindCars();
+
+                RestAllCarFields();
+                $("#EditCarModalApp").find(".close").trigger("click");
+            }
+        });
+
+    }
+
+
+    function GetModels($this) {
+
+        var makeid = $($this).find("option:selected").val();
+
+        $("#ddlModelMC").find("option").each(function () {
+            $(this).hide();
+        })
+
+        $("#ddlModelMC").val(0);
+
+        $("#ddlModelMC").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+    }
+
+    function GetVersions($this) {
+
+        @*$("#ddlVersionMC").html("");
+        $("#ddlVersionMC").html('<option value="0">Version (Optional)</option>')
+
+        var modelid = $($this).val();
+        var data = {};
+        data.modelid = modelid;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("getVersions", "Car")',
+            success: function (data) {
+                for (var i = 0; i < data.data.length; i++) {
+                    $("#ddlVersionMC").append('<option value="' + data.data[i].id + '">' + data.data[i].name + '</option>');
+                }
+            },
+        });*@
+    }
+
+
+    function BindCars() {
+
+        var loaderhtml = '<div class="loaderdiv" style="width:100%;"><img style="margin-left:50%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" /></div>'
+        $('#accountareaMyCars').html(loaderhtml);
+        $('#accountareaMyCars').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("AccountCustCars", "Customer")',
+            type: 'GET',
+            success: function (data) {
+                $('#accountareaMyCars').html(data);
+                $("#addCarModalApp").find(".close").trigger("click");
+                setTimeout(function () {
+                    /* Join Club Slider */
+                    var mySwiper = new Swiper('.join_slider.swiper-container', {
+                        spaceBetween: 20,
+                        slidesPerView: 4,
+                        navigation: {
+                            nextEl: '.joinNext',
+                            prevEl: '.joinPrev',
+                        },
+                        scrollbar: {
+                            el: '.swiper-scrollbar',
+                            hide: false,
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            type: 'bullets',
+                            clickable: true
+                        },
+                        breakpoints: {
+
+                            320: {
+                                slidesPerView: 1,
+                                freeMode: false,
+                                spaceBetween: 10
+                            },
+
+                            480: {
+                                slidesPerView: 1,
+                                spaceBetween: 10
+                            },
+
+                            640: {
+                                slidesPerView: 2,
+                                spaceBetween: 20
+                            }
+                        }
+                    });
+                }, 3000)
+            },
+        });
+    }
+
+
+    function MarkFavourite(id, type, $this) {
+
+        var text = $($this).text();
+
+        var data = {};
+        data.news_id = id;
+        data.type = type;
+
+        $.ajax({
+                type: 'GET',
+                url: '@Url.Action("MarkFavouriteNews", "Car")',
+                data: data,
+                success: function (data) {
+                    if (data == "success") {
+                        if ($($this).hasClass("act")) {
+                            notify("Marked favourite Successfully", "success");
+                            //$($this).removeClass("act")
+                        }
+                        else {
+                            notify("Marked Unfavourite Successfully", "success");
+                            //$($this).addClass("act")
+                        }
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Request has been submitted")
+                    }
+                    else {
+                        notify("Something went wrong while submitting request, Please try again", "danger");
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                    }
+                },
+            });
+    }
+
+    function RestAllCarFields() {
+        $("#dllMakeMC").val(0);
+        $("#ddlModelMC").val(0);
+        $("#ddlYearMC").val(0);
+        $("#ddlVersionMC").val('');
+        $("#txtKMMC").val('');
+        $("#txtChassisMC").val('');
+        $("#ddlRegionalSpecsMC").val(0);
+        $("#ddlExteriorColorMC").val(0);
+        $("#ddlInteriorColorMC").val(0);
+        $("#ddlAccidentMC").val(0);
+        $("#txtWarrantyRemMC").val('');
+        $("#txtServiceRemMC").val('');
+        $("#txtNotesMC").val('');
+        $(".uploadInnerdiv").find("input").each(function () { $(this).val('') });
+        $(".uploadInnerdiv").find("a").each(function () { $(this).css("background-image", "none") });
+    }
+</script>

@@ -1,0 +1,198 @@
+﻿@using Caristocrate.Common.Models
+@model PagesModel.Response
+@{
+    ViewData["Title"] = "Personal Coach";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "online-course-page coach-pages";
+}
+
+<style type="text/css">
+    .togetter_sec .form {
+        margin: 40px 0 0;
+    }
+</style>
+
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/personal-coach-banner.jpg")');">
+
+        <div class="course_ban_text">
+            <h1>Corporate Services</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt.<br>Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex.</p>
+        </div>
+
+    </figure>
+</section>
+
+<div class="persCoach_sec">
+    <div class="container">
+        <div class="topContent text-center">
+            @if (Model != null)
+            {
+                if (Model.data != null)
+                {
+                    if (Model.data.Where(a => a.slug == "personal_coach") != null)
+                    {                        
+                        @Html.Raw(Model.data.Where(a => a.slug == "personal_coach").FirstOrDefault().content)
+                    }
+                }
+            }
+            @*<h2 class="page-title">How I service large and middle size companies</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex. Integer ut molestie sem, a facilisis ligula. Donec porttitor commodo sem, vitae consequat massa ullamcorper ut. Donec non diam massa. </p>
+            <p>Curabitur non felis porta, maximus quam egestas, vestibulum justo. Curabitur eu eleifend nisi, a congue sapien. Vestibulum consectetur eget dolor quis semper. Nam pulvinar neque eu feugiat viverra. Nam quis nisl nibh. In ornare sapien vitae quam dapibus, non eleifend velit scelerisque. Pellentesque at turpis eget sem malesuada auctor at in augue.</p>
+            <p><strong>Phasellus vel odio bibendum, convallis felis in, tincidunt nisi. Donec placerat massa quis libero accumsan, vel eleifend dolor molestie. Aliquam faucibus ex quis cursus pretium. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse mollis fermentum velit, vitae tincidunt nisl ullamcorper sit amet. Praesent vel erat purus. </strong></p>*@
+        </div>
+    </div>
+
+    <div class="service_offer">
+        <div class="container">
+            <h2 class="page-title text-center">The Corporate Services I offer are</h2>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="box">
+                        <img src="@Url.Content("~/assets/images/offer-icon1.png")" alt="">
+                        <p><span>Consultancy</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box">
+                        <img src="@Url.Content("~/assets/images/offer-icon2.png")" alt="">
+                        <p><span>Training Programs</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center mb-5">Nulla enim diam, pulvinar nec pretium ac, semper nec elit. Donec porttitor finibus nunc, sed semper mauris commodo sit amet. Praesent vel fermentum velit, at pharetra turpis. Phasellus sit amet tincidunt elit. Mauris cursus hendrerit porttitor. </p>
+
+         <!--   <h2 class="page-title text-center">Satisfied clients include but are not limited to</h2> -->
+
+            <!--<img src="@Url.Content("~/assets/images/logos.jpg")" alt="" class="img-fluid">-->
+        </div>
+    </div>
+
+    <div class="togetter_sec">
+        <div class="container">
+            <h2 class="page-title text-center">Let’s work together</h2>
+            <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex.</p>
+            <div class="form">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input id="txtFirstNamePC" type="text" placeholder="Frist Name" name="">
+                    </div>
+                    <div class="col-md-4">
+                        <input id="txtLastNamePC" type="text" placeholder="Last Name" name="">
+                    </div>
+                    <div class="col-md-4">
+                        <input id="txtEmailPC" type="email" placeholder="Email Address" name="">
+                    </div>
+                    <div class="col-md-4">
+                        <input id="txtPhoneNoPC" type="text" placeholder="Phone Number" name="">
+                    </div>
+                    <div class="col-md-4">
+                        <input id="txtCompanyPC" type="text" placeholder="Company" name="">
+                    </div>
+                    <div class="col-md-4">
+                        <input id="txtIndustryPC" type="text" placeholder="Industry" name="">
+                    </div>
+                    <div class="col-md-12">
+                        <textarea id="txtCommentsPC" name="" placeholder="Comment"></textarea>
+                    </div>
+
+                    <div class="col-md-12 text-right">
+                        <label class="custom-chck">I accept the <strong>privacy policy terms.</strong><i>*</i><input id="chkPolicyPC" style="margin-top: 50px" type="checkbox"> <span class="checkmark"></span> </label>
+                        <div class="loaderdiv2" style="display:none; margin-left:45%; padding:10px;">
+                            <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                        </div>
+                        <button onclick="EnquiryPersonalCoach(this)">Send</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function EnquiryPersonalCoach($this) {
+
+        var txtFirstNamePC = $("#txtFirstNamePC").val();
+        var txtLastNamePC = $("#txtLastNamePC").val();
+        var txtEmailPC = $("#txtEmailPC").val();
+        var txtPhoneNoPC = $("#txtPhoneNoPC").val();
+        var txtCompanyPC = $("#txtCompanyPC").val();
+        var txtIndustryPC = $("#txtIndustryPC").val();
+        var txtCommentsPC = $("#txtCommentsPC").val();
+
+        var validationcount = 0;
+        if (txtFirstNamePC == "") {
+            validationcount++;
+        }
+
+        if (txtEmailPC == "") {
+            validationcount++;
+        }
+
+        if (txtPhoneNoPC == "") {
+            validationcount++;
+        }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        if (!validatetoemail(txtEmailPC)) {
+            notify("Invalid email format ", "danger");
+            return;
+        }
+
+        if ($("#chkPolicyPC:checked").length == 0) {
+            notify("Kindly accept the privacy policy", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv2").show();
+
+        var data = {};
+        data.name = txtFirstNamePC + " " + txtLastNamePC;
+        data.email = txtEmailPC;
+        data.phone = txtPhoneNoPC;
+        data.message = txtCommentsPC;
+        data.industry = txtIndustryPC;
+        data.company = txtCompanyPC;
+        data.type = 50;
+
+        var _url = '@Url.Action("PersonalCoachForm", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "Contact Us saved successfully") {
+                    notify("Submitted successfully", "success");
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv2").hide();
+
+                RestAllCarFields();
+            }
+        });
+    }
+
+    function RestAllCarFields() {
+        $("#txtFirstNamePC").val('');
+        $("#txtLastNamePC").val('');
+        $("#txtEmailPC").val('');
+        $("#txtPhoneNoPC").val('');
+        $("#txtCompanyPC").val('');
+        $("#txtIndustryPC").val('');
+        $("#txtCommentsPC").val('');
+    }
+
+</script>

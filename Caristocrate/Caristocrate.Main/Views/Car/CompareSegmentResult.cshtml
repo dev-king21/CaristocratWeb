@@ -1,0 +1,1136 @@
+﻿@using Caristocrate.Common.Models;
+@model GetCars.Response
+@{
+    ViewData["Title"] = "Professional Comparison Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page resultPage";
+}
+
+<style type="text/css">
+    /*.mCSB_horizontal > .mCSB_container.mCS_no_scrollbar_x.mCS_x_hidden {
+        margin-bottom: 15px !important;
+    }*/
+</style>
+<section class="banner_sec">
+    @*<figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/compare-result-banner.jpg")');">*@
+    <figure class="img_wrap" style="background-image: url('http://caristocrat.stagingic.com/api/resize/media_files/1547565728.png');">
+        <div class="container">
+            @*<div class="banner_text">
+                    <h1><span>INTRODUCING THE <br>NEW SELF HEALING LAMBORGHINI</span></h1>
+                    <p>Lorem Ipsum is simply dummy text of the printing and <br>typesetting industry.</p>
+                </div>*@
+        </div>
+    </figure>
+</section>
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("CompareSegments", "Car")">Professional Comparison</a></li>
+                    <li><a href="javascript:;">Professional Comparison Result</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="result_sec">
+    <div class="container">
+        <div class="list_head">
+            <h2>Segment Comparison</h2>
+
+        </div>
+
+        @if (Model != null)
+        {
+            if (Model.data != null)
+            {
+
+                <div class="resultTable">
+                    <p class="result_text" style="text-transform: uppercase; text-align:center;">
+                        <!--  <strong>Results:</strong> -->
+                        @if (Model != null)
+                        {
+                            if (Model.data != null)
+                            {
+                                <strong>@Model.data.FirstOrDefault().car_type.name</strong>
+                            }
+                        }
+                    </p>
+                </div>
+                <div id="table-scroll" class="table-scroll">
+                    <div class="table-wrap">
+                        <table class="table main-table">
+                            <thead>
+                                <tr>
+                                    <th class="fixed-side" scope="col" rowspan="2">CAR - CV</th>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <th class="carimagetd" style="border-bottom:2px solid white;">
+                                            <figure><img width="150" src='@item.media.FirstOrDefault().file_url' class="img-fluid" alt=""></figure>
+                                        </th>
+                                    }
+                                </tr>
+                                <tr>
+                                    <th class="fixed-side" scope="col" style="display:none;"></th>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <th class="carnametd">
+                                            <span style="font-size: 14px;">@item.name</span>
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong>Price</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "")
+                                        </td>
+                                    }
+                                </tr>
+
+
+                                <tr>
+                                    <th class="fixed-side" scope="col" colspan="100">Dimensions & Weight</th>
+                                </tr>
+
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Length </strong>(mm)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Dimensions_Weight != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Dimensions_Weight.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Dimensions_Weight)
+                                                        {
+                                                            if (subitem.name == "LENGTH")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Width </strong>(mm)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Dimensions_Weight != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Dimensions_Weight.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Dimensions_Weight)
+                                                        {
+                                                            if (subitem.name == "WIDTH")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Height </strong>(mm)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Dimensions_Weight != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Dimensions_Weight.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Dimensions_Weight)
+                                                        {
+                                                            if (subitem.name == "HEIGHT")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                @*       <tr>
+          <td class="fixed-side" scope="col"><strong class="light">Weight Distribution</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Dimensions_Weight != null)
+                        {
+                            if (item.limited_edition_specs_array.Dimensions_Weight.Count > 0)
+                            {
+                                foreach (var subitem in item.limited_edition_specs_array.Dimensions_Weight)
+                                {
+                                    if (subitem.name == "WEIGHT DISTRIBUTION")
+                                    {
+                                        if (subitem.is_highlight == 1)
+                                        {
+                                            <span class="hlighted">
+                                                @subitem.value
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @subitem.value
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+                            <tr>
+                                <td class="fixed-side" scope="col"><strong class="light">Trunk </strong>(L)</td>
+                                @foreach (var item in Model.data)
+                                {
+                                    <td style="font-size: 14px;">
+                                        @if (item.limited_edition_specs_array != null)
+                                        {
+                                            if (item.limited_edition_specs_array.Dimensions_Weight != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Dimensions_Weight.Count > 0)
+                                                {
+                                                    foreach (var subitem in item.limited_edition_specs_array.Dimensions_Weight)
+                                                    {
+                                                        if (subitem.name == "TRUNK")
+                                                        {
+                                                            if (subitem.is_highlight == 1)
+                                                            {
+                                                                <span class="hlighted">
+                                                                    @(subitem.value + "")
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                @(subitem.value + "")
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Weight </strong>(kg)</td>
+
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Dimensions_Weight != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Dimensions_Weight.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Dimensions_Weight)
+                                                        {
+                                                            if (subitem.name == "WEIGHT")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+
+                                @*<tr>
+            <th colspan="100">Seating Capacity</th>
+        </tr>
+        <tr>
+            <td><strong class="light">No of Seats</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault() != null)
+                        {
+                            if (item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault().is_highlight == 1)
+                            {
+                                <span class="hlighted">@item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault().value</span>
+                            }
+                            else
+                            {
+                                @item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault().value
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+                            <tr>
+
+                                <td class="fixed-side" scope="col"><strong class="light">Max No of Seats</strong></td>
+                                @foreach (var item in Model.data)
+                                {
+                                    <td style="font-size: 14px;">
+                                        @if (item.limited_edition_specs_array != null)
+                                        {
+                                            if (item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault() != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault().is_highlight == 1)
+                                                {
+                                                    <span class="hlighted">@item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault().value</span>
+                                                }
+                                                else
+                                                {
+                                                    @item.limited_edition_specs_array.Seating_Capacity.FirstOrDefault().value
+                                                }
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+
+
+
+                                @*<tr>
+            <th colspan="100">Drive Train</th>
+        </tr>
+        <tr>
+            <td><strong class="light">Drive Train</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.DRIVE_TRAIN != null)
+                        {
+                            if (item.limited_edition_specs_array.DRIVE_TRAIN.Count > 0)
+                            {
+                                foreach (var subitem in item.limited_edition_specs_array.DRIVE_TRAIN)
+                                {
+
+                                    if (subitem.is_highlight == 1)
+                                    {
+                                        <span class="hlighted">
+                                            @subitem.value
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @subitem.value
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+                                <tr>
+                                    <th class="fixed-side" scope="col" colspan="100">Engine</th>
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Displacement </strong>(cc)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Engine != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Engine.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Engine)
+                                                        {
+                                                            if (subitem.name == "DISPLACEMENT")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">No. Of Clynders</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Engine != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Engine.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Engine)
+                                                        {
+                                                            if (subitem.name == "NO. OF CYLINDER")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @subitem.value
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @subitem.value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+
+                                    <td class="fixed-side" scope="col"><strong class="light">Drive Train</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.DRIVE_TRAIN.FirstOrDefault() != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.DRIVE_TRAIN.FirstOrDefault().is_highlight == 1)
+                                                    {
+                                                        <span class="hlighted">@item.limited_edition_specs_array.DRIVE_TRAIN.FirstOrDefault().value</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.limited_edition_specs_array.DRIVE_TRAIN.FirstOrDefault().value
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <th class="fixed-side" scope="col" colspan="100">Performance</th>
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Max Speed </strong>(km/h)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Performance != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Performance.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Performance)
+                                                        {
+                                                            if (subitem.name == "MAX SPEED")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Acceleration </strong>(0-100km) (sec)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Performance != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Performance.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Performance)
+                                                        {
+                                                            if (subitem.name == "Acceleration 0-100 Km")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Horsepower </strong>(hp)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Performance != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Performance.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Performance)
+                                                        {
+                                                            if (subitem.name == "Horsepower")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @subitem.value
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @subitem.value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Torque </strong>(nm)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Performance != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Performance.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Performance)
+                                                        {
+                                                            if (subitem.name == "TORQUE")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value + "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value + "")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <th class="fixed-side" scope="col" colspan="100">Transmission</th>
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Gearbox</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.transmission != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.transmission.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.transmission)
+                                                        {
+                                                            if (subitem.name == "GEARBOX")
+                                                            {
+                                                                @subitem.value
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                @*<tr>
+            <td class="fixed-side" scope="col">Transmission</td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.transmission.FirstOrDefault() != null)
+                        {
+                            if (item.limited_edition_specs_array.transmission.FirstOrDefault().is_highlight == 1)
+                            {
+                                <span class="hlighted">@item.limited_edition_specs_array.transmission.FirstOrDefault().value</span>
+                            }
+                            else
+                            {
+                                @item.limited_edition_specs_array.transmission.FirstOrDefault().value
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+
+
+
+                                @*<tr>
+            <th colspan="100">Brakes</th>
+        </tr>
+        <tr>
+            <td><strong class="light">Brakes System</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Brakes != null)
+                        {
+                            if (item.limited_edition_specs_array.Brakes.Count > 0)
+                            {
+                                foreach (var subitem in item.limited_edition_specs_array.Brakes)
+                                {
+
+                                    if (subitem.is_highlight == 1)
+                                    {
+                                        <span class="hlighted">
+                                            @subitem.value
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @subitem.value
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+                                @*  <tr>
+            <td class="fixed-side" scope="col">Brakes System</td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Brakes.FirstOrDefault() != null)
+                        {
+                            if (item.limited_edition_specs_array.Brakes.FirstOrDefault().is_highlight == 1)
+                            {
+                                <span class="hlighted">@item.limited_edition_specs_array.Brakes.FirstOrDefault().value</span>
+                            }
+                            else
+                            {
+                                @item.limited_edition_specs_array.Brakes.FirstOrDefault().value
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>
+                                *@
+
+                                @*<tr>
+            <th colspan="100">Suspension</th>
+        </tr>
+        <tr>
+            <td><strong class="light">Suspension</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Suspension != null)
+                        {
+                            if (item.limited_edition_specs_array.Suspension.Count > 0)
+                            {
+                                foreach (var subitem in item.limited_edition_specs_array.Suspension)
+                                {
+
+                                    if (subitem.is_highlight == 1)
+                                    {
+                                        <span class="hlighted">
+                                            @subitem.value
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @subitem.value
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+                             @*   <tr>
+                                    <td class="fixed-side" scope="col">Suspension</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td>
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Suspension.FirstOrDefault() != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Suspension.FirstOrDefault().is_highlight == 1)
+                                                    {
+                                                        <span class="hlighted">@item.limited_edition_specs_array.Suspension.FirstOrDefault().value</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.limited_edition_specs_array.Suspension.FirstOrDefault().value
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                               *@
+                                 <tr>
+                                    <th class="fixed-side" scope="col" colspan="100">Wheels & Tyres</th>
+                                </tr>
+                                 <tr>
+                                     <td class="fixed-side" scope="col"><strong class="light">Front Tyre</strong></td>
+                                     @foreach (var item in Model.data)
+                                     {
+                                         <td style="font-size: 14px;">
+                                             @if (item.limited_edition_specs_array != null)
+                                             {
+                                                 if (item.limited_edition_specs_array.Wheels_Tyres != null)
+                                                 {
+                                                     if (item.limited_edition_specs_array.Wheels_Tyres.Count > 0)
+                                                     {
+                                                         foreach (var subitem in item.limited_edition_specs_array.Wheels_Tyres)
+                                                         {
+                                                             if (subitem.name == "FRONT TYRE")
+                                                             {
+                                                                 if (subitem.is_highlight == 1)
+                                                                 {
+                                                                     <span class="hlighted">
+                                                                         @subitem.value
+                                                                     </span>
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                     @subitem.value
+                                                                 }
+                                                             }
+                                                         }
+                                                     }
+                                                 }
+                                             }
+                                         </td>
+                                     }
+                                 </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Rear Tyre</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Wheels_Tyres != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Wheels_Tyres.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Wheels_Tyres)
+                                                        {
+                                                            if (subitem.name == "REAR TYRE")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @subitem.value
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @subitem.value
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+
+                                @*<tr>
+            <th colspan="100">Fuel</th>
+        </tr>
+        <tr>
+            <td><strong class="light">Fuel Consumption</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Fuel != null)
+                        {
+                            if (item.limited_edition_specs_array.Fuel.Count > 0)
+                            {
+                                foreach (var subitem in item.limited_edition_specs_array.Fuel)
+                                {
+
+                                    if (subitem.is_highlight == 1)
+                                    {
+                                        <span class="hlighted">
+                                            @subitem.value
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @subitem.value
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+                            <tr>
+
+                                <td class="fixed-side" scope="col"><strong class="light">Fuel Consumption </strong>(L/100km)</td>
+                                @foreach (var item in Model.data)
+                                {
+                                    <td style="font-size: 14px;">
+                                        @if (item.limited_edition_specs_array != null)
+                                        {
+                                            if (item.limited_edition_specs_array.Fuel.FirstOrDefault() != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Fuel.FirstOrDefault().is_highlight == 1)
+                                                {
+                                                    <span class="hlighted">@(item.limited_edition_specs_array.Fuel.FirstOrDefault().value + "")</span>
+                                                }
+                                                else
+                                                {
+                                                    @(item.limited_edition_specs_array.Fuel.FirstOrDefault().value + "")
+                                                }
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+
+
+                                @*<tr>
+            <th colspan="100">Emission</th>
+        </tr>
+        <tr>
+            <td><strong class="light">Emission</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.limited_edition_specs_array != null)
+                    {
+                        if (item.limited_edition_specs_array.Emission != null)
+                        {
+                            if (item.limited_edition_specs_array.Emission.Count > 0)
+                            {
+                                foreach (var subitem in item.limited_edition_specs_array.Emission)
+                                {
+
+                                    if (subitem.is_highlight == 1)
+                                    {
+                                        <span class="hlighted">
+                                            @subitem.value
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @subitem.value
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+                            <tr>
+                                <td class="fixed-side" scope="col"><strong class="light">Emission </strong>(gmCO2/km)</td>
+                                @foreach (var item in Model.data)
+                                {
+                                    <td style="font-size: 14px;">
+                                        @if (item.limited_edition_specs_array != null)
+                                        {
+                                            if (item.limited_edition_specs_array.Emission.FirstOrDefault() != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Emission.FirstOrDefault().is_highlight == 1)
+                                                {
+                                                    <span class="hlighted">@(item.limited_edition_specs_array.Emission.FirstOrDefault().value + "")</span>
+                                                }
+                                                else
+                                                {
+                                                    @(item.limited_edition_specs_array.Emission.FirstOrDefault().value + " ")
+                                                }
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+
+                                <tr>
+                                    <th class="fixed-side" scope="col" colspan="100">Warranty & Maintenace</th>
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Warranty</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Warranty_Maintenance != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Warranty_Maintenance.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Warranty_Maintenance)
+                                                        {
+                                                            if (subitem.name == "WARRANTY")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value)
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="fixed-side" scope="col"><strong class="light">Maintenance Program</strong></td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        <td style="font-size: 14px;">
+                                            @if (item.limited_edition_specs_array != null)
+                                            {
+                                                if (item.limited_edition_specs_array.Warranty_Maintenance != null)
+                                                {
+                                                    if (item.limited_edition_specs_array.Warranty_Maintenance.Count > 0)
+                                                    {
+                                                        foreach (var subitem in item.limited_edition_specs_array.Warranty_Maintenance)
+                                                        {
+                                                            if (subitem.name == "MAINTENANCE PROGRAM" || subitem.name == "MAINTENANCE PROGRAM ")
+                                                            {
+                                                                if (subitem.is_highlight == 1)
+                                                                {
+                                                                    <span class="hlighted">
+                                                                        @(subitem.value)
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @(subitem.value)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+
+                                    <td class="fixed-side" scope="col"><strong class="light">Lifecycle </strong>(Remaining Years)</td>
+                                    @foreach (var item in Model.data)
+                                    {
+                                        string strremainingyears = "";
+                                        <td style="font-size: 14px;">
+                                            @if (item.life_cycle != null)
+                                            {
+                                                try
+                                                {
+                                                    string productionyear = item.life_cycle.Split('-')[1].ToString();
+                                                    if (productionyear != "")
+                                                    {
+                                                        if (productionyear != "0")
+                                                        {
+                                                            int year = Convert.ToInt32(productionyear);
+                                                            year = year - DateTime.Now.Year;
+
+                                                            if (year > 0)
+                                                            {
+                                                                strremainingyears = year.ToString() + "";
+                                                            }
+                                                            else
+                                                            {
+                                                                strremainingyears = "< 1 Year";
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            strremainingyears = "-";
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        strremainingyears = "-";
+                                                    }
+                                                }
+                                                catch
+                                                {
+                                                    strremainingyears = "-";
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                strremainingyears = "-";
+                                            }
+
+                                            @strremainingyears
+                                        </td>
+                                    }
+                                </tr>
+                                @*<tr>
+            <td><strong>Depreciation Trend</strong></td>
+            @foreach (var item in Model.data)
+            {
+                <td>
+                    @if (item.depreciation_trend_value != null)
+                    {
+                        if (item.depreciation_trend_value.Count > 0)
+                        {
+                            foreach (var subitem2 in item.depreciation_trend_value)
+                            {
+
+
+                                @item.life_cycle
+                            }
+                        }
+                    }
+                </td>
+            }
+        </tr>*@
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        }
+        <div class="row cta_row" style="display:none;">
+            <div class="col-md-12">
+                <img src="@Url.Content("~/assets/images/cta-img.jpg")" class="img-fluid" alt="">
+            </div>
+        </div>
+
+    </div>
+</section>
+

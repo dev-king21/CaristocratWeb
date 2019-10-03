@@ -1,0 +1,557 @@
+﻿@using Caristocrate.Common.Models;
+@{
+    ViewData["Title"] = "Compare Car";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModelobj = ViewData["GetModel"] as GetModel.Response;
+    //GetCars.Response getCarsobj = ViewData["getCarsobj"] as GetCars.Response;
+    ViewBag.BodyClass = "inner-page comparePage";
+
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+    AdvertisementBannersModel.Response AdvertisementBannersobj = ViewData["AdvertisementBannersobj"] as AdvertisementBannersModel.Response;
+}
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (AdvertisementBannersobj != null)
+        {
+            if (AdvertisementBannersobj.data != null)
+            {
+                if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 30).ToList().Count > 0)
+                {
+                    foreach (var item in AdvertisementBannersobj.data.Where(a => a.banner_type_id == 30).OrderByDescending(a => a.media_type))
+                    {
+                        if (item.media_type == "20")
+                        {
+                            <div class="slide">
+                                <iframe width="100%" height="100%" src="@item.video_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var subitem in item.banner_images.OrderBy(x => Guid.NewGuid()))
+                            {
+                                <div class="slide">
+                                    <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                        <div class="container">
+                                            <div class="banner_text">
+                                                <h1>@item.title</h1>
+                                                <p>@item.description</p>
+                                                @if (item.is_read_more == 1)
+                                                {
+                                                    <a onclick="MarkBannersViewed(this, '@item.id')" url="@item.source_url" href="@item.source_url" target="_blank" class="custBtn">readmore</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                            <div class="container">
+                                <div class="banner_text">
+                                    <h1>Welcome To<span>Caristocrat</span></h1>
+                                    @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                                @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                            @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+
+
+    </div>
+    @if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 30).ToList().Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="javascript:;">Compare Any Car</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="listing_page">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12 pl-20">
+                <div class="list_head">
+                    <h2>Compare Any Car</h2>
+                </div>
+
+                <div class="compare_thumbnails newSec">
+                    <p>Select two or more cars and see the detailed comparision</p>
+                    <div class="row" id="MainCompareCarDiv">
+
+                        <div class="col-md-4 lisearchedcar">
+                            <figure>
+                                <div class="innerBox">
+                                    <a href="javascript:;" onclick="RemovethisCar(this)" class="deltCar">&times;</a>
+                                    @*<img style="width:200px; height:100px;" src='@Url.Content("~/assets/images/campare-thumbnail.png")' alt="" />*@
+                                    <div class="image" style="background-image: url(@Url.Content("~/assets/images/campare-thumbnail.png"));"></div>
+                                    <input type="hidden" class="carid" />
+
+                                    <ul class="comparecarUL">
+                                        <div class="loaderdiv" style="padding:10px; display:none; position:fixed; margin-left: 35%;z-index: 2;">
+                                            <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                                        </div>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlMake" onchange="GetModels(this)">
+                                                    <option value="0">Select Brand</option>
+                                                    @if (getMake.success == true)
+                                                    {
+                                                        foreach (var item in getMake.data.ToList())
+                                                        {
+                                                            <option value="@item.id">@item.name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlModel" onchange="GetYears(this)">
+                                                    <option value="0">Select Model</option>
+                                                    @if (getModelobj.success == true)
+                                                    {
+                                                        foreach (var item in getModelobj.data.Where(a => a.brand != null).ToList())
+                                                        {
+                                                            <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlYear" onchange="OnYearChange(this)">
+                                                    <option value="0">Select Year</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlVersion" onchange="OnVersionChange(this)">
+                                                    <option value="0">Select Version</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </figure>
+                        </div>
+                        <div class="col-md-4 lisearchedcar">
+                            <figure>
+                                <div class="innerBox">
+                                    <a href="javascript:;" onclick="RemovethisCar(this)" class="deltCar">&times;</a>
+                                    @*<img style="width:200px; height:100px;" src='@Url.Content("~/assets/images/campare-thumbnail.png")' alt="" />*@
+                                    <div class="image" style="background-image: url(@Url.Content("~/assets/images/campare-thumbnail.png"));"></div>
+                                    <input type="hidden" class="carid" />
+                                    <ul class="comparecarUL">
+                                        <div class="loaderdiv" style="padding:10px; display:none; position:fixed; margin-left: 35%;z-index: 2;">
+                                            <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                                        </div>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlMake" onchange="GetModels(this)">
+                                                    <option value="0">Select Brand</option>
+                                                    @if (getMake.success == true)
+                                                    {
+                                                        foreach (var item in getMake.data.ToList())
+                                                        {
+                                                            <option value="@item.id">@item.name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlModel" onchange="GetYears(this)">
+                                                    <option value="0">Select Model</option>
+                                                    @if (getModelobj.success == true)
+                                                    {
+                                                        foreach (var item in getModelobj.data.Where(a => a.brand != null).ToList())
+                                                        {
+                                                            <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlYear" onchange="OnYearChange(this)">
+                                                    <option value="0">Select Year</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="select_parent">
+                                                <select class="ddlVersion" onchange="OnVersionChange(this)">
+                                                    <option value="0">Select Version</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </figure>
+                        </div>
+                        <div class="col-md-4" id="AddmoreButtonSection">
+                            <a href="javascript:;" onclick="AddmoreCompareCarDiv()" class="addnewcar">
+                                <i>+</i>
+                                Add More Car
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a href="javascript:;" class="lightBtn" onclick="CompareCars()">compare cars</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="AllCarsListing" style="display:none">
+            @*<ul>
+                @foreach (var item in getCarsobj.data)
+                {
+                    <li carid="@item.id" slug="@item.slug" brandid="@item.car_model.brand.id" modelid="@item.car_model.id" year="@item.year">
+                        <img src="@item.media.FirstOrDefault().file_url" />
+                    </li>
+                }
+            </ul>*@
+        </div>
+
+        <div class="row cta_row" style="display:none;">
+            <div class="col-md-12">
+                <img src='@Url.Content("~/assets/images/cta-img.jpg")' class="img-fluid" alt="">
+            </div>
+        </div>        
+
+        <div id="samplecomparecarDiv" style="display:none">
+            <div class="col-md-4 lisearchedcar">
+                <figure>
+                    <div class="innerBox">
+                        <a href="javascript:;" onclick="RemovethisCar(this);" class="deltCar">&times;</a>
+                        @*<img style="width:200px; height:100px;" src='@Url.Content("~/assets/images/campare-thumbnail.png")' alt="" />*@
+                        <div class="image" style="background-image: url(@Url.Content("~/assets/images/campare-thumbnail.png"));"></div>
+                        <input type="hidden" class="carid" />
+                        <ul class="comparecarUL">
+                            <div class="loaderdiv" style="padding:10px; display:none; position:fixed; margin-left: 35%;z-index: 2;">
+                                <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                            </div>
+                            <li>
+                                <div class="select_parent">
+                                    <select class="ddlMake" onchange="GetModels(this)">
+                                        <option value="0">Select Brand</option>
+                                        @if (getMake.success == true)
+                                        {
+                                            foreach (var item in getMake.data.ToList())
+                                            {
+                                                <option value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="select_parent">
+                                    <select class="ddlModel" onchange="GetYears(this);">
+                                        <option value="0">Select Model</option>
+                                        @if (getModelobj.success == true)
+                                        {
+                                            foreach (var item in getModelobj.data.Where(a => a.brand != null).ToList())
+                                            {
+                                                <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="select_parent">
+                                    <select class="ddlYear" onchange="OnYearChange(this)">
+                                        <option value="0">Select Year</option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="select_parent">
+                                    <select class="ddlVersion" onchange="OnVersionChange(this)">
+                                        <option carid="0" value="0">Select Version</option>
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </figure>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".ddlModel").each(function () {
+            $(this).find("option").each(function () {
+                if ($(this).val() != 0) {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+
+    function OnYearChange($this) {
+
+        var makeid = $($this).parents(".comparecarUL").find(".ddlMake").find("option:selected").val();
+        var modelid = $($this).parents(".comparecarUL").find(".ddlModel").find("option:selected").val();
+        var Year = $($this).find("option:selected").val();
+
+        $($this).parents(".comparecarUL").find(".ddlVersion").html("");
+        $($this).parents(".comparecarUL").find(".ddlVersion").html('<option value="0">Select Version</option>');
+
+        $($this).parents(".comparecarUL").css("opacity", "0.7")
+        $($this).parents(".comparecarUL").find(".loaderdiv").show();
+
+
+        var data = {};
+        data.categoryID = 28;
+        data.makeid = makeid;
+        data.modelid = modelid;
+        data.minyear = Year;
+        data.masyear = Year;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("getVersionbyYear", "Car")',
+            type: 'GET',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $($this).parents(".comparecarUL").find(".ddlVersion").append('<option vimagePath="' + data[i].imagePath +'" vcarid="' + data[i].carid +'"  value="' + data[i].slug + '">' + data[i].Version + '</option>');
+                }
+            }, complete: function (data) { 
+                $($this).parents(".comparecarUL").css("opacity", "1")
+                $($this).parents(".comparecarUL").find(".loaderdiv").hide();
+            }
+        });
+
+
+
+    }
+
+    function OnVersionChange($this) {    
+        $($this).parents(".comparecarUL").css("opacity", "0.7")
+        $($this).parents(".comparecarUL").find(".loaderdiv").show();
+
+        var id = $($this).find("option:selected").val();
+        var vimagePath = $($this).find("option:selected").attr("vimagePath");
+        $($this).parents(".lisearchedcar").find(".image").css('background-image', 'url(' + vimagePath + ')');
+        $($this).parents(".lisearchedcar").find(".carid").val(id);
+
+        $($this).parents(".comparecarUL").css("opacity", "1")
+        $($this).parents(".comparecarUL").find(".loaderdiv").hide();
+
+        //if (id != "0") {
+        //    $("#AllCarsListing").find("ul").find("li").each(function () {
+        //        if ($(this).attr("carid") == id) {                    
+        //            var image = $(this).find("img").attr("src");
+        //            var carID = $(this).attr("slug");
+        //            $($this).parents(".lisearchedcar").find(".image").css('background-image', 'url(' + image + ')');
+        //            $($this).parents(".lisearchedcar").find(".carid").val(carID);
+        //            return;
+        //        }
+        //    });
+        //}
+    }
+
+    function AddmoreCompareCarDiv() {
+
+        //var carcount = $(".lisearchedcar").length;
+
+        //if (carcount >= 6) {
+        //    ShowAlert("You can compare maximum 5 cars")
+        //    return;
+        //}
+
+        var sampleHtml = $("#samplecomparecarDiv").html();
+        $("#AddmoreButtonSection").before(sampleHtml)
+
+    }
+
+    function RemovethisCar($this) {
+        $($this).parents(".lisearchedcar").remove();
+    }
+
+    function GetModels($this) {
+        var makeid = $($this).find("option:selected").val();
+
+        $($this).parents(".comparecarUL").find(".ddlModel").find("option").each(function () {
+            $(this).hide();
+        })
+
+        $($this).parents(".comparecarUL").find(".ddlModel").val(0);
+
+        $($this).parents(".comparecarUL").find(".ddlModel").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+    }
+
+    function GetYears($this) {
+
+        var makeid = $($this).parents(".comparecarUL").find(".ddlMake").find("option:selected").val();
+        var modelid = $($this).parents(".comparecarUL").find(".ddlModel").find("option:selected").val();
+        //var Year = $($this).find("option:selected").val();
+
+        $($this).parents(".comparecarUL").find(".ddlYear").html("");
+        $($this).parents(".comparecarUL").find(".ddlYear").html('<option value="0">Select Year</option>');
+
+        $($this).parents(".comparecarUL").css("opacity", "0.7")
+        $($this).parents(".comparecarUL").find(".loaderdiv").show();
+
+
+        var data = {};
+        data.categoryID = 28;
+        data.makeid = makeid;
+        data.modelid = modelid;        
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("GetYearsbyMakeModel", "Car")',
+            type: 'GET',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $($this).parents(".comparecarUL").find(".ddlYear").append('<option value="' + data[i] + '">' + data[i] + '</option>');
+                }
+            }, complete: function (data) { 
+                $($this).parents(".comparecarUL").css("opacity", "1")
+                $($this).parents(".comparecarUL").find(".loaderdiv").hide();
+            }
+        });
+    }
+
+    function CompareCars() {
+        debugger;
+        var carcount = $(".lisearchedcar").length;
+        var carIds = "";
+
+        if (carcount < 3) {
+            notify("Select 2 or more cars to compare", "danger");
+        }
+        else {
+            var isvalidate = true;
+            var listcount = 0;
+            $(".lisearchedcar").each(function () {
+
+                listcount++;
+
+                if (listcount < carcount) {
+                    if ($(this).find(".ddlMake").val() == "0") {
+                        isvalidate = false;
+                        $($(this).find(".ddlMake").css("border", "1px solid red"))
+                    }
+                    else {
+                        isvalidate = true;
+                        $($(this).find(".ddlMake").css("border", "none"))
+                    }
+                    if ($(this).find(".ddlModel").val() == "0") {
+                        isvalidate = false;
+                        $($(this).find(".ddlModel").css("border", "1px solid red"))
+                    }
+                    else {
+                        isvalidate = true;
+                        $($(this).find(".ddlModel").css("border", "none"))
+                    }
+                    if ($(this).find(".ddlYear").val() == "0") {
+                        isvalidate = false;
+                        $($(this).find(".ddlYear").css("border", "1px solid red"))
+                    }
+                    else {
+                        isvalidate = true;
+                        $($(this).find(".ddlYear").css("border", "none"))
+                    }
+                    if ($(this).find(".ddlVersion").val() == "0") {
+                        isvalidate = false;
+                        $($(this).find(".ddlVersion").css("border", "1px solid red"))
+                    }
+                    else {
+                        isvalidate = true;
+                        $($(this).find(".ddlVersion").css("border", "none"))
+                    }
+                }
+            });
+
+            if (isvalidate) {
+                $(".lisearchedcar").each(function () {
+                    carIds = carIds + $(this).find(".carid").val() + "vs";
+                });
+                carIds = carIds.substring(0, carIds.length - 4);
+                window.location.href = "/Car/CompareCarResultTemp?carIds=" + carIds;
+            }
+            //else {
+            //    ShowAlert("Fill out the missing fields");
+            //}
+        }
+    }
+
+</script>

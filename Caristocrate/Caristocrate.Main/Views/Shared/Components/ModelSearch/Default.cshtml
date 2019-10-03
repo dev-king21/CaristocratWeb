@@ -1,0 +1,20 @@
+﻿@using Caristocrate.Common.Models;
+@model GetCars.Response
+@{
+    Layout = null;
+}
+
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        foreach (var item in Model.data)
+        {
+            <li>
+                <a href="javascript:;" onclick="SelectSearchModel('@item.id','@item.media.FirstOrDefault().file_url', '@item.car_model.name', '@item.name', '@item.amount')">
+                    <figure><img src="@item.media.FirstOrDefault().file_url" alt=""></figure><p>@item.name</p>
+                </a>
+            </li>
+        }
+    }
+}

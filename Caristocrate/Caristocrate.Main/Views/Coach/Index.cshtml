@@ -1,0 +1,278 @@
+﻿@using Caristocrate.Common.Models
+@model PagesModel.Response
+@{
+    ViewData["Title"] = "Coach";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "coach-pages";
+
+    CoursesModel.Response onsiteCoursesobj = ViewData["onsiteCoursesobj"] as CoursesModel.Response;
+    CoursesModel.Response onlineCoursesobj = ViewData["onlineCoursesobj"] as CoursesModel.Response;
+}
+
+<style type="text/css">
+    .coach-pages .blogBox .custBtn.active {
+        background-color: #313131;
+        color: #fff;
+    }
+
+    .coach-pages .blogBox .custBtn {
+        width:250px;
+    }
+</style>
+
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/coach-home-banner.jpg")');">
+        <div class="container">
+            <div class="banner_text" style="display:none;">
+                <h1><span>Trade in your car</span></h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+        </div>
+    </figure>
+</section>
+
+<div class="firstSec">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="@Url.Content("~/assets/images/coach-home-img-1.jpg")" alt="">
+            </div>
+            <div class="col-md-6 my-auto">
+                <article>
+                    <h2>About Coaching</h2>
+                    @if (Model != null)
+                    {
+                        if (Model.data != null)
+                        {
+                            if (Model.data.Where(a => a.slug == "about_coach") != null)
+                            {                                
+                                @Html.Raw(Model.data.Where(a => a.slug == "about_coach").FirstOrDefault().content)
+                            }
+                        }
+                    }
+
+                    @*<h3>Donec porttitor finibus nunc, sed semper mauris commodo sit amet</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex. Integer ut molestie sem, a facilisis ligula. Donec porttitor commodo sem, vitae consequat massa ullamcorper ut. Donec non diam massa. Curabitur non felis porta, maximus quam egestas, vestibulum justo. Curabitur eu eleifend nisi, a congue sapien. Vestibulum consectetur eget dolor quis semper. Nam pulvinar neque eu feugiat viverra. Nam quis nisl nibh. In ornare sapien vitae quam dapibus, non eleifend velit scelerisque. Pellentesque at turpis eget sem malesuada auctor at in augue.</p>*@
+                </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="secSec">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-6 my-auto col-md-offset-1">
+                <article>
+                    <h2>About The Coach</h2>
+                    @if (Model != null)
+                    {
+                        if (Model.data != null)
+                        {
+                            if (Model.data.Where(a => a.slug == "about_the_coach") != null)
+                            {
+                                @Html.Raw(Model.data.Where(a => a.slug == "about_the_coach").FirstOrDefault().content)
+                            }
+                        }
+                    }
+                    @*<h3>Donec porttitor finibus nunc, sed semper mauris commodo sit amet</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie hendrerit enim ac, pretium mattis ex. Integer ut molestie sem, a facilisis ligula. Donec porttitor commodo sem, vitae consequat massa ullamcorper ut. Donec non diam massa. Curabitur non felis porta, maximus quam egestas, vestibulum justo. Curabitur eu eleifend nisi, a congue sapien. Vestibulum consectetur eget dolor quis semper. Nam pulvinar neque eu feugiat viverra. Nam quis nisl nibh. In ornare sapien vitae quam dapibus, non eleifend velit scelerisque. Pellentesque at turpis eget sem malesuada auctor at in augue.</p>*@
+                </article>
+
+            </div>
+            <div class="col-md-6">
+                <img src="@Url.Content("~/assets/images/coach-home-img-2.jpg")" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="blog_sec" id="CoachServices">
+    <div class="container">
+        <div class="row head">
+            <div class="col-md-12">
+                <h3 class="title_blog">Our Services</h3>
+                <h5></h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="blogBox tbs">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/blog1.jpg")');"></figure>
+                    <h2>Onsite Courses</h2>
+
+                    @if (onsiteCoursesobj != null)
+                    {
+                        if (onsiteCoursesobj.data != null)
+                        {
+                            if (onsiteCoursesobj.data.Count > 0)
+                            {
+                                <p>
+                                    @onsiteCoursesobj.data.FirstOrDefault().category.subtitle
+                                </p>
+                            }
+                        }
+                    }
+                    <a href="#tb1" onclick="acoachServicesClick(this, 1)" class="custBtn acoachServices active showonsitecourses">Show All Courses</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="blogBox tbs">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/blog2.jpg")');"></figure>
+                    <h2>Online Courses</h2>
+
+
+
+                    @if (onlineCoursesobj != null)
+                    {
+                        if (onlineCoursesobj.data != null)
+                        {
+                            if (onlineCoursesobj.data.Count > 0)
+                            {
+                                <p>
+                                    @onlineCoursesobj.data.FirstOrDefault().category.subtitle
+                                </p>
+                            }
+                        }
+                    }
+
+                    @*<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummyt text ever since the 1500s.</p>*@
+                    <a href="#tb2" onclick="acoachServicesClick(this, 2)" class="custBtn acoachServices showonlinecourses">Show All Courses</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="blogBox">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/blog3.jpg")');"></figure>
+                    <h2>One-on-One Coaching</h2>
+                    <p>We work side by side on customized program to achieve the desired planned goals</p>
+                    <a href="@Url.Action("PersonalCoach","Coach")" target="_blank" class="custBtn showpersonalcoach">View more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="blog_sec btm">
+    <div class="container">
+        <div class="cours_tbs" id="tb1">
+            <div class="row">
+                @if (onsiteCoursesobj != null)
+                {
+                    if (onsiteCoursesobj.data != null)
+                    {
+                        if (onsiteCoursesobj.data.Count > 0)
+                        {
+                            foreach (var item in onsiteCoursesobj.data)
+                            {
+                                <div class="col-md-4">
+                                    <div class="blogBox">
+                                        <a href="@Url.Action("OnsiteCourses","Coach", new { id = item.slug })">
+                                            <figure class="img_wrap" style="background-image: url('@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : "")');"></figure>
+                                            <h2>@item.title</h2>
+                                            <ul>
+                                                @*<li><span class="icon-marker"></span>@item.region</li>*@
+                                                <li><span class="icon-icon-6"></span>@(Convert.ToDateTime(item.created_at).ToString("MMMM dd, yyyy"))</li>
+                                            </ul>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                        }
+                    }
+                    else
+                    {
+                        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                }
+            </div>
+        </div>
+        <div class="cours_tbs" id="tb2">
+            <div class="row">
+                @if (onlineCoursesobj != null)
+                {
+                    if (onlineCoursesobj.data != null)
+                    {
+                        if (onlineCoursesobj.data.Count > 0)
+                        {
+                            foreach (var item in onlineCoursesobj.data)
+                            {
+                                <div class="col-md-4">
+                                    <div class="blogBox">
+                                        <a href="@Url.Action("OnlineCourses","Coach", new { id = item.slug })">
+                                            <figure class="img_wrap" style="background-image: url('@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : "")');"></figure>
+                                            <h2>@item.title</h2>
+                                        </a>
+                                        @( Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description) )
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                        }
+                    }
+                    else
+                    {
+                        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    $(window).bind("load", function () {
+        if (window.location.href.indexOf("#onsite-courses") > -1) {
+            $(".showonsitecourses").trigger("click");
+        }
+        if (window.location.href.indexOf("#online-courses") > -1) {
+            $(".showonlinecourses").trigger("click");
+        }
+        if (window.location.href.indexOf("#personal-coach") > -1) {
+            //$(".showpersonalcoach").trigger("click");
+            window.location.href = '@Url.Action("PersonalCoach", "Coach")';
+        }
+    })
+
+
+    function acoachServicesClick($this, type) {        
+        $(".acoachServices").each(function () {
+            $(this).removeClass("active")
+        })
+
+        $($this).addClass("active")
+
+        if (type == 1) {
+            setTimeout(function () {
+                document.getElementById('tb1').scrollIntoView({ block: 'start', behavior: 'smooth' });
+            }, 1000);
+        }
+        else if (type == 2) {
+            setTimeout(function () {
+                document.getElementById('tb2').scrollIntoView({ block: 'start', behavior: 'smooth' });
+            }, 1000);
+        }
+    }
+</script>

@@ -1,0 +1,115 @@
+﻿@using Caristocrate.Common.Models;
+@{
+    ViewData["Title"] = "Vin Check";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+    ViewBag.BodyClass = "inner-page aboutPage";
+    AdvertisementBannersModel.Response AdvertisementBannersobj = ViewData["AdvertisementBannersobj"] as AdvertisementBannersModel.Response;
+}
+
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (AdvertisementBannersobj != null)
+        {
+            if (AdvertisementBannersobj.data != null)
+            {
+                if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 50).ToList().Count > 0)
+                {
+                    foreach (var item in AdvertisementBannersobj.data.Where(a => a.banner_type_id == 50).OrderByDescending(a => a.media_type))
+                    {
+                        if (item.media_type == "20")
+                        {
+                            <div class="slide">
+                                <iframe width="100%" height="100%" src="@item.video_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var subitem in item.banner_images.OrderBy(x => Guid.NewGuid()))
+                            {
+                                <div class="slide">
+                                    <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                        <div class="container">
+                                            <div class="banner_text">
+                                                <h1>@item.title</h1>
+                                                <p>@item.description</p>
+                                                @if (item.is_read_more == 1)
+                                                {
+                                                    <a onclick="MarkBannersViewed(this, '@item.id')" url="@item.source_url" href="@item.source_url" target="_blank" class="custBtn">readmore</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                            <div class="container">
+                                <div class="banner_text">
+                                    <h1>Welcome To<span>Caristocrat</span></h1>
+                                    @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                                @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                            @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+    </div>
+    @if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 50).ToList().Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="javascript:;">Vin Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about_sec mainSec">
+    <div class="container text-center">
+        <h1 style="text-align:center; font-weight:bold; font-size:30px;">Coming Soon</h1>
+    </div>
+</section>

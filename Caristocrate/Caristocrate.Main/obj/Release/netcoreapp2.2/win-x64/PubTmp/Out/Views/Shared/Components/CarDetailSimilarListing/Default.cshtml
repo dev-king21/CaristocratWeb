@@ -1,0 +1,50 @@
+﻿@using Caristocrate.Common.Models
+@{
+    GetCars.Response list = ViewData["GetCarsobj"] as GetCars.Response;
+    int carid = Convert.ToInt32(ViewData["carID"].ToString());
+}
+
+@if (list != null)
+{
+    if (list.data != null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Similiar listings</h2>
+            </div>
+            @if (list.data.Where(a => a.id != carid).ToList().Count > 3)
+            {
+                <div class="col-md-6 my-auto">
+                    <div class="arrowParent">
+                        <div class="prevCar arrow"><span class="icon-arrow-left1"></span></div>
+                        <div class="nextCar arrow"><span class="icon-arrow-right1"></span></div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="slider_wrap slider_wrap1 swiper-container">
+            <div class="swiper-wrapper">
+
+
+                @foreach (var item in list.data.Where(a => a.id != carid))
+                {
+                    <div class="carBox swiper-slide similarlistingcars">
+                        <div class="overlayBox"></div>
+                        <a href="@Url.Action("CarDetail", "Car", new { brand = ViewData["brand"].ToString(), model = ViewData["model"].ToString(), id = ViewData["slug"].ToString() })">
+                            <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');">
+
+                                <div class="car_dtl clearfix">
+                                    <p>@item.name <span>@item.year</span></p>
+                                    @*<p>@item.name <span>@item.year  <p style="@(item.average_mkp != null && item.average_mkp > 0 ? "display:inline-block" : "display:none")">•  A.V.G Price @Convert.ToDecimal(item.average_mkp).ToString("C0").Replace("$", "")</p></span></p>*@
+                                    <h4>@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "")</h4>
+                                </div>
+
+                            </figure>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

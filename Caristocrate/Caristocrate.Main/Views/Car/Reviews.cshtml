@@ -1,0 +1,562 @@
+﻿@using Caristocrate.Common.Models
+@model GetCars.Response
+@{
+    ViewData["Title"] = "Reviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page reviewPage";
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response getCarTypeobj = ViewData["getCarTypeobj"] as CarType.Response;
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+<style type="text/css">
+    .paginationjs {
+        margin-left: 35%;
+    }
+</style>
+
+<section class="banner_sec">
+
+    @if (categories != null)
+    {
+        foreach (var category in categories.data.Where(x => x.slug == "the-consultant"))
+        {
+            foreach (var subitem in category.child_category.Where(a => a.slug == "reviews").Take(1))
+            {
+                @*<figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1><span>@subitem.name</span></h1>
+                            <p>@subitem.subtitle</p>
+                        </div>
+                    </div>
+                </figure>*@
+                <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');">
+                    <div class="container">
+                        <h1>Most popular car reviews</h1>
+                        <section class="search_sec">
+                            <div class="search_parent">
+
+                                <form class="form_container" method="post" action="@Url.Action("Reviews", "Car")" enctype="application/x-www-form-urlencoded">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h2>Filter for your favorite cars <a href="javascript:;" onclick="javascript: ResetAllFields();">Clear</a></h2>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="select_parent">
+                                                <select id="ddlMake" name="ddlMake" onchange="GetModels(this)">
+                                                    <option value="">Select Brand</option>
+                                                    @if (getMake.success == true)
+                                                    {
+                                                        foreach (var item in getMake.data.ToList())
+                                                        {
+                                                            if (ViewData["MakeID"].ToString() == item.id.ToString())
+                                                            {
+                                                                <option selected="selected" value="@item.id">@item.name</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.id">@item.name</option>
+                                                            }
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="select_parent">
+                                                <select id="ddlModel" name="ddlModel">
+                                                    <option value="">Select Model</option>
+                                                    @if (getModel.success == true)
+                                                    {
+                                                        foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                                        {
+                                                            if (ViewData["ModelID"].ToString() == item.id.ToString())
+                                                            {
+                                                                <option selected="selected" brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                                            }
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4" style="display:none">
+                                            <div class="select_parent">
+                                                <select>
+                                                    <option value="">Select Version</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="amount">Budget</label>
+                                            <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                            <input type="hidden" id="hdnamount" name="hdnamount" readonly style="border:0; color:#f6931f; font-weight:bold;">                                            
+                                            <div id="slider-range"></div>
+                                        </div>
+
+
+                                        <div class="col-md-4">
+                                            <div class="select_parent">
+                                                <select name="ddlMinimumRating" id="ddlMinimumRating">
+                                                    <option value="">Select Rating</option>
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        if (ViewData["MinimumRating"].ToString() == i.ToString())
+                                                        {
+                                                            <option selected="selected" value="@i">@i</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@i">@i</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="select_parent">
+                                                <select id="ddlCarType" name="ddlCarType">
+                                                    <option value="">Select Segment</option>
+                                                    @if (getCarTypeobj.success == true)
+                                                    {
+                                                            foreach (var item in getCarTypeobj.data.Where(a => a.slug == "best-saloon-cars" || a.slug == "top-luxury-suv" || a.slug == "best-convertible-cars" || a.slug == "luxury-sports-cars" || a.slug == "best-electrical-cars").ToList())
+                                                            {
+                                                                if (ViewData["CarTypeID"].ToString() == item.id.ToString())
+                                                                {
+                                                                <option selected="selected" value="@item.id">@item.name</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.id">@item.name</option>
+                                                            }
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 text-right margintop">
+                                            <a href="javascript:;" class="clearBtn" onclick="javascript: ResetAllFields();">Clear</a>
+                                            <button type="submit" class="custBtn">Apply</button>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </section>
+                    </div>
+                </figure>
+            }
+        }
+    }
+    else
+    {
+        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/compare-result-banner.jpg")');">
+            <div style="display:none" class="container">
+                <div class="banner_text">
+                    <h1><span>Luxury Market</span></h1>
+                    <p>Your luxury cars search ends here</p>
+                </div>
+            </div>
+        </figure>
+    }
+
+
+</section>
+
+<section class="listing_page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-12">
+                <a href="javascript:;" class="mobileFilter"><i class="fa fa-filter"></i> Advance Filter</a>
+                <div class="sideBar">
+                    <a href="javascript:;" class="closeFilter"><i class="fa fa-close"></i></a>
+                    <h3>Most Reviewed Car</h3>
+                    <ul class="links" id="MostReviewedCarSection"></ul>                    
+                </div>
+            </div>
+
+            <div class="col-lg-9 col-md-12">
+                <div class="row">
+                    <div class="list_head">
+
+                        <input type="hidden" id="hdnMake" value="@ViewData["MakeID"].ToString()" />
+                        <input type="hidden" id="hdnModel" value="@ViewData["ModelID"].ToString()" />
+                        <h2 class="searchResultText"></h2>
+                        <div class="listview gridBtns">
+                            <a href="javascript:;" class="gridBtn act"><span class="icon-gird"></span></a>
+                            <a href="javascript:;" class="listBtn"><span class="icon-menu"></span></a>
+                            <div class="select_parent">
+                                <select id="ddlFilteredCarSorting" onchange="FilterCarSorting(this)">
+                                    <option value="1">Latest Reviews</option>
+                                    <option value="2" selected="selected">Highest Ratings</option>
+                                    <option value="3">Lowest Ratings</option>
+                                    <option value="4">No. of Reviews</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row listing" id="CarListingSection">
+                    @if (Model != null)
+                    {
+                        if (Model.data != null)
+                        {
+                            if (Model.data.Count > 0)
+                            {
+                                foreach (var item in Model.data.Select((x, i) => new { Data = x, Index = i }))
+                                {
+                                    <div class="col-md-6 bx Ratingchildlisting" sortno="@(item.Index + 1)" reviews="@item.Data.review_count" ratings="@Math.Round(item.Data.average_rating)" rowno="@(item.Index + 1)">
+                                        <a href="@Url.Action("ReviewsbyID","Car", new { brand = item.Data.car_model.brand.slug, model = item.Data.car_model.slug, carid = item.Data.slug })">
+                                            <div class="filter_carBox">
+                                                <figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().file_url');"></figure>
+                                                <article>
+                                                    <div class="car_dtl clearfix">
+                                                        <p>@item.Data.name <span>@item.Data.year</span></p>
+                                                    </div>
+                                                    @{
+                                                        decimal ratingcount = Math.Round(item.Data.average_rating);
+                                                        <div class="rating">
+                                                            <input id="input-id" name="input-name" value="@item.Data.average_rating" type="number" hoverEnabled=0 class="rating" min=0 max=5 step=0.1 data-size="lg">
+                                                        </div>
+                                                    }
+                                                </article>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                        }
+                    }
+                    else
+                    {
+                        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                    }
+
+                </div>
+
+                <div style="width:100%; text-align:center">
+                    <div class="pagination"></div>
+                </div>
+
+                <input type="hidden" id="hdnTotalRecords" value="@Model.total_count" />
+
+                <input type="hidden" id="hdnMakeID" value="@ViewData["MakeID"].ToString()" />
+                <input type="hidden" id="hdnModelID" value="@ViewData["ModelID"].ToString()" />
+                <input type="hidden" id="hdnMinimumRating" value="@ViewData["MinimumRating"].ToString()" />
+                <input type="hidden" id="hdnCarTypeID" value="@ViewData["CarTypeID"].ToString()" />
+                <input type="hidden" id="hdnMinAmount" value="@ViewData["MinAmount"].ToString()" />
+                <input type="hidden" id="hdnMaxAmount" value="@ViewData["MaxAmount"].ToString()" />
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+
+    function GetMostReviewedCars() {
+        
+        $('#MostReviewedCarSection').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',            
+            url: '@Url.Action("MostReviewedCars", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#MostReviewedCarSection').html(data);                
+            }, complete: function () {
+                
+            }
+        });
+    }
+
+    function CarsforReview(pageno) { 
+        pageno = pageno - 1;
+
+        var limit = 10;
+        var offset = parseInt(pageno) * 10;
+
+        var data = {};
+        data.categoryID = 28;
+        data.brand_ids = $("#hdnMakeID").val();
+        data.model_ids = $("#hdnModelID").val();
+        data.car_type = $("#hdnCarTypeID").val();
+        data.rating = $("#hdnMinimumRating").val();
+        data.min_price = $("#hdnMinAmount").val();
+        data.max_price = $("#hdnMaxAmount").val();
+        data.sortID = $("#ddlFilteredCarSorting").val();
+        data.limit = limit;
+        data.offset = offset;
+
+        if (data.min_price == "1000")
+            data.min_price = "";
+        if (data.max_price == "5000000")
+            data.max_price = "";
+
+        $('.loading').fadeIn();
+
+        //$('#CarListingSection').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',  
+            data: data,
+            url: '@Url.Action("CarsforReview", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#CarListingSection').html(data);
+            }, complete: function () {
+                $(".rating").find(".rating").rating();
+                $('.loading').fadeOut('');
+
+                $(".pagination li a").on("click", function (event) {
+                    event.preventDefault();
+                    var currentPage = parseInt($(this).text());
+                    CarsforReview(currentPage);
+                });
+
+            }
+        });
+
+    }
+
+    $(window).bind("load", function () {
+        //GetMostReviewedCars();
+    });
+
+    function Pagination(totalrecords, pageno) {
+        var dataSource = [];
+        for (var i = 1; i < totalrecords; i++) {
+            dataSource.push(i);
+        }
+
+        $('.pagination').pagination({
+            dataSource: dataSource,
+            showPrevious: false,
+            showNext: false
+        });
+        
+        setTimeout(function () {
+            $(".pagination li a").on("click", function (event) {
+                event.preventDefault();                
+                var currentPage = parseInt($(this).text());               
+                CarsforReview(currentPage);
+            });
+        }, 1000);
+    }
+
+    $(document).ready(function () {
+
+        var totalrecords = $("#hdnTotalRecords").val();
+        Pagination(totalrecords, 1);
+
+        GetMostReviewedCars();
+
+        //$("#ddlFilteredCarSorting").val(2);
+        //FilterCarSorting($("#ddlFilteredCarSorting"));
+
+        var test = "Your Filter has the following results:";
+        var hdnmakeid = $("#hdnMake").val();
+        var hdnmodelid = $("#hdnModel").val();
+
+        if (hdnmakeid != "" || hdnmodelid != "") {
+            var makename = ""; var modelname = "";
+            if (hdnmakeid != "") {
+                makename = $("#ddlMake option:selected").text();
+            }
+            if (hdnmodelid != "") {
+                modelname = $("#ddlModel option:selected").text();
+            }            
+            test = "Your Filter for " + makename + " " + modelname + " has the following results:";
+        }
+
+        $(".searchResultText").text(test)                
+
+        $("#ddlModel").find("option").each(function () {
+            if ($(this).val() != "") {
+                $(this).hide();
+            }
+        });
+
+        setTimeout(function () {
+
+            var minimumbudget = 0;
+            var maximumbudget = 0;
+
+            var minBudget = 10000, maxBudget = 5000000;
+            var budgetMinamount = "@ViewData["MinAmount"].ToString()";
+            var budgetMaxamount = "@ViewData["MaxAmount"].ToString()";
+
+            if (budgetMinamount == "") {
+                minBudget = minBudget;
+            }
+            else {
+                minBudget = parseInt(budgetMinamount);
+            }
+            if (budgetMaxamount == "") {
+                maxBudget = maxBudget;
+            }
+            else {
+                maxBudget = parseInt(budgetMaxamount);
+            }
+
+            $("#slider-range").slider({
+                range: true,
+                min: minBudget,
+                max: maxBudget,
+                step: 10000,
+                values: [minBudget, maxBudget],
+                slide: function (event, ui) {
+
+                    minimumbudget = ui.values[0];
+                    maximumbudget = ui.values[1];
+
+                    minimumbudget = formatcurrency(minimumbudget);
+                    maximumbudget = formatcurrency(maximumbudget);
+
+                    $("#amount").val("AED " + minimumbudget + " - " + maximumbudget);
+                    $("#hdnamount").val(ui.values[0] + "-" + ui.values[1]);
+
+                }
+            });
+
+            minimumbudget = $("#slider-range").slider("values", 0);
+            maximumbudget = $("#slider-range").slider("values", 1);
+
+            minimumbudget = formatcurrency(minimumbudget);
+            maximumbudget = formatcurrency(maximumbudget);
+
+            $("#amount").val("AED " + minimumbudget + " - " + maximumbudget);
+            $("#hdnamount").val($("#slider-range").slider("values", 0) + "-" + $("#slider-range").slider("values", 1));
+        }, 3000);
+
+            //$(".Ratingchildlisting").each(function () {
+            //    $(this).hide();
+            //})
+
+            //for (var i = 1; i <= 10; i++) {
+            //    $(".Ratingchildlisting").each(function () {
+            //        if ($(this).attr("rowno") == i) {
+            //            $(this).show();
+            //        }
+            //    })
+            //}
+    });
+
+
+    function FilterCarSorting($this) {
+        CarsforReview(1);
+        var totalrecords = $("#hdnTotalRecords").val();
+        $('.pagination').pagination("destroy");
+        Pagination(totalrecords, 1);
+    }
+
+    function sortMeBy(arg, sel, elem, order) {
+        var $selector = $(sel),
+            $element = $selector.children(elem);
+        $element.sort(function (a, b) {
+            var an = parseInt(a.getAttribute(arg)),
+                bn = parseInt(b.getAttribute(arg));
+            if (order == "asc") {
+                if (an > bn)
+                    return 1;
+                if (an < bn)
+                    return -1;
+            } else if (order == "desc") {
+                if (an < bn)
+                    return 1;
+                if (an > bn)
+                    return -1;
+            }
+            return 0;
+        });
+        $element.detach().appendTo($selector);
+    }
+
+    function ResetAllFields() {
+        debugger;
+        $("#ddlMake").val("")
+        $("#ddlModel").val("")
+        $("#ddlMinimumRating").val("")
+        $("#ddlCarType").val("")
+        var minBudget = 10000, maxBudget = 5000000;
+        $("#slider-range").slider({
+            range: true,
+            min: minBudget,
+            max: maxBudget,
+            values: [minBudget, maxBudget],
+            slide: function (event, ui) {
+                $("#amount").val("AED " + ui.values[0] + " - " + ui.values[1]);
+                $("#hdnamount").val(ui.values[0] + "-" + ui.values[1]);
+
+            }
+        });
+        $("#amount").val("AED " + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
+        $("#hdnamount").val($("#slider-range").slider("values", 0) + "-" + $("#slider-range").slider("values", 1));
+
+        return false;
+    }
+
+    function NewsDisplayPage($this, min, max) {
+
+        min = max - 9;
+
+        $(".Ratingchildlisting").each(function () {
+            $(this).hide();
+        })
+
+        for (var i = min; i <= max; i++) {
+            $(".Ratingchildlisting").each(function () {
+                if ($(this).attr("rowno") == i) {
+                    $(this).show();
+                }
+            })
+        }
+
+    }
+
+    function GetModels($this) {
+        var makeid = $($this).find("option:selected").val();
+        $("#ddlModel").find("option").each(function () {
+            if ($(this).val() != "") {
+                $(this).hide();
+            }
+        })
+
+        $("#ddlModel").val("");
+
+        $("#ddlModel").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+    }
+</script>
+

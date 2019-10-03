@@ -1,0 +1,2009 @@
+﻿@using Caristocrate.Common.Models
+@using Caristocrate.Common
+@model GetCarDetail.Response
+@{
+    ViewData["Title"] = "Car Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    GetCars.Response list = ViewData["GetCarsobj"] as GetCars.Response;
+    SettingModel.Response SettingModelObj = ViewData["SettingModelobj"] as SettingModel.Response;
+    BankRateModel.Response BankRateModelobj = ViewData["BankRateModelobj"] as BankRateModel.Response;
+    ReviewsModel.Response Reviewsobj = ViewData["Reviewsobj"] as ReviewsModel.Response;
+    CustMyCars.Response CustMyCarsObj = ViewData["CustMyCarsObj"] as CustMyCars.Response;
+
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response getCarTypeobj = ViewData["getCarTypeobj"] as CarType.Response;
+    RegionalSpecificationModel.Response regionalSpecificationModelObj = ViewData["regionalSpecificationModelObj"] as RegionalSpecificationModel.Response;
+    CarAttributesModel.Response InteriorColorObj = ViewData["InteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response ExteriorColorObj = ViewData["ExteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response AccidentObj = ViewData["AccidentObj"] as CarAttributesModel.Response;
+    ReportCategoriesModel.Response reportCategoriesObj = ViewData["reportCategoriesObj"] as ReportCategoriesModel.Response;
+
+    ViewBag.BodyClass = "inner-page preownDetail";
+    string encryptionKey = "E546C8DF278CD5931069B522E695D4F2";
+    string SiteBaseURL = ViewData["SiteBaseURL"].ToString();
+}
+
+@section HeadMeta
+    {
+    <meta property="og:url" content="@Url.Action("OutletMall","Car", new { brand = Model.data.car_model.brand.slug, model = Model.data.car_model.slug, id = Model.data.slug })" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.data.name" />
+    <meta property="og:description" content="@Model.data.notes" />
+    <meta property="og:image" content="@Model.data.media.FirstOrDefault().file_url" />
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    @*<meta name="twitter:site" content="@nytimes">
+        <meta name="twitter:creator" content="@SarahMaslinNir">*@
+    <meta name="twitter:title" content="@Model.data.name">
+    <meta name="twitter:description" content="@Model.data.notes">
+    <meta name="twitter:image" content="@Model.data.media.FirstOrDefault().file_url">
+}
+
+<style>
+
+    .irs-single {
+        opacity: 0;
+    }
+
+        .irs-single.active {
+            opacity: 1;
+        }
+
+    .range_slider_wrap {
+        margin-top: 10%;
+    }
+
+    .feature_list li {
+        width: 48%;
+        display: inline-block !important;
+    }
+
+    .uploadInnerdiv {
+        display: inline-block;
+        vertical-align: middle;
+        height: 100px;
+        text-align: center;
+        width: 15%;
+    }
+
+        .uploadInnerdiv a {
+            text-align: center;
+        }
+
+        .uploadInnerdiv .uploadInnerDivSpan {
+            text-align: center;
+            width: 100%;
+        }
+
+    .uploadBtn {
+        background-image: url('');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+        .uploadBtn span {
+            opacity: 0.5;
+        }
+
+    .uploadInnerdiv span {
+        margin-left: 0px !important;
+    }
+
+    .uploadBtn {
+        width: 100px !important;
+    }
+</style>
+
+<section class="banner_sec">
+    @*<figure class="img_wrap" style="background-image: url('@Model.data.media.FirstOrDefault().file_url');"></figure>*@
+
+    @if (Model.data.media.Count > 0)
+    {
+        <div class="car_detail_slider">
+
+            @foreach (var item in Model.data.media)
+            {
+                <figure class="img_wrap" style="background-image: url('@item.file_url');"></figure>
+            }
+        </div>
+        <div class="car_detail_slider_nav">
+            @foreach (var item in Model.data.media)
+            {
+                <figure class="img_wrap" style="background-image: url('@item.file_url');"></figure>
+            }
+        </div>
+    }
+</section>
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <ul>
+                    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                    <li><a style="text-transform:capitalize" href="@Url.Action("Index","Car", new { data= General.EncryptString("categoryID=" + Model.data.category.id.ToString(), encryptionKey) })">@Model.data.category.name</a></li>
+                    <li><a href="@Url.Action("OutletMall", "Car", new { brand = Model.data.car_model.brand.slug, model = Model.data.car_model.slug, id = Model.data.slug })">@Model.data.name</a></li>
+                </ul>
+            </div>
+            <div class="col-md-5 dtl-action-btns">
+                <ul>
+
+                    @if (Context.Session.Keys.Count() > 0)
+                    {
+                        <li><a href="javascript:;" data-toggle="modal" data-target="#myModal3"><span class="icon-flag"></span> Report</a></li>
+                        <li><a href="javascript:;" onclick="MarkFavourite('@Model.data.id', 30, this)"><span class="icon-star-full"></span><p style="display:inline;">@(Model.data.is_favorite == false ? "Favorite" : "Unfavourite")</p></a></li>
+                        <li><a href="javascript:;" data-toggle="modal" data-target="#myModal2"><span class="icon-share1"></span> Share</a></li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ownedDetail_sec">
+    <div class="container">
+        <div class="head">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="page-title">@Model.data.name</h2>
+                    <span class="year-km-dtl">@Model.data.year &nbsp; • &nbsp; @Model.data.kilometer km</span>
+                </div>
+                <div class="col-md-4">
+                    <p class="car_price">@Model.data.currency @(Model.data.amount != null ? Convert.ToDecimal(Model.data.amount).ToString("C0").Replace("$", "") : "")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="btns_parent  carDetails">
+            <a href="#tab1" class="custBtn current"><i class="fa fa-home"></i></a>
+            @if (Model.data.owner != null)
+            {
+                if (Model.data.owner.showroom_details != null)
+                {
+                    <a href="#tab2" class="custBtn atradeincar" onclick="CHeckLogin(this)">Trade in your car</a>
+                }
+            }
+            <a href="#tab3" class="custBtn avirtualBuy">Virtual Buy</a>
+            <a href="#tab4" class="custBtn apersonalShopper">My Personal Shopper</a>
+
+            @*<a href="javascript:;" class="custBtn">Trade in your car</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#ModalVirtualBuy" class="custBtn">Virtual Buy</a>
+                <a href="javascript:;" data-toggle="modal" data-target="#ModalPersonalShopper" class="custBtn">My Personal Shopper</a>*@
+        </div>
+        <div class="carDetail_tab" id="tab1" style="display: block;">
+            <div class="full_dtl">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>Description</h2>
+                        <p style="word-break:break-all;" class="des-info">@Model.data.notes</p>
+
+                        @if (Model.data.my_car_attributes != null || Model.data.car_model != null || Model.data.engine_type != null)
+                        {
+                            <h2>Specifications</h2>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul class="feature_list">
+                                        @if (Model.data.specification.Count > 0)
+                                        {
+                                            foreach (var item in Model.data.specification)
+                                            {
+                                                if (item.attr_id == 4 || item.attr_id == 3)
+                                                {
+                                                    <li><span class=""><img width="30" height="30" src="@item.attr_icon" /></span><p>@item.attr_name <small>@item.attr_option</small></p></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><span class=""><img width="30" height="30" src="@item.attr_icon" /></span><p>@item.attr_name <small>@item.value</small></p></li>
+                                                }
+                                            }
+
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+
+                    <div class="col-md-4">
+
+                        @if (Model.data != null)
+                        {
+                            if (Model.data.owner != null)
+                            {
+                                if (Model.data.owner.showroom_details != null)
+                                {
+
+                                    <div class="vendorBox">
+                                        <a href="javascript:;" class="custBtn shownumber"><span class="icon-phone"></span> Show Phone number <span class="v_number"><span class="icon-phone"></span>@Model.data.owner.showroom_details.phone</span></a>
+                                        <img src="@Model.data.owner.showroom_details.logo_url" alt="">
+                                        <div class="content">
+                                            <h3>@Model.data.owner.showroom_details.name</h3>
+                                            <p style="word-break:break-all;">@Model.data.owner.showroom_details.address</p>
+                                        </div>
+                                        @*<a href="javascript:;" class="custBtn" data-toggle="modal" data-target="#ShowPhoneNumber"><span class="icon-phone"></span> Show Phone number</a>*@
+                                    </div>
+
+                                }
+                            }
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="carDetail_tab tradeinsection" id="tab2">
+
+            <div class="evaluate_new">
+                @{
+                    string divclass = "act";
+                    string anchorstyle = "none";
+
+                    if (CustMyCarsObj != null)
+                    {
+                        if (CustMyCarsObj.data != null)
+                        {
+                            if (CustMyCarsObj.data.Count > 0)
+                            {
+                                divclass = "";
+                                anchorstyle = "block";
+                            }
+                        }
+                    }
+                }
+
+                <a href="javascript:;" style="@("display:" + anchorstyle)" class="carDetailForm"><i>+</i> <p>Add New Car <span> Enter the details of your car</span></p></a>
+                <div class="evalute_form car_detail_form @divclass">
+
+                    <a style="@("display:" + anchorstyle)" href="javascript:;" class="close"> X </a>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="icon_field"><span class="icon-user1"></span><label>Full Name</label><input id="txtUserNameMC" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Full Name"></div>
+                        </div>
+                        <div class="col-md-6">
+                            @if (ViewData["UserEmail"].ToString() != "")
+                            {
+                                <div class="icon_field"><span class="icon-msg"></span><label>Email Address</label><input id="txtEmailMC" readonly="readonly" type="text" name="" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" placeholder="Email Address"></div>
+                            }
+                            else
+                            {
+                                <div class="icon_field"><span class="icon-msg"></span><label>Email Address</label><input id="txtEmailMC" type="text" name="" placeholder="Email Address"></div>
+                            }
+                        </div>
+
+
+
+                        <div class="col-md-12" id="PSPhoneCodeFIeld">
+                            <div class="icon_field">
+                                <span class="icon-call icon"></span>
+                                <label class="phoneno">Phone Number</label>
+                                <input id="txtPhoneNoMC" type="text" class="pncode phone" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" name="" placeholder="Phone Number">
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-make"></span><label>Make</label><div class="select_parent">
+                                    <select class="ddlMake" id="dllMakeMC" onchange="GetModels(this)">
+                                        <option value="0">Make</option>
+                                        @if (getMake.success == true)
+                                        {
+                                            foreach (var item in getMake.data.ToList())
+                                            {
+                                                <option value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-icon-5"></span><label>Model</label><div class="select_parent">
+                                    <select class="ddlModel" id="ddlModelMC">
+                                        <option value="0">Model</option>
+                                        @if (getModel.success == true)
+                                        {
+                                            foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                            {
+                                                <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix"><span class="icon-icon-6"></span><label>Version</label><input id="ddlVersionMC" type="text" name="" placeholder="Version"></div>
+                        </div>
+                        @*<div class="col-md-3">
+                                <div class="icon_field"><span class="icon-icon-6"></span><label>Year</label><input id="ddlYearMC" type="text" name="" placeholder="Year"></div>
+                            </div>*@
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-icon-6"></span><label>Year</label><div class="select_parent">
+                                    <select class="ddlYear" id="ddlYearMC">
+                                        <option value="0">Year</option>
+                                        @for (int i = 2005; i <= DateTime.Now.Year; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field"><span class="icon-icon-7"></span><label>KM</label><input type="text" id="txtKMMC" name="" placeholder="KM"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field"><span class="icon-icon-8"></span><label>Chassis</label><input type="text" id="txtChassisMC" name="" placeholder="Chassis"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-icon-9"></span><label>Regional specs</label><div class="select_parent">
+                                    <select id="ddlRegionalSpecsMC">
+                                        <option value="0">Regional specs</option>
+                                        @if (regionalSpecificationModelObj.success == true)
+                                        {
+                                            foreach (var item in regionalSpecificationModelObj.data.ToList())
+                                            {
+                                                <option value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-icon-10"></span><label>Exterior Color</label><div class="select_parent">
+                                    <select id="ddlExteriorColorMC">
+                                        <option value="0">Exterior Color</option>
+                                        @if (ExteriorColorObj.success == true)
+                                        {
+                                            foreach (var item in ExteriorColorObj.data.option_array)
+                                            {
+                                                <option value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-icon-11"></span><label>Interior Color</label><div class="select_parent">
+                                    <select id="ddlInteriorColorMC">
+                                        <option value="0">Interior Color</option>
+                                        @if (InteriorColorObj.success == true)
+                                        {
+                                            foreach (var item in InteriorColorObj.data.option_array)
+                                            {
+                                                <option value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field clearfix">
+                                <span class="icon-icon-17"></span><label>Accident?</label><div class="select_parent">
+                                    <select id="ddlAccidentMC">
+                                        <option value="0">Accident?</option>
+                                        @if (AccidentObj.success == true)
+                                        {
+                                            foreach (var item in AccidentObj.data.option_array)
+                                            {
+                                                <option value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field"><span class="icon-icon-14"></span><label>Warranty Remaining</label><input id="txtWarrantyRemMC" class="numericonly" type="text" name="" placeholder="Warranty Remaining (In Month)"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="icon_field"><span><img src="@Url.Content("~/assets/images/serivec-icon.png")" alt=""></span><label>Service Remaining</label><input class="numericonly" id="txtServiceRemMC" type="text" name="" placeholder="Service Remaining (In Month)"></div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="upload_container">
+                                <p>Upload images</p>
+                                <br />
+                                <div class="col-md-2 uploadInnerdiv">
+                                    <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fufrontMC" type="file" name=""></a>
+                                    <br />
+                                    <div class="uploadInnerDivSpan">
+                                        <span class="uploadInnerspan">Front</span>
+                                        <br />
+                                        <span class="uploadedimagename"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 uploadInnerdiv">
+                                    <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuBackMC" type="file" name=""></a>
+                                    <br />
+                                    <div class="uploadInnerDivSpan">
+                                        <span class="uploadInnerspan">Back</span>
+                                        <br />
+                                        <span class="uploadedimagename"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 uploadInnerdiv">
+                                    <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRightMC" type="file" name=""></a>
+                                    <br />
+                                    <div class="uploadInnerDivSpan">
+                                        <span class="uploadInnerspan">Right Side</span>
+                                        <br />
+                                        <span class="uploadedimagename"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 uploadInnerdiv">
+                                    <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuLeftMC" type="file" name=""></a>
+                                    <br />
+                                    <div class="uploadInnerDivSpan">
+                                        <span class="uploadInnerspan">Left Side</span>
+                                        <br />
+                                        <span class="uploadedimagename"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 uploadInnerdiv">
+                                    <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuInteriorMC" type="file" name=""></a>
+                                    <br />
+                                    <div class="uploadInnerDivSpan">
+                                        <span class="uploadInnerspan">Interior</span>
+                                        <br />
+                                        <span class="uploadedimagename"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 uploadInnerdiv">
+                                    <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRegistrationCardMC" type="file" name=""></a>
+                                    <br />
+                                    <div class="uploadInnerDivSpan">
+                                        <span class="uploadInnerspan">Registration Card</span>
+                                        <br />
+                                        <span class="uploadedimagename"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="icon_field note_msg"><textarea id="txtNotesMC" name="" placeholder="Additional notes (if any)"></textarea></div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="loaderdiv" style="display:none; padding:10px;">
+                                <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                            </div>
+                            <button type="submit" onclick="AddMyCar(this)">Add Car</button>
+                            <p><strong>Disclaimer!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi hendrerit et mi at dictum. Ut fringilla eros id urna auctor pulvinar. Etiam felis ligula, aliquet et feugiat vel, finibusarcu. Suspendisse ligula dolor</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="women_sec carDetailsPage" id="carDetailsPage">
+
+            </div>
+            <input type="hidden" id="EvaluationForm" value="@ViewData["UserName"]" />
+
+        </div>
+        <div class="carDetail_tab" id="tab3">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="virtualTabs">
+                        <ul>
+                            <li class="current"><a href="#vtab1">Finance Buy</a></li>
+                            <li><a href="#vtab2">Cash Buy</a></li>
+                        </ul>
+                    </div>
+                    <input type="hidden" id="hdnCarAmount" value="@Math.Round(Model.data.amount != null ? Convert.ToDecimal(Model.data.amount) : 0)" />
+                    <div class="virtualTab_content" id="vtab1">
+                        <div class="rang_slider_parent">
+                            <div class="range_slider_wrap">
+                                <div class="range_slider_row first">
+                                    <h3>Period</h3>
+                                    <input id="VBPeriod-range" type="text" class="moth_slider" name="my_range" value="" />
+                                    <span id="VBPeriod-hidden" style="display:none;">12</span>
+                                </div>
+                            </div>
+
+                            <div class="range_slider_wrap">
+                                <div class="range_slider_row">
+                                    <h3>Down Payment (%)</h3>
+                                    <input id="VBDownPayment-range" type="text" class="down_payment" name="my_range" value="" />
+                                    <span id="VBDownPayment-hidden" style="display:none;">0</span>
+                                    <div style="text-align:center; width:100%; margin-top:7px;">
+                                        <span style="text-align:center" id="VBDownPayment-span">AED 0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="range_slider_wrap">
+                                <div class="range_slider_row">
+                                    <h3>Interest Rate</h3>
+                                    <input id="VBInterestRate-range" type="text" class="interest_rate" name="my_range" value="" />
+                                    <span id="VBInterestRate-hidden" style="display:none;">0</span>
+                                    <div style="text-align:center; width:100%; margin-top:7px;">
+                                        <span style="text-align:center" id="VBMOnthlyINstallment-span1">AED 0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="range_slider_wrap">
+                                <div class="range_slider_row">
+                                    <h3>Insurance Rate</h3>
+                                    <input id="VBInsuranceRate-range" type="text" class="insurance_rate" name="my_range" value="" />
+                                    <span id="VBInsuranceRate-hidden" style="display:none;">0</span>
+                                    <div style="text-align:center; width:100%; margin-top:7px;">
+                                        <span style="text-align:center" id="VBInsurance-span">AED 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary_total_box">
+                            <h4>Finance Breakdown</h4>
+                            <div class="table-responsive">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Car Price</td>
+                                            <td align="right" id="tdCarPrice">AED @Math.Round(Model.data.amount != null ? Convert.ToDecimal(Model.data.amount) : 0).ToString("C0").Replace("$", "")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Down Payment</td>
+                                            <td align="right" class="tdDownPayment">AED 0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monthly Installment </td>
+                                            <td align="right" id="tdMonthlyInstallment">AED 0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="summary_total_box">
+                            <h4>Driveway Payment</h4>
+                            <div class="table-responsive">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Down Payment</td>
+                                            <td align="right" class="tdDownPayment">AED 0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Insurance (1st Year)</td>
+                                            <td align="right" id="tdInsurance" class="tdInsurance">AED 0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Registration Fee</td>
+                                            <td align="right" id="tdRegistrationFee">AED 550</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Upfront Payment</td>
+                                            <td align="right" id="tdTotalUpfrontPayment">AED 0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="virtualTab_content" id="vtab2">
+                        <div class="rang_slider_parent">
+                            <div class="range_slider_wrap">
+                                <div class="range_slider_row">
+                                    <h3>Insurance Rate</h3>
+                                    <input type="text" id="VBInterestRate-range2" class="insurance_rate2" name="my_range" value="" />
+                                    <div style="text-align:center; width:100%; margin-top:7px;">
+                                        <span style="text-align:center" id="VBMOnthlyINstallment-span2">AED 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary_total_box">
+                            <h4>Driveway Payment</h4>
+                            <div class="table-responsive">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Car Price</td>
+                                            <td align="right" id="tdCBCarPrice">AED @Math.Round(Model.data.amount != null ? Convert.ToDecimal(Model.data.amount) : 0).ToString("C0").Replace("$", "")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Insurance (1st Year)</td>
+                                            <td align="right" class="tdInsurance" id="tdCBInsurance">AED 0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Registration Fee</td>
+                                            <td align="right" id="tdRegistrationFee">AED 550</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Upfront Payment</td>
+                                            <td align="right" id="tdCBTotalUpfrontPayment"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                @if (BankRateModelobj != null)
+                {
+                    if (BankRateModelobj.data != null)
+                    {
+                        if (BankRateModelobj.data.Count > 0)
+                        {
+                            <div class="col-md-4">
+                                <div class="call_widget">
+                                    <div class="swiper-container">
+                                        <div class="swiper-wrapper">
+                                            @foreach (var item in BankRateModelobj.data.Where(x => x.type == 10))
+                                            {
+                                                <div class="swiper-slide">
+                                                    <figure class="img_holder">
+                                                        <img src="@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : "")" alt="" class="img-fluid">
+                                                    </figure>
+                                                    <h3>@item.rate %</h3>
+                                                    <a href="javascript:;" onclick="RequestaCallBank('@item.id')" class="lightBtn">Request a call </a>
+                                                    <a href="javascript:;" onclick="ShowDealerPhoneNumber('@item.phone_no')" class="lightBtn">Call Now</a>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="swiper-pagination"></div>
+                                    </div>
+                                </div>
+
+                                <div class="call_widget">
+                                    <div class="swiper-container">
+                                        <div class="swiper-wrapper">
+                                            @foreach (var item in BankRateModelobj.data.Where(x => x.type == 20))
+                                            {
+                                                <div class="swiper-slide">
+                                                    <figure class="img_holder">
+                                                        <img src="@item.media.FirstOrDefault().file_url" alt="" class="img-fluid">
+                                                    </figure>
+                                                    <h3>@item.rate %</h3>
+                                                    <a href="javascript:;" onclick="RequestaCallBank('@item.id')" class="lightBtn">Request a call </a>
+                                                    <a href="javascript:;" onclick="ShowDealerPhoneNumber('@item.phone_no')" class="lightBtn">Call Now</a>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="swiper-pagination"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    }
+                }
+
+            </div>
+        </div>
+        <div class="carDetail_tab" id="tab4">
+            <div class="evaluate_sec">
+                <div class="container">
+                    <h3 class="page-title">Description</h3>
+                    @if (SettingModelObj != null)
+                    {
+                        if (SettingModelObj.data != null)
+                        {
+                            if (SettingModelObj.data.Count > 0)
+                            {
+                                if (SettingModelObj.data.FirstOrDefault().personal_shopper != null)
+                                {
+                                    <p class="page-info">@Html.Raw(SettingModelObj.data.FirstOrDefault().personal_shopper)</p>
+                                }
+                            }
+                        }
+                    }
+                    <h3 class="page-title mt-4">Contact Details</h3>
+                    <p class="page-info">Just drop us your contact details and we will be in touch right away</p>
+                    <div class="evalute_form">
+                        <div class="row">
+                            <input type="hidden" id="txtPSCarID" value="@Model.data.id" />
+                            <div class="col-md-6">
+                                <div class="icon_field"><span class="icon-user1"></span><input id="txtPSUserName" value="@ViewData["UserName"]" type="text" name="" placeholder="Full Name"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="icon_field"><span class="icon-msg"></span><input id="txtPSEmail" value="@ViewData["UserEmail"]" type="text" name="" placeholder="Email Address"></div>
+                            </div>
+                            <div class="col-md-12" id="PSPhoneCodeFIeld">
+                                <div class="icon_field">
+                                    <span class="icon-call icon"></span>
+                                    <input id="txtPSPhone" type="text" class="pncode phone" value="@ViewData["UserPhoneNo"]" name="" placeholder="Phone Number">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <span id="spanPSmessage"></span>
+                                <br />
+                                <button onclick="btnPSSubmitForm()" class="custBtn">submit request</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="similer_sec">
+            @if (list != null)
+            {
+                if (list.data != null)
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Similiar listings</h2>
+                        </div>
+                        @if (list.data.Where(a => a.id != Model.data.id).ToList().Count > 3)
+                        {
+                            <div class="col-md-6 my-auto">
+                                <div class="arrowParent">
+                                    <div class="prevCar arrow"><span class="icon-arrow-left1"></span></div>
+                                    <div class="nextCar arrow"><span class="icon-arrow-right1"></span></div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="slider_wrap slider_wrap1 swiper-container">
+                        <div class="swiper-wrapper">
+
+                            @if (list.data.Where(a => a.id != Model.data.id && a.car_regions.Count > 0).ToList().Count > 0)
+                            {
+                                foreach (var item in list.data.Where(a => a.id != Model.data.id && a.car_regions.Count > 0))
+                                {
+                                    <div class="carBox swiper-slide similarlistingcars">
+                                        <div class="overlayBox"></div>
+                                        <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');">
+                                            <a href="@Url.Action("OutletMall", "Car", new { brand = item.car_model.brand.slug, model = item.car_model.slug, id = item.slug })">
+                                                <div class="car_dtl clearfix">
+                                                    <p>@item.name <span>@item.year</span></p>
+                                                    @*<p>@item.name <span>@item.year  <p style="@(item.average_mkp != null && item.average_mkp > 0 ? "display:inline-block" : "display:none")">•  A.V.G Price @Convert.ToDecimal(item.average_mkp).ToString("C0").Replace("$", "")</p></span></p>*@
+                                                    <h4>@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "")</h4>
+                                                </div>
+                                            </a>
+                                        </figure>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+
+                                <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        @if (Reviewsobj != null)
+        {
+            if (Reviewsobj.data != null)
+            {
+                if (Reviewsobj.data.Count > 0)
+                {
+
+                    <div class="review_list" style="display:none;">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h2>User Reviews</h2>
+                                </div>
+                                <div class="col-md-4">
+
+                                    @{
+                                        decimal ratingcount = Math.Round(Model.data.average_rating);
+                                        <div class="rating">
+                                            @for (int j = 1; j <= ratingcount; j++)
+                                            {<i class="fa fa-star fill"></i>}
+                                            @for (int j = 1; j <= 5 - ratingcount; j++)
+                                            {<i class="fa fa-star"></i>}
+
+                                            <span>(@Model.data.average_rating.ToString("F1")/5)</span>
+                                        </div>
+                                        if (Context.Session.Keys.Count() > 0 && Model.data.is_reviewed == 0)
+                                        {
+                                            <a href="@Url.Action("ReviewsbyID", "Car", new { brand = Model.data.car_model.brand.slug, model = Model.data.car_model.slug, carid = Model.data.id })" style="float:right;">Add Review</a>
+                                        }
+                                    }
+                                </div>
+                                @foreach (var item in Reviewsobj.data)
+                                {
+                                    <div class="col-md-12">
+                                        <figure style="background-image: url(@item.user_details.image_url);"></figure>
+                                        <article>
+                                            <h3>
+                                                @item.user_details.user_name
+                                                @*<span>20 min</span>*@
+                                            </h3>
+                                            <div class="rating">
+                                                @{
+                                                    decimal ratingcount2 = Math.Round(item.average_rating);
+                                                    for (int j = 1; j <= ratingcount2; j++)
+                                                    {<i class="fa fa-star fill"></i>}
+                                                    for (int j = 1; j <= 5 - ratingcount2; j++)
+                                                    {<i class="fa fa-star"></i>}
+                                                }
+                                                (@item.average_rating.ToString("F1")/5)
+                                            </div>
+                                            <p>@item.review_message</p>
+                                        </article>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+
+    </div>
+</section>
+
+
+<!-- The Modal -->
+<div class="modal cardetail_popup" id="ModalRequestaCallBank" tabindex="-1" role="dialog" aria-labelledby="ShowPhoneNumber" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" id="btncloseBankRequestModal" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="ownedDetail_sec">
+                    <div class="evaluate_sec">
+                        <h2>Request a Call</h2>
+                        @*<p class="page-info">Please fill your details so our representative can call you!</p>*@
+                        <div class="evalute_form">
+                            <div class="row">
+                                <input type="hidden" id="hdnConsultancyType" name="hdnConsultancyType" value="10" />
+                                <input type="hidden" id="hdnBankID" name="hdnBankID" value="" />
+                                <div class="col-md-6" style="display:none">
+                                    <div class="icon_field"><span class="icon-user1"></span><input id="txtVBASKUserName" type="text" value="@ViewData["UserName"]" name="" placeholder="Full Name"></div>
+                                </div>
+                                <div class="col-md-6" style="display:none">
+                                    <div class="icon_field"><span class="icon-msg"></span><input id="txtVBASKUserEmail" type="text" value="@ViewData["UserEmail"]" name="" placeholder="Email Address"></div>
+                                </div>
+
+                                <div class="col-md-12" id="VBASKPhoneCodeFIeld" style="display:none">
+                                    <div class="icon_field">
+                                        <span class="icon-call icon"></span>
+                                        <input type="text" class="pncode phone" name="" value="@ViewData["UserPhoneNo"]" id="txtVBASKUserPhone" placeholder="Phone Number">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="icon_field">
+                                        <textarea id="txtVBASKUserComments" placeholder="Write a Comments..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="loaderdivVBASK" style="display:none; padding:10px;">
+                                        <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                                    </div>
+                                    <button type="submit" onclick="btnVBASKSubmitForm(this);" class="custBtn">submit request</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade loginModal" id="ShowPhoneNumber" tabindex="-1" role="dialog" aria-labelledby="ShowPhoneNumber" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <div class="form">
+                        <label style="width:100%; text-align:center; font-weight:bold; word-break:break-all;" class="DealerPhoneNo"></label>
+                    </div>
+                </div>
+                <div class="foot">
+                    <button data-dismiss="modal" aria-label="Close" class="custBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade loginModal" id="RequestTradeInModal" tabindex="-1" role="dialog" aria-labelledby="RequestTradeInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <div class="form">
+                        <label style="width:100%; text-align:center; font-weight:bold; word-break:break-all;" class="TradeInMessage"></label>
+                        <input type="hidden" value="@Model.data.id" id="hdnOriginalCarID" />
+                        <input type="hidden" id="hdnNewCarID" />
+                        <input type="hidden" value="@Model.data.amount" id="hdnTRadeinAmount" />
+                    </div>
+                </div>
+                <div class="foot">
+                    <div class="loaderdiv2" style="display:none; margin-left:45%; padding:10px;">
+                        <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                    </div>
+                    <button onclick="TradeinYourCar(this)" class="custBtn">Yes, Trade In</button>
+                    <button data-dismiss="modal" aria-label="Close" id="TRadeinClosebtn" class="custBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The share popup -->
+<div class="modal share_popup" id="myModal2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="share_cont">
+                    <figure style="background-image: url('@Model.data.media.FirstOrDefault().file_url');"></figure>
+                    <article>
+                        <h2>@Model.data.name <span>@Model.data.currency @(Model.data.amount != null ? Math.Round(Convert.ToDecimal(Model.data.amount)).ToString("C0").Replace("$", "") : "" )</span></h2>
+                        <p>@Model.data.year  •  @Model.data.kilometer km</p>
+                        <p>@Model.data.notes</p>
+                        <ul>
+                            <li>
+                                <a href="@("https://twitter.com/share?url="+ SiteBaseURL + "Car/OutletMall/" + Model.data.car_model.brand.slug + "/" + Model.data.car_model.slug + "/" + Model.data.slug +"&text=" + Model.data.name)" data-network="twitter" class="tw share twitter"><i class="fa fa-twitter"></i> Share on Twitter</a>
+                            </li>
+                            <li>
+                                <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + SiteBaseURL + "Car/OutletMall/" + Model.data.car_model.brand.slug + "/" + Model.data.car_model.slug + "/" + Model.data.slug + "&t=TITLE")" data-network="facebook" class="fb share facebook"><i class="fa fa-facebook-f"></i> Share on Facebook</a>
+                            </li>
+                            <li>
+                                <a href="@("mailto:" + ViewData["UserEmail"].ToString() + "&subject=" + Model.data.name + "&body=" + Model.data.notes )" class="email"><i class="fa1">&commat;</i> Share Email</a>
+                            </li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- The report popup -->
+<div class="modal share_popup report" id="myModal3">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h2>Report</h2>
+            <p>kindly select from on of the option below.</p>
+            <!-- Modal body -->
+            <div class="modal-body">
+
+                <div class="form">
+                    <div class="field">
+                        <div class="select_parent">
+                            <select class="ddlCarReportReason" id="ddlCarReportReason">
+                                <option value="0">Reasons</option>
+                                @if (reportCategoriesObj.success == true)
+                                {
+                                    foreach (var item in reportCategoriesObj.data.ToList())
+                                    {
+                                        <option value="@item.id">@item.title</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" id="hdncarReportCarID" value="@Model.data.id" />
+                    <div class="field">
+                        <br /><br />
+                        <div class="carNote">
+                            <textarea name="" id="CarReportComments" placeholder="Comments"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="CarReportloaderdiv" style="display:none; margin-left:45%; padding:10px;">
+                    <img style="margin-left:90%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                </div>
+                <a href="javascript:;" onclick="CarReportCall(this)" class="custBtn">Submit Request</a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="fb-root"></div>
+<script>
+
+
+    $('a.share').click(function (e) {
+        e.preventDefault();
+        var $link = $(this);
+        var href = $link.attr('href');
+        var network = $link.attr('data-network');
+
+        var networks = {
+            facebook: { width: 600, height: 300 },
+            twitter: { width: 600, height: 254 },
+            google: { width: 515, height: 490 },
+            linkedin: { width: 600, height: 473 }
+        };
+
+        var popup = function (network) {
+            var options = 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,';
+            window.open(href, '', options + 'height=' + networks[network].height + ',width=' + networks[network].width);
+        }
+
+        popup(network);
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    $(window).bind("load", function () {
+        if (window.location.href.indexOf("#virtual-buy") > -1) {
+            $(".avirtualBuy").trigger("click");
+        }
+        if (window.location.href.indexOf("#trade-in-your car") > -1) {
+            $(".atradeincar").trigger("click");
+        }
+        if (window.location.href.indexOf("#personal-car-shopper") > -1) {
+            $(".apersonalShopper").trigger("click");
+        }
+    })
+
+    function TriggerFBShareModal() {
+        debugger;
+        $("#u_0_1").click();
+    }
+
+    function CarReportCall($this) {
+
+        var hdncarReportCarID = $("#hdncarReportCarID").val();
+        var ddlCarReportReason = $("#ddlCarReportReason").val();
+        var CarReportComments = $("#CarReportComments").val();
+        if (ddlCarReportReason == "0") {
+            notify("Select any Reason", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".CarReportloaderdiv").show();
+
+
+        var data = {};
+        data.car_id = hdncarReportCarID;
+        data.report_category_id = ddlCarReportReason;
+        data.message = CarReportComments;
+
+        $.ajax({
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("PostCarReport", "Car")',
+            success: function (data) {
+                if (data == "success") {
+                    debugger;
+                    notify("Request has been submitted", "success");
+                }
+            },
+            complete: function () {
+                $($this).show();
+                $(".CarReportloaderdiv").hide();
+                $("#myModal3").find(".close").trigger("click");
+            }
+        });
+
+
+    }
+
+    function uploadImage($this) {
+        var filename = $($this).val();
+        if (filename != "") {
+            var path = filename;
+            filename = path.replace(/^.*\\/, "");
+            //$($this).parents(".uploadInnerdiv").find(".uploadedimagename").text(filename);
+
+            var formData = new FormData();
+            formData.append('file', $($this)[0].files[0]);
+
+            var baseurl = window.location.origin;
+            var fullpath = baseurl + "/uploads/" + filename;
+            debugger;
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'POST',
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                url: '@Url.Action("FileUpload", "Car")',
+                success: function (data) {
+                    if (data != "") {
+                        debugger;
+                        $($this).parents(".uploadInnerdiv").find("a").css('background-image', 'url(' + fullpath + ')');
+                    }
+                }, complete: function (data) {
+                }
+            });
+        }
+    }
+
+    function AddMyCar($this) {
+
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLogin").trigger("click");
+            return;
+        }
+
+        var txtUserNameMC = $("#txtUserNameMC").val();
+        var txtEmailMC = $("#txtEmailMC").val();
+        var txtPhoneNoMC = $("#txtPhoneNoMC").val();
+        var PSPhoneCodeFIeld = $("#PSPhoneCodeFIeld").find(".selected-dial-code").text();;
+        var dllMakeMC = $("#dllMakeMC").val();
+        var ddlModelMC = $("#ddlModelMC").val();
+        var ddlYearMC = $("#ddlYearMC").val();
+        var ddlVersionMC = $("#ddlVersionMC").val();
+        var txtKMMC = $("#txtKMMC").val();
+        var txtChassisMC = $("#txtChassisMC").val();
+        var ddlRegionalSpecsMC = $("#ddlRegionalSpecsMC").val();
+        var ddlExteriorColorMC = $("#ddlExteriorColorMC").val();
+        var ddlInteriorColorMC = $("#ddlInteriorColorMC").val();
+        var ddlAccidentMC = $("#ddlAccidentMC").val();
+        var txtWarrantyRemMC = $("#txtWarrantyRemMC").val();
+        var txtServiceRemMC = $("#txtServiceRemMC").val();
+        var txtNotesMC = $("#txtNotesMC").val();
+        var tradeincarid = $("#hdnOriginalCarID").val();
+        var tradeincaramount = $("#hdnTRadeinAmount").val();
+
+        var validationcount = 0;
+        if (txtUserNameMC == "") {
+            $("#txtUserNameMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtUserNameMC").css("border", "none"); }
+
+        if (txtEmailMC == "") {
+            $("#txtEmailMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailMC").css("border", "none"); }
+
+        if (txtPhoneNoMC == "") {
+            $("#txtPhoneNoMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneNoMC").css("border", "none"); }
+
+        if (dllMakeMC == "0") {
+            $("#dllMakeMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#dllMakeMC").css("border", "none"); }
+
+        if (ddlModelMC == "0") {
+            $("#ddlModelMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlModelMC").css("border", "none"); }
+
+        if (ddlYearMC == "0") {
+            $("#ddlYearMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlYearMC").css("border", "none"); }
+
+        if (ddlRegionalSpecsMC == "0") {
+            $("#ddlRegionalSpecsMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlRegionalSpecsMC").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv").show();
+
+        var formData = new FormData();
+        formData.append('front', $('#fufrontMC')[0].files[0]);
+        formData.append('Back', $('#fuBackMC')[0].files[0]);
+        formData.append('Right', $('#fuRightMC')[0].files[0]);
+        formData.append('Left', $('#fuLeftMC')[0].files[0]);
+        formData.append('Interior', $('#fuInteriorMC')[0].files[0]);
+        formData.append('RegCard', $('#fuRegistrationCardMC')[0].files[0]);
+        formData.append('username', txtUserNameMC);
+        formData.append('email', txtEmailMC);
+        formData.append('countrycode', PSPhoneCodeFIeld);
+        formData.append('phone', txtPhoneNoMC);
+        formData.append('makeid', dllMakeMC);
+        formData.append('modelid', ddlModelMC);
+        formData.append('year', ddlYearMC);
+        formData.append('version_app', ddlVersionMC);
+        formData.append('KM', txtKMMC);
+        formData.append('Chassis', txtChassisMC);
+        formData.append('regionalSpecid', ddlRegionalSpecsMC);
+        formData.append('exteriorcolorid', ddlExteriorColorMC);
+        formData.append('interiorcolorid', ddlInteriorColorMC);
+        formData.append('accidentid', ddlAccidentMC);
+        formData.append('warrantyrem', txtWarrantyRemMC);
+        formData.append('servicerem', txtServiceRemMC);
+        formData.append('notes', txtNotesMC);
+        formData.append('ownerid', tradeincarid);
+        formData.append('amount', tradeincaramount);
+        formData.append('type', 10);
+
+        var json = "";
+        var array = [];
+
+        var output = {}
+
+        if (ddlExteriorColorMC != "0") {
+            output = {};
+            output[4] = parseInt(ddlExteriorColorMC);
+            array.push(output);
+        }
+        if (ddlInteriorColorMC != "0") {
+            output = {};
+            output[3] = parseInt(ddlInteriorColorMC);
+            array.push(output);
+        }
+        if (ddlAccidentMC != "0") {
+            output = {};
+            output[23] = parseInt(ddlAccidentMC);
+            array.push(output);
+        }
+        if (txtWarrantyRemMC != "") {
+            output = {};
+            output[5] = parseInt(txtWarrantyRemMC);
+            array.push(output);
+        }
+        if (txtServiceRemMC != "") {
+            output = {};
+            output[6] = parseInt(txtServiceRemMC);
+            array.push(output);
+        }
+
+
+        json = JSON.stringify(array);
+        formData.append('car_attributes', json);
+
+        var _url = '@Url.Action("AddMyCar", "Car")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (result) {
+                $($this).show();
+                $(".loaderdiv").hide();
+                if (result == "Success") {
+                    notify("Car trade in request post successfully", "success");
+                }
+            },
+            error: function (jqXHR) {
+
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                GetCustomerMyCars();
+
+                RestAllCarFields();
+            }
+        });
+
+    }
+
+    function GetModels($this) {
+
+        var makeid = $($this).find("option:selected").val();
+
+        $("#ddlModelMC").find("option").each(function () {
+            $(this).hide();
+        })
+
+        $("#ddlModelMC").val(0);
+
+        $("#ddlModelMC").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+    }
+
+    function OnYearChange($this) {
+
+        var makeid = $("#ddlMakeMC").find("option:selected").val();
+        var modelid = $("#ddlModelMC").find("option:selected").val();
+        var Year = $($this).find("option:selected").val();
+
+        if (makeid == "0") {
+            $("#ddlMakeMC").css("border", "1px solid red");
+            return;
+        }
+        else {
+            $("#ddlMakeMC").css("border", "none");
+        }
+
+        if (modelid == "0") {
+            $("#ddlModelMC").css("border", "1px solid red");
+            return;
+        }
+        else {
+            $("#ddlModelMC").css("border", "none");
+        }
+
+
+        $("#ddlVersionMC").html("");
+        $("#ddlVersionMC").html('<option value="0">Version (Optional)</option>');
+
+        var data = {};
+        data.categoryID = 0;
+        data.makeid = makeid;
+        data.modelid = modelid;
+        data.minyear = Year;
+        data.masyear = Year;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("CarsforCompareCar", "Car")',
+            type: 'GET',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $("#ddlVersionMC").append('<option  value="' + data[i].carid + '">' + data[i].Version + '</option>');
+                }
+            },
+        });
+    }
+
+    function CHeckLogin($this) {
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLogin").trigger("click");
+            return;
+        }
+        else {
+            var tab = $($this).attr("href");
+            event.preventDefault();
+            $($this).addClass("current");
+            $($this).siblings().removeClass("current");
+            $(".carDetail_tab").not(tab).css("display", "none");
+            $(tab).fadeIn();
+        }
+    }
+
+    $(window).bind("load", function () {
+
+        setTimeout(function () {
+            /* Call Wid Slider */
+            var mySwiper = new Swiper('.call_widget .swiper-container', {
+                spaceBetween: 10,
+                slidesPerView: 1,
+                loop: true,
+                autoplay: true,
+                speed: 1000,
+                pagination: {
+                    el: '.swiper-pagination',
+                    type: 'bullets',
+                    clickable: true
+                }
+            });
+
+            /* Dash Tabs */
+            $(".carDetails a").click(function (event) {
+                $('.call_widget .swiper-container')[0].swiper.update();
+                $('.call_widget .swiper-container')[1].swiper.update();
+            });
+        }, 5000);
+
+        var similarlistingcarsLength = $(".similarlistingcars").length;
+
+        if (similarlistingcarsLength > 3) {
+            /* Instagram Slider */
+            var mySwiper = new Swiper('.slider_wrap.slider_wrap1.swiper-container', {
+                spaceBetween: 10,
+                freeMode: true,
+
+                loop: true,
+                autoplay: true,
+                speed: 1000,
+                slidesPerView: 3,
+                navigation: {
+                    nextEl: '.nextCar',
+                    prevEl: '.prevCar',
+                },
+
+
+                breakpoints: {
+
+                    1367: {
+                        slidesPerView: 3,
+                        freeMode: false,
+                        spaceBetween: 10
+                    },
+                    320: {
+                        slidesPerView: 1,
+                        freeMode: false,
+                        spaceBetween: 10
+                    },
+
+                    480: {
+                        slidesPerView: 1,
+                        spaceBetween: 10
+                    },
+
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20
+                    }
+                }
+            });
+
+        }
+        else {
+            $(".similarlistingcars").each(function () {
+                $(this).css("margin-left", "5px");
+            })
+         }
+    });
+
+    function RequestaCallBank(hdnBankID) {
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLogin").trigger("click");
+            return;
+        }
+        else {
+            $("#hdnBankID").val(hdnBankID);
+            $("#ModalRequestaCallBank").modal('show');
+        }
+    }
+
+    function btnVBASKSubmitForm($this) {
+
+
+
+        var txtPSCarID = $("#txtPSCarID").val();
+        var txtPSUserName = $("#txtVBASKUserName").val();
+        var txtPSEmail = $("#txtVBASKUserEmail").val();
+        var ddlPSCountryCode = $("#VBASKPhoneCodeFIeld").find(".selected-dial-code").text();
+        var txtPSPhone = $("#txtVBASKUserPhone").val();
+        var bankID = $("#hdnBankID").val();
+        var comments = $("#txtVBASKUserComments").val();
+
+        if (txtPSUserName == "" || txtPSEmail == "" || txtPSPhone == "")
+        {
+            //$("#spanPSmessage").show();
+            //$("#spanPSmessage").text("Kindly fill all the required fields")
+            notify("Kindly fill all the required fields", "danger");
+        }
+        else
+        {
+            //$("#spanPSmessage").hide();
+            //$("#spanPSmessage").text("");
+
+            $($this).hide();
+            $(".loaderdivVBASK").show();
+
+            var data = {};
+            data.car_id = txtPSCarID;
+            data.bank_id = bankID;
+            data.name = txtPSUserName;
+            data.email = txtPSEmail;
+            data.country_code = ddlPSCountryCode;
+            data.phone = txtPSPhone;
+            data.type = 20;
+            data.message = comments;
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("PersonalShopperRequest", "Car")',
+                data: data,
+                success: function (data) {
+                    if (data == "Contact Us saved successfully") {
+                        notify("The bank has received your details. You will receive a call back shortly!", "success");
+                        $("#btncloseBankRequestModal").click();
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Request has been submitted")
+                    }
+                    else {
+                        notify("Something went wrong while submitting request, Please try again", "danger");
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                    }
+                }, complete: function () {
+                    $($this).show();
+                    $(".loaderdivVBASK").hide();
+                }
+            });
+        }
+    }
+
+    function ConsultancyToggle($this, type) {
+
+        $(".btns_parent").find("a.custBtn").each(function () {
+            $(this).removeClass("current")
+        })
+
+        $($this).addClass("current");
+        $("#hdnConsultancyType").val(type);
+
+        if (type == 10) {
+            $("#descAskforConsultancy").show();
+            $("#descPersonalShopper").hide();
+        }
+        else {
+            $("#descAskforConsultancy").hide();
+            $("#descPersonalShopper").show();
+        }
+
+    }
+
+    $(document).ready(function () {
+
+        GetCustomerMyCars();
+
+        $("#ddlModelMC").find("option").each(function () {
+            $(this).hide();
+        });
+
+        setTimeout(function () {
+            if ('@ViewData["UserCountryCode"]' != null) {
+                if ('@ViewData["UserCountryCode"].ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@ViewData["UserCountryCode"].ToString()') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 10000);
+
+    });
+
+    $(function () {
+        CalculateFinanceBuy(0);
+        CalculateCashBuy();
+
+        $(".moth_slider").ionRangeSlider({
+            min: 12,
+            max: 60,
+            from: 12,
+            postfix: " Months",
+            onStart: function (data) {
+                //label = new Label(data.slider);
+                $(data.slider).find(".irs-single").removeClass("active");
+            },
+            onChange: function (data) {
+                //label.start();
+                $(data.slider).find(".irs-single").addClass("active");
+                $("#VBPeriod-hidden").text(data.from);
+                CalculateFinanceBuy(1);
+            },
+            onFinish: function (data) {
+                //label.end();
+                if (data.from <= 12) {
+                    $(data.slider).find(".irs-single").removeClass("active");
+                }
+            }
+        });
+
+        $(".down_payment").ionRangeSlider({
+            min: 0,
+            max: 75,
+            from: 0,
+            postfix: " %",
+            onStart: function (data) {
+                //label = new Label(data.slider);
+                $(data.slider).find(".irs-single").removeClass("active");
+            },
+            onChange: function (data) {
+                $(data.slider).find(".irs-single").addClass("active");
+                $("#VBDownPayment-hidden").text(data.from);
+                CalculateFinanceBuy(2);
+            },
+            onFinish: function (data) {
+                //label.end();
+                if (data.from <= 0) {
+                    $(data.slider).find(".irs-single").removeClass("active");
+                }
+            }
+        });
+
+        $(".interest_rate").ionRangeSlider({
+            min: 0,
+            max: 10,
+            from: 0,
+            step: 0.01,
+            postfix: " %",
+            onStart: function (data) {
+                $(data.slider).find(".irs-single").removeClass("active");
+            },
+            onChange: function (data) {
+                $(data.slider).find(".irs-single").addClass("active");
+                $("#VBInterestRate-hidden").text(data.from);
+                CalculateFinanceBuy(3);
+            },
+            onFinish: function (data) {
+                //label.end();
+                if (data.from <= 0) {
+                    $(data.slider).find(".irs-single").removeClass("active");
+                }
+            }
+        });
+
+        $(".insurance_rate2").ionRangeSlider({
+            min: 0,
+            max: 10,
+            from: 0,
+            step: 0.01,
+            postfix: " %",
+            onStart: function (data) {
+                $(data.slider).find(".irs-single").removeClass("active");
+            },
+            onChange: function (data) {
+                $(data.slider).find(".irs-single").addClass("active");
+                $("#VBInsuranceRate-hidden2").text(data.from);
+                CalculateCashBuy();
+            },
+            onFinish: function (data) {
+                //label.end();
+                if (data.from <= 0) {
+                    $(data.slider).find(".irs-single").removeClass("active");
+                }
+            }
+        });
+
+
+        $(".insurance_rate").ionRangeSlider({
+            min: 0,
+            max: 10,
+            from: 0,
+            step: 0.01,
+            postfix: " %",
+            onStart: function (data) {
+                $(data.slider).find(".irs-single").removeClass("active");
+            },
+            onChange: function (data) {
+                $(data.slider).find(".irs-single").addClass("active");
+                $("#VBInsuranceRate-hidden").text(data.from);
+                CalculateFinanceBuy(5);
+            },
+            onFinish: function (data) {
+                //label.end();
+                if (data.from <= 0) {
+                    $(data.slider).find(".irs-single").removeClass("active");
+                }
+            }
+        });
+
+    });
+
+    function ShowDealerPhoneNumber(phoneno) {
+        $(".DealerPhoneNo").text(phoneno);
+        $('#ShowPhoneNumber').modal('show');
+    }
+
+    function CalculateCashBuy() {
+        var CarPrice = $("#hdnCarAmount").val();
+        var InsuranceRate = parseFloat($("#VBInsuranceRate-hidden2").text());
+
+        if (InsuranceRate > 0) {
+            InsuranceRate = parseFloat(parseFloat(InsuranceRate / 100) * parseFloat(CarPrice));
+            $("#tdCBInsurance").text("AED  " + formatcurrency(Math.ceil(parseFloat(InsuranceRate))));
+            $("#VBMOnthlyINstallment-span2").text($("#tdCBInsurance").text());
+            calculateUpfrontPayment();
+        }
+        else {
+            $("#tdCBInsurance").text("AED  " + formatcurrency(Math.ceil(parseFloat(InsuranceRate))));
+            $("#VBMOnthlyINstallment-span2").text($("#tdCBInsurance").text());
+        }
+
+        var TotalUpfrontPayment = parseFloat(CarPrice) + parseFloat(InsuranceRate) + 550
+        $("#tdCBTotalUpfrontPayment").text("AED  " + formatcurrency(Math.ceil(parseFloat(TotalUpfrontPayment))));
+
+
+
+        //$("#VBMOnthlyINstallment-span2").text($("#tdCBTotalUpfrontPayment").text());
+    }
+
+    function CalculateFinanceBuy(type) {
+        var CarPrice = $("#hdnCarAmount").val();
+        var period = parseInt($("#VBPeriod-hidden").text());
+        var DownPayment = parseFloat($("#VBDownPayment-hidden").text());
+        var InterestRate = parseFloat($("#VBInterestRate-hidden").text());
+        var InsuranceRate = parseFloat($("#VBInsuranceRate-hidden").text());
+
+        if (DownPayment > 0) {
+            DownPayment = parseFloat(parseFloat(DownPayment / 100) * parseFloat(CarPrice));
+            $(".tdDownPayment").text("AED  " + formatcurrency(Math.ceil(parseFloat(DownPayment))));
+            $("#VBDownPayment-span").text($(".tdDownPayment:first").text());
+        }
+        else {
+            $(".tdDownPayment").text("AED  " + formatcurrency(Math.ceil(parseFloat(DownPayment))));
+            $("#VBDownPayment-span").text($(".tdDownPayment:first").text());
+        }
+
+        if (InsuranceRate > 0) {
+            InsuranceRate = parseFloat(parseFloat(InsuranceRate / 100) * parseFloat(CarPrice)).toFixed(2);
+            $("#tdInsurance").text("AED  " + formatcurrency(Math.ceil(parseFloat(InsuranceRate).toFixed(2))));
+            $("#VBInsurance-span").text($("#tdInsurance").text());
+            calculateUpfrontPayment();
+        }
+        else {
+            $("#tdInsurance").text("AED  " + formatcurrency(Math.ceil(parseFloat(InsuranceRate))));
+            $("#VBInsurance-span").text($("#tdInsurance").text());
+        }
+
+        calculateMonthlyInstallment(type);
+        calculateUpfrontPayment();
+    }
+
+    function calculateMonthlyInstallment(type)
+    {
+        var CarPrice = $("#hdnCarAmount").val();
+        var period = parseFloat($("#VBPeriod-hidden").text());
+        var DownPayment = $(".tdDownPayment:first").text().replace("AED  ", "");
+        var InterestRate = parseFloat($("#VBInterestRate-hidden").text());
+
+        DownPayment = RemoveallComma(DownPayment);
+
+        var totalinstallmentpermonth = parseFloat(CarPrice) / 12;
+
+        var AnnualInterest = parseFloat(CarPrice) - parseFloat(DownPayment)
+
+        InterestRate = parseFloat(parseFloat(InterestRate / 100));
+
+        AnnualInterest = parseFloat(AnnualInterest * InterestRate)
+
+        var MonthlyInstallment = AnnualInterest / 12;
+
+        var totalInterestPayable = (parseFloat(CarPrice) - parseFloat(DownPayment)) / period;
+
+        MonthlyInstallment = (parseFloat(MonthlyInstallment) + parseFloat(totalInterestPayable));
+
+        //MonthlyInstallment = MonthlyInstallment + totalinstallmentpermonth;
+
+        $("#tdMonthlyInstallment").text("AED  " + formatcurrency(Math.ceil(parseFloat(MonthlyInstallment))));
+
+        if (type == 3) {
+            $("#VBMOnthlyINstallment-span1").text($("#tdMonthlyInstallment").text());
+        }
+    }
+
+    function calculateUpfrontPayment()
+    {
+        var DownPayment = $(".tdDownPayment:first").text().replace("AED  ", "");
+        var InsuranceRate = $("#tdInsurance").text().replace("AED  ", "");
+
+        DownPayment = RemoveallComma(DownPayment);
+        InsuranceRate = RemoveallComma(InsuranceRate);
+
+        var TotalUpfrontPayment = parseFloat(DownPayment) + parseFloat(InsuranceRate) + 550
+        $("#tdTotalUpfrontPayment").text("AED  " + formatcurrency(Math.ceil(parseFloat(TotalUpfrontPayment))));
+
+        //$("#VBInsurance-span").text($("#tdTotalUpfrontPayment").text());
+    }
+
+    function MarkFavourite(id, type, $this) {
+
+        var text = $($this).text();
+
+        var data = {};
+        data.car_id = id;
+        data.type = type;
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("MarkFavouriteCar", "Car")',
+            data: data,
+            success: function (data) {
+                if (data == "success") {
+                    if (text == "Favorite") {
+                        notify("Marked favourite Successfully", "success");
+                        $($this).find("p").text("UnFavorite")
+                    }
+                    else {
+                        notify("Marked Unfavourite Successfully", "success");
+                        $($this).find("p").text("Favorite")
+                    }
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Request has been submitted")
+                }
+                else {
+                    notify("Something went wrong while submitting request, Please try again", "danger");
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                }
+            },
+        });
+    }
+
+
+    function btnPSSubmitForm() {
+
+        var txtPSCarID = $("#txtPSCarID").val();
+        var txtPSUserName = $("#txtPSUserName").val();
+        var txtPSEmail = $("#txtPSEmail").val();
+        var ddlPSCountryCode = $("#PSPhoneCodeFIeld").find(".selected-dial-code").text();
+        var txtPSPhone = $("#txtPSPhone").val();
+
+        if (txtPSUserName == "" || txtPSEmail == "" || txtPSPhone == "") {
+            //$("#spanPSmessage").show();
+            //$("#spanPSmessage").text("Kindly fill all the required fields")
+            notify("Kindly fill all fields", "danger");
+        }
+        else {
+            //$("#spanPSmessage").hide();
+            //$("#spanPSmessage").text("");
+            debugger;
+            var data = {};
+            data.car_id = txtPSCarID;
+            data.bank_id = 0;
+            data.name = txtPSUserName;
+            data.email = txtPSEmail;
+            data.country_code = ddlPSCountryCode;
+            data.phone = txtPSPhone;
+            data.type = 20;
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("PersonalShopperRequest", "Car")',
+                data: data,
+                success: function (data) {
+                    if (data == "Contact Us saved successfully") {
+                        notify("Request has been submitted", "success");
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Request has been submitted")
+                    }
+                    else {
+                        notify("Something went wrong while submitting request, Please try again", "danger");
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                    }
+                },
+            });
+        }
+    }
+
+
+    function TradeinYourCar($this) {
+        $(".loaderdiv2").show();
+        $($this).hide();
+        $("#TRadeinClosebtn").hide();
+        var data = {};
+        data.owner_car_id = $("#hdnOriginalCarID").val();
+        data.customer_car_id = $("#hdnNewCarID").val();
+        data.amount = $("#hdnTRadeinAmount").val();
+        data.type = 10;
+
+        $.ajax({
+            dataType: "html",
+            async: true,
+            data: data,
+            type: 'GET',
+            url: '@Url.Action("TradeInRequest", "Car")',
+            success: function (data) {
+                if (data == "Success") {
+                    notify("Car trade in request post successfully", "success");
+                }
+            }, complete: function (data) {
+                $(".loaderdiv2").hide();
+                $($this).show();
+                $("#TRadeinClosebtn").show();
+                $("#TRadeinClosebtn").trigger("click");
+            }
+        });
+
+
+    }
+
+
+    function TradeInthisCar($this, NewCarID) {
+        $(".TradeInMessage").text("Please confirm, do you want to submit your car for Trade In?");
+        $("#hdnNewCarID").val(NewCarID);
+        $('#RequestTradeInModal').modal('show');
+    }
+
+    function GetCustomerMyCars() {
+        $('.loading').fadeIn();
+        $('#carDetailsPage').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("CustCars", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#carDetailsPage').html(data);
+            }, complete: function (data) {
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+
+    function GetVersions($this) {
+
+        @*$("#ddlVersionMC").html("");
+        $("#ddlVersionMC").html('<option value="0">Version (Optional)</option>')
+
+        var modelid = $($this).val();
+        var data = {};
+        data.modelid = modelid;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("getVersions", "Car")',
+            success: function (data) {
+                for (var i = 0; i < data.data.length; i++) {
+                    $("#ddlVersionMC").append('<option value="' + data.data[i].id + '">' + data.data[i].name + '</option>');
+                }
+            },
+        });*@
+    }
+
+    function RestAllCarFields() {
+        $("#dllMakeMC").val(0);
+        $("#ddlModelMC").val(0);
+        $("#ddlYearMC").val(0);
+        $("#ddlVersionMC").val('');
+        $("#txtKMMC").val('');
+        $("#txtChassisMC").val('');
+        $("#ddlRegionalSpecsMC").val(0);
+        $("#ddlExteriorColorMC").val(0);
+        $("#ddlInteriorColorMC").val(0);
+        $("#ddlAccidentMC").val(0);
+        $("#txtWarrantyRemMC").val('');
+        $("#txtServiceRemMC").val('');
+        $("#txtNotesMC").val('');
+        $(".uploadInnerdiv").find("input").each(function () { $(this).val('') });
+        $(".uploadInnerdiv").find("a").each(function () { $(this).css("background-image", "none") });
+    }
+
+</script>

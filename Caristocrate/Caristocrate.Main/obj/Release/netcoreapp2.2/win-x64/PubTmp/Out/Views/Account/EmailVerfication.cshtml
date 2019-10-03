@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Email Verfication";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page search_results_page";
+}
+<style>
+</style>
+<section class="pageTitle">
+    <div class="container">
+        <h2>Two-Factor Verification</h2>
+    </div>
+</section>
+
+<section class="search_results_sec mainSec">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="verificationBx">
+                    <input type="hidden" id="hdnVerificationEmail" value="@(ViewData["email"] != null ? ViewData["email"].ToString() : "")" />
+                    
+                    <h3>Enter the 4-digit verification code sent to your email</h3>
+                    <div class="form-group">
+                        <input type="text" id="VCtxt1" onkeyup="MovetoNext(this, 'VCtxt2')" placeholder="0">
+                        <input type="text" id="VCtxt2" onkeyup="MovetoNext(this, 'VCtxt3')" placeholder="0">
+                        <input type="text" id="VCtxt3" onkeyup="MovetoNext(this, 'VCtxt4')" placeholder="0">
+                        <input type="text" id="VCtxt4" placeholder="0">
+                        <button onclick="VerifyEmail(this)" class="custBtn">Verify</button>
+                    </div>
+                    <h5>
+                        <a href="@Url.Action("Register", "Account")">Sign in as different user</a>                        
+                    </h5>
+                    <div class="" style="text-align:center; margin-bottom:30px;">
+                        <span>Didn't receive code?</span><br />
+                        <span class="resendcodespan">click here to resend code</span>
+                        <a style="display:none;" class="resendcodeanchor" href="javascript:;" onclick="ResendVerificationCode(this)">click here to resend code</a>
+                        00:<span class="VCinterval">30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade loginModal" id="ShowVerificationCodeAlert" tabindex="-1" role="dialog" aria-labelledby="ShowVerificationCodeAlert" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <h2>Email Verification Required</h2>
+                    <div class="form">
+                        <label style="width:100%; word-break:break-all;" id="AlertMessage">A verification code has been sent to your email address</label>
+                    </div>
+                </div>
+                <div class="foot">
+                    <button data-dismiss="modal" aria-label="Close" class="custBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    function VerifyEmail($this) {
+
+        var txt1 = $("#VCtxt1").val();
+        var txt2 = $("#VCtxt2").val();
+        var txt3 = $("#VCtxt3").val();
+        var txt4 = $("#VCtxt4").val();
+
+        if (txt1 == "" || txt2 == "" || txt3 == "" || txt4 == "") {
+            notify("Enter 4 digit verfication code", "danger");
+            return;
+        }
+
+        $('.loading').fadeIn();
+
+        var code = txt1 + txt2 + txt3 + txt4;
+        var email = $("#hdnVerificationEmail").val();
+
+        var data = {};
+        data.email = email
+        data.verifcationCode = code;
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("VerifyEmailVerficationCode", "Account")',
+            data: data,
+            success: function (data) {
+                if (data == "Logged in successfully") {
+                    window.location.href = '@Url.Action("MyAccount", "Customer")';
+                }
+                else { 
+                    notify("Code Is Invalid", "danger");
+                }
+            }, complete: function () {   
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#ShowVerificationCodeAlert").modal("show");
+        CodeCounter();
+    });
+
+    function CodeCounter() { 
+
+        var setintrvl;
+
+        $(".VCinterval").text(30)
+        clearInterval(setintrvl);
+
+
+        $(".resendcodespan").show();
+        $(".resendcodeanchor").hide();
+
+        var startfrom = $(".VCinterval").text();
+        startfrom = parseInt(startfrom);        
+
+        setintrvl = setInterval(function () {
+            startfrom = startfrom - 1;
+            if (startfrom == 0) {
+                clearInterval(setintrvl);
+                $(".resendcodespan").hide();
+                $(".resendcodeanchor").show();
+            }
+
+            if (startfrom < 10) {
+                $(".VCinterval").text("0" + startfrom)
+            }
+            else {
+                $(".VCinterval").text(startfrom)
+            }
+
+        }, 1000);        
+    }
+
+    function MovetoNext($this, nextid) {
+        if ($($this).val() != "") {
+            $("#" + nextid).focus();
+        }
+    }
+
+    function ResendVerificationCode($this) {
+        $('.loading').fadeIn();
+        var email = $("#hdnVerificationEmail").val();
+        var data = {};
+        data.email = email;
+        data.isForResetPassword = 0;
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("ResendEmailVerificationCode", "Account")',
+            data: data,
+            success: function (data) {
+                if (data == "Success") {
+                    notify("A verification code has been sent to your email address", "success");
+                }                
+            }, complete: function () { 
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+</script>

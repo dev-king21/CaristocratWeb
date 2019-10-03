@@ -1,0 +1,958 @@
+﻿@using Caristocrate.Common.Models
+@using Microsoft.AspNetCore.Http
+@model GetCars.Request
+@{
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+    AdvertisementBannersModel.Response AdvertisementBannersobj = ViewData["AdvertisementBannersobj"] as AdvertisementBannersModel.Response;
+    string categoryname = "Luxury Market";
+
+    if (Model.categoryID > 0)
+    {
+        categoryname = categories.data.Where(a => a.slug == "luxury-market").FirstOrDefault().child_category.Where(x => x.id == Model.categoryID).FirstOrDefault().name;
+    }
+
+    ViewData["Title"] = categoryname;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page";
+
+    RegionsModel.Response getRegionsobj = ViewData["getRegionsobj"] as RegionsModel.Response;
+
+
+    List<int> RegionList = null;
+    if (Model.Region != null)
+    {
+        if (Model.Region != "")
+        {
+            RegionList = Model.Region.Split(",").Select(int.Parse).ToList();
+        }
+        else
+        {
+
+            if (ViewData["UserRegionIDs"].ToString() != "")
+            {
+                RegionList = ViewData["UserRegionIDs"].ToString().Split(",").Select(int.Parse).ToList();
+            }
+        }
+    }
+    else
+    {
+        if (ViewData["UserRegionIDs"].ToString() != "")
+        {
+            RegionList = ViewData["UserRegionIDs"].ToString().Split(",").Select(int.Parse).ToList();
+        }
+    }
+
+
+
+}
+
+<style type="text/css">
+    .carbannerimage {
+        display: none !important;
+    }
+
+    .actcarbanner {
+        display: block !important;
+    }
+</style>
+
+<div class="overlay3" style="display:none;"></div>
+<div class="select_regn_popup" style="display:none;">
+    <h3>Pleese select your desired Region</h3>
+    <ul>
+        @if (getRegionsobj.success == true)
+        {
+            if (RegionList != null)
+            {
+                if (RegionList.Count > 0)
+                {
+                    foreach (var item in getRegionsobj.data.Where(m => RegionList.Contains(m.id)))
+                    {
+                        <li><label class="custom-chck"><img style="width:75px;" src="@item.flag" alt=""> @item.name<input class="selectedregioncheckbox" value="@item.id" checked="checked" type="checkbox"> <span class="checkmark"></span> </label></li>
+                    }
+                    foreach (var item in getRegionsobj.data.Where(m => !RegionList.Contains(m.id)))
+                    {
+                        <li><label class="custom-chck"><img style="width:75px;" src="@item.flag" alt=""> @item.name<input class="selectedregioncheckbox" value="@item.id" type="checkbox"> <span class="checkmark"></span> </label></li>
+                    }
+                }
+                else
+                {
+                    foreach (var item in getRegionsobj.data.ToList())
+                    {
+                        <li><label class="custom-chck"><img style="width:75px;" src="@item.flag" alt=""> @item.name<input class="selectedregioncheckbox" value="@item.id" type="checkbox"> <span class="checkmark"></span> </label></li>
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in getRegionsobj.data.ToList())
+                {
+                    <li><label class="custom-chck"><img style="width:75px;" src="@item.flag" alt=""> @item.name<input class="selectedregioncheckbox" value="@item.id" type="checkbox"> <span class="checkmark"></span> </label></li>
+                }
+            }
+        }
+    </ul>
+    <span style="color:black; text-align:center; width:100%;" id="regionsvalidationmsg"></span><br />
+
+    <span style="color:black; text-align:center; width:100%;"><input type="checkbox" id="checkboxRegionSelection" />&nbsp;Remember my selection for next time</span><br />
+    @*@if (Context.Session.Keys.Count() > 0)
+    {
+        <span style="color:black; text-align:center; width:100%;"><input type="checkbox" id="checkboxRegionSelection" />&nbsp;Remember my selection for next time</span><br />
+    }*@
+    <button onclick="SelectedRegions();">OK</button>
+</div>
+
+<input type="hidden" id="hdnselectedRegions" value="@Model.Region" />
+<input type="hidden" id="hdnisfromHome" value="@ViewData["isfromHome"]" />
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (AdvertisementBannersobj != null)
+        {
+            if (AdvertisementBannersobj.data != null)
+            {
+                if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 20).ToList().Count > 0)
+                {
+                    foreach (var item in AdvertisementBannersobj.data.Where(a => a.banner_type_id == 20).OrderByDescending(a => a.media_type))
+                    {
+                        if (item.media_type == "20")
+                        {
+                            <div class="slide">
+                                <iframe width="100%" height="100%" src="@item.video_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var subitem in item.banner_images.OrderBy(x => Guid.NewGuid()))
+                            {
+                                <div class="slide">
+                                    <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                        <div class="container">
+                                            <div class="banner_text">
+                                                <h1>@item.title</h1>
+                                                <p>@item.description</p>
+                                                @if (item.is_read_more == 1)
+                                                {
+                                                    <a onclick="MarkBannersViewed(this, '@item.id')" url="@item.source_url" href="@item.source_url" target="_blank" class="custBtn">readmore</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                            <div class="container">
+                                <div class="banner_text">
+                                    <h1>Welcome To<span>Caristocrat</span></h1>
+                                    @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                                @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                            @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+
+
+    </div>
+    @if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 20).ToList().Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+@*<section class="banner_sec">
+    @if (categories != null)
+    {
+        if (Model.categoryID == 0)
+        {
+            foreach (var item in categories.data.Where(a => a.slug == "luxury-market").ToList().Take(1))
+            {
+                <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1><span>@item.name</span></h1>
+                            <p>@item.subtitle</p>
+                        </div>
+                    </div>
+                </figure>
+            }
+        }
+        else
+        {
+            foreach (var item in categories.data.Where(a => a.slug == "luxury-market").FirstOrDefault().child_category)
+            {
+                <figure categoryid="@item.id" class="img_wrap carbannerimage @(item.id == Model.categoryID ? "actcarbanner" : "")" style="background-image: url('@item.media.FirstOrDefault().file_url');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1><span>@item.name</span></h1>
+                            <p>@item.subtitle</p>
+                        </div>
+                    </div>
+                </figure>
+            }
+        }
+    }
+    else
+    {
+        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/banner2.jpg")');">
+            <div class="container">
+                <div class="banner_text">
+                    <h1><span>Luxury Market</span></h1>
+                    <p>Your luxury cars search ends here</p>
+                </div>
+            </div>
+        </figure>
+    }
+</section>*@
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                    <li><a href="@Url.Action("Index","Car")">Luxury Market</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="listing_page">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3 col-md-12" id="GetLeftFilter"></div>
+
+            <div class="col-lg-9 col-md-12" id="GetFilteredCars"></div>
+
+        </div>
+    </div>
+</section>
+<input type="hidden" id="hdnIsRegionSelected" value="0" />
+
+@*<script src='@Url.Content("~/assets/js/xlib.js")'></script>
+<script src='@Url.Content("~/assets/js/bootstrap-notify.min.js")'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src=" https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
+<script src='@Url.Content("~/assets/js/script.js")'></script>
+<script src='@Url.Content("~/assets/js/accounting.min.js")'></script>*@
+
+<script type="text/javascript">   
+
+    if ('@ViewData["UserRegionIDs"]' == '' || '@Model.Region' != '') {
+
+        if (($("#hdnisfromHome").val() == "1" && '@Model.Region' != '') || '@Model.categoryID' == 28) {
+            $("#hdnselectedRegions").val('@Model.Region');
+            $(".select_regn_popup, .overlay3").fadeOut('');
+        }
+        else {
+            $(".select_regn_popup, .overlay3").fadeIn();
+        }
+    }
+    else {
+        $("#hdnselectedRegions").val('@ViewData["UserRegionIDs"]');
+    }
+
+
+    $(document).ready(function () {
+
+        var isfromhome = $("#hdnisfromHome").val();
+        if ('@Model.categoryID' == 28) {
+            
+            if (isfromhome == "1") {
+
+                if ('@Model.makeID' != "0") {
+                    //btnApplyFilter();
+                }
+                else {
+                    FilterbyBrand();
+                }
+
+            }
+            else {
+                FilterbyBrand();
+            }
+        }
+
+        
+
+        $('.loading').fadeIn();
+
+        var data = {};
+        data.categoryID = '@Model.categoryID'
+        data.makeID = '@Model.makeID'
+        data.modelID = '@Model.modelID'
+        data.minPrice = '@Model.minPrice'
+        data.maxPrice = '@Model.maxPrice'
+        data.minYear = '@Model.minYear'
+        data.maxYear = '@Model.maxYear'
+        data.minKM = '@Model.minKM'
+        data.maxKM = '@Model.maxKM'
+        data.CarType = '@Model.CarType'
+        data.Region = '@Model.Region'
+
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("LeftFilter", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#GetLeftFilter').html(data);
+
+                $("#ddlModel").find("option").each(function () {
+                    if (data.modelID != $(this).val()) {
+                        $(this).hide();
+                    }
+                })
+                
+                $("#txtMinBudget").val('@Model.minPrice');
+                $("#txtMaxBudget").val('@Model.maxPrice');
+
+                if ($("#txtMinBudget").val() == "0" && $("#txtMaxBudget").val() == 0) {
+                    $("#txtMinBudget").val(10000);
+                    $("#txtMaxBudget").val(5000000);
+                }
+
+            }, complete: function (data) {
+                $('.loading').fadeOut('');
+
+                if ($("#hdnisfromHome").val() == "1" && '@Model.Region' != '') {
+                    $("#hdnselectedRegions").val('@Model.Region');
+                }
+
+                
+
+                
+                if ($(".radiocategory:checked").val() == 28) {
+
+                    if (isfromhome == "1") {
+
+                        if ('@Model.makeID' != "0") {
+                            btnApplyFilter();
+                        }
+                        else {
+                            //FilterbyBrand();
+                        }
+
+                    } else {
+                        //FilterbyBrand();
+                    }
+                }
+                else {
+                    btnApplyFilter();
+                }
+
+
+            }
+        });
+    });
+
+
+    function GetModels($this) {
+
+        var makeid = $($this).find("option:selected").val();
+
+        $("#ddlModel").find("option").each(function () {
+            $(this).hide();
+        })
+
+        $("#ddlModel").val(0);
+
+        $("#ddlModel").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+
+
+        $(".brandsLogo").each(function () {
+            if ($(this).attr("id") == makeid) {
+                $(this).addClass("active")
+            }
+            else { $(this).removeClass("active") }
+        });
+    }
+
+    function OnSegmentChange($this) {
+        var segmedID = $($this).find("option:selected").val();
+        $(".loaderdivsubsegment").show();
+        $(".SubSegmentDiv").hide();
+        $("#ddlSubSegment").html("");
+        $("#ddlSubSegment").html('<option value="0">Filter by Sub Segment</option>')
+        
+        var data = {};
+        data.parentID = segmedID;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("GetSubSegments", "Car")',
+            success: function (data) {
+                console.log(data)
+                debugger;
+                for (var i = 0; i < data.data.length; i++) {
+                    $("#ddlSubSegment").append('<option value="' + data.data[i].id + '">' + data.data[i].name + '</option>');
+                }
+            },
+            complete: function () {
+                $(".loaderdivsubsegment").hide();
+                $(".SubSegmentDiv").show();
+            }
+        });
+    }
+
+    function FilterbyBrandClick(id, $this) {
+        $("#ddlMake").val(id);
+        GetModels($("#ddlMake"));
+
+        $("#btnApplyFilter").trigger("click")
+
+    }
+
+    function ResetAllFields() {
+
+        //$(".radiocategory").each(function () {
+        //    $(this).removeAttr("checked")
+        //})
+
+        //$("#radioALL").click();
+
+        $("#ddlMake").val(0)
+        $("#ddlModel").val(0)
+        $("#ddlSegment").val(0)
+        $("#ddlSubSegment").val(0)
+        $("#hdnYearSorting").val(0)
+        $("#ddlRegions").val(0);
+        $("#ddlVersion").val(0);
+
+
+        var minKM = 0, maxKM = 100000;
+        var currentTime = new Date()
+        var minYear = 2010, maxYear = currentTime.getFullYear();
+        var minBudget = 10000, maxBudget = 5000000;
+        var minimumbudget = 0;
+        var maximumbudget = 0;
+
+        $("#slider-range").slider({
+            range: true,
+            min: minBudget,
+            max: maxBudget,
+            step: 10000,
+            values: [minBudget, maxBudget],
+            slide: function (event, ui) {
+
+                minimumbudget = ui.values[0];
+                maximumbudget = ui.values[1];
+
+                $("#txtMinBudget").val(minimumbudget);
+                $("#txtMaxBudget").val(maximumbudget);
+
+                minimumbudget = formatcurrency(minimumbudget);
+                maximumbudget = formatcurrency(maximumbudget);
+
+                $("#amount").val("AED " + minimumbudget + " - " + maximumbudget);
+            }
+        });
+
+        minimumbudget = $("#slider-range").slider("values", 0);
+        maximumbudget = $("#slider-range").slider("values", 1);
+
+        $("#txtMinBudget").val(minimumbudget);
+        $("#txtMaxBudget").val(maximumbudget);
+
+        minimumbudget = formatcurrency(minimumbudget);
+        maximumbudget = formatcurrency(maximumbudget);
+
+        $("#amount").val("AED " + minimumbudget + " - " + maximumbudget);
+
+
+        $("#year-range").slider({
+            range: true,
+            min: minYear,
+            max: maxYear,
+            values: [minYear, maxYear],
+            slide: function (event, ui) {
+                $("#year").val(ui.values[0] + " - " + ui.values[1]);
+            }
+        });
+        $("#year").val($("#year-range").slider("values", 0) +
+            " - " + $("#year-range").slider("values", 1));
+
+        $("#km-range").slider({
+            range: true,
+            min: minKM,
+            max: maxKM,
+            values: [minKM, maxKM],
+            slide: function (event, ui) {
+                $("#km").val(ui.values[0] + " km " + " - " + ui.values[1] + " km");
+            }
+        });
+        $("#km").val($("#km-range").slider("values", 0) + " km " +
+            " - " + $("#km-range").slider("values", 1) + " km");
+
+        if ($(".radiocategory:checked").val() == 28) {
+            FilterbyBrand();
+        }
+        else {
+            btnApplyFilter();
+        }
+    }
+
+    function FilterbyBrand() {
+
+        //var html = '<div class="listing_loading"><div class="loading-text"><span class="loading-text-words">L</span><span class="loading-text-words">O</span><span class="loading-text-words">A</span><span class="loading-text-words">D</span>' +
+        //    '<span class="loading-text-words">I</span><span class="loading-text-words">N</span><span class="loading-text-words">G</span></div></div>';
+
+        //$('#GetFilteredCars').html(html);
+
+        //$(".listing_loading").fadeIn();
+        $('.loading').fadeIn();
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("FilterByBrand", "Car")',
+            success: function (data) {
+                $('#GetFilteredCars').html(data);
+                //$(".listing_loading").fadeOut('');
+                OnFilteredDataSuccess();
+            }, complete: function (data) {
+
+                $('.loading').fadeOut('');
+
+                var makeid = $("#ddlMake").find("option:selected").val();
+                $(".brandsLogo").each(function () {
+                    if ($(this).attr("id") == makeid) {
+                        $(this).addClass("active")
+                    }
+                    else { $(this).removeClass("active") }
+                });
+
+
+            }
+        });
+     }
+
+    function btnApplyFilter() {
+
+        //var html = '<div class="listing_loading"><div class="loading-text"><span class="loading-text-words">L</span><span class="loading-text-words">O</span><span class="loading-text-words">A</span><span class="loading-text-words">D</span>' +
+        //    '<span class="loading-text-words">I</span><span class="loading-text-words">N</span><span class="loading-text-words">G</span></div></div>';
+
+        //$('#GetFilteredCars').html(html);
+
+        //$(".listing_loading").fadeIn();
+        $('.loading').fadeIn();
+
+        var KM = $("#km").val();
+
+        KM = KM.replace(' ', '')
+        KM = KM.replace(' km ', '')
+        KM = KM.replace('km', '')
+        KM = KM.replace(' ', '')
+        KM = KM.replace(' km ', '')
+        KM = KM.replace('km', '')
+        KM = KM.replace(' ', '')
+        KM = KM.replace(' km ', '')
+        KM = KM.replace('km', '')
+        KM = KM.replace(' ', '')
+        KM = KM.replace(' ', '')
+
+        var year = $("#year").val()
+        year = year.replace(' ', '')
+        year = year.replace(' year ', '')
+        year = year.replace('year', '')
+
+        var categoryID = $(".radiocategory:checked").val();
+        var makeID = $("#ddlMake").val();
+        var modelID = $("#ddlModel").val();
+        var minKM = KM.split('-')[0];
+        var maxKM = KM.split('-')[1];
+        var minYear = year.split('-')[0];
+        var maxYear = year.split('-')[1];
+        var minPrice = $("#txtMinBudget").val();
+        var maxPrice = $("#txtMaxBudget").val();
+        var CarType = $("#ddlSegment").val();
+        var SubSegmentID = $("#ddlSubSegment").val();
+        var SortbyYear = $("#hdnYearSorting").val();
+        var versionID = $("#ddlVersion").val();
+        
+        var Region = "";
+        //Region = $(".regionFilterSection").find("select").val().join([separator = ','])
+        Region = $("#hdnselectedRegions").val();
+
+        var dealertype = "0";
+        if ($(".dealerradio:checked").length > 0) {
+            dealertype = $(".dealerradio:checked").val()
+        }
+
+        var currentTime = new Date()
+        if (minKM == 0 && maxKM == 100000) {
+            minKM = 0; maxKM = 0;
+        }
+        if (minYear == 2010 && maxYear == currentTime.getFullYear()) {
+            minYear = 0; maxYear = 0;
+        }
+        if (minYear == 1920 && maxYear == 2010) {
+            minYear = 0; maxYear = 0;
+        }
+        if (minPrice == 10000 && maxPrice == 5000000) {
+            minPrice = 0; maxPrice = 0;
+        }
+
+        var data = {};
+        data.categoryID = categoryID;
+        data.makeID = makeID;
+        data.modelID = modelID;
+        data.minPrice = minPrice;
+        data.maxPrice = maxPrice;
+        data.minYear = minYear;
+        data.maxYear = maxYear;
+        data.minKM = minKM;
+        data.maxKM = maxKM;
+        data.CarType = CarType;
+        data.SubSegmentID = SubSegmentID;
+        data.versionID = versionID;
+        data.Region = Region;
+        data.sortbyYear = SortbyYear;
+        data.dealer = dealertype;
+
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("FilteredCars", "Car")',
+            success: function (data) {
+                debugger;
+                $('#GetFilteredCars').html(data);
+                
+                //$(".listing_loading").fadeOut('');
+
+
+                $(".childlisting").each(function () {
+                    $(this).hide();
+                })
+
+                for (var i = 1; i <= 30; i++) {
+                    $(".childlisting").each(function () {
+                        if ($(this).attr("rowno") == i) {
+                            $(this).show();
+                        }
+                    })
+                }
+
+                if ($(".radiocategory:checked").length > 0) {
+                    $("#SearchedCategoryName").text($(".radiocategory:checked").parent().text().trim())
+                }
+                else {
+                    $("#SearchedCategoryName").text("All Luxury Cars")
+                }
+
+                OnFilteredDataSuccess();
+
+            }, error: function (x, v) { 
+                debugger;
+            }, complete: function () { 
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+
+    function OnFilteredDataSuccess() {
+
+        $('#txtCarFilteredSearch').keypress(function (event) {
+            var text = $(this).val();
+            console.log(text);
+            if (text != "") {
+                $(".childlisting").each(function () {
+                    if ($(this).attr("carname").match(text)) {
+                        $(this).attr("searching", "0");
+                    }
+                    else {
+                        $(this).attr("searching", "1");
+                    }
+                })
+
+                sortMeBy("searching", "#CarListingSection", ".childlisting", "asc");
+
+            }
+            else {
+                $(".childlisting").each(function () {
+                    $(this).removeAttr("searching");
+                });
+                sortMeBy("sortno", "#CarListingSection", ".childlisting", "asc");
+            }
+        });
+
+
+        $('.gridBtns a').on('click', function () {
+            $(this).addClass('act');
+            $(this).siblings().removeClass('act');
+        });
+
+        $('.gridBtns .listBtn').on('click', function () {
+
+            $('.listing').addClass('list_parent');
+
+            if ($('.listing').hasClass('list_parent')) {
+
+                $('.list_parent').children('.bx').removeClass('col-md-6');
+                $('.list_parent').find('.bx').addClass('col-lg-12');
+
+            } else {
+                $('.list_parent').find('.bx').removeClass('col-lg-6');
+            }
+
+        });
+
+        $('.gridBtns .gridBtn').on('click', function () {
+
+            $('.listing').removeClass('list_parent');
+            $('.listing').addClass('grid_parent');
+
+            if ($('.listing').hasClass('grid_parent')) {
+
+                $('.grid_parent').find('.bx').addClass('col-md-6');
+                $('.grid_parent').find('.bx').removeClass('col-lg-12');
+
+            } else {
+
+            }
+
+        });
+    }
+
+    function DisplayPage($this, min, max) {
+
+        min = max - 29;
+
+        $(".childlisting").each(function () {
+            $(this).hide();
+        })
+
+        for (var i = min; i <= max; i++) {
+            $(".childlisting").each(function () {
+                if ($(this).attr("rowno") == i) {
+                    $(this).show();
+                }
+            })
+        }
+
+        document.getElementById('GetFilteredCars').scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+    }
+
+    function FilterCarSorting($this) {
+        var id = $($this).val();
+
+        if (id == 1) {
+            sortMeBy("sortno", "#CarListingSection", ".childlisting", "asc");
+        }
+        else if (id == 2) {
+            sortMeBy("sortno", "#CarListingSection", ".childlisting", "desc");
+        }
+        else if (id == 3) {
+            sortMeBy("price", "#CarListingSection", ".childlisting", "asc");
+        }
+        else if (id == 4) {
+            sortMeBy("price", "#CarListingSection", ".childlisting", "desc");
+        }
+
+        var divlength = $(".childlisting").length;
+
+
+        var index = 1;
+        $(".childlisting").each(function () {
+            $(this).hide();
+            $(this).attr("rowno", index);
+            index++;
+        })
+
+        for (var i = 1; i <= 30; i++) {
+            $(".childlisting").each(function () {
+                if ($(this).attr("rowno") == i) {
+                    $(this).show();
+                }
+            })
+        }
+
+        $(".FilteredCarNav:first").find("a").click();
+
+    }
+
+    function sortMeBy(arg, sel, elem, order) {
+        var $selector = $(sel),
+            $element = $selector.children(elem);
+        $element.sort(function (a, b) {
+            var an = parseInt(a.getAttribute(arg)),
+                bn = parseInt(b.getAttribute(arg));
+            if (order == "asc") {
+                if (an > bn)
+                    return 1;
+                if (an < bn)
+                    return -1;
+            } else if (order == "desc") {
+                if (an < bn)
+                    return 1;
+                if (an > bn)
+                    return -1;
+            }
+            return 0;
+        });
+        $element.detach().appendTo($selector);
+    }
+
+    function GetVersions($this) {
+
+        $("#ddlVersion").html("");
+        $("#ddlVersion").html('<option value="0">Filter by Version</option>')
+
+        var modelid = $($this).val();
+        var data = {};
+        data.modelid = modelid;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("getVersions", "Car")',
+            success: function (data) {
+                for (var i = 0; i < data.data.length; i++) {
+                    $("#ddlVersion").append('<option value="' + data.data[i].id + '">' + data.data[i].name + '</option>');
+                }
+            },
+        });
+    }
+
+    function SelectedRegions() {
+
+        var categoryID = '@Model.categoryID';
+        $("#regionsvalidationmsg").text("");
+
+        $("#hdnIsRegionSelected").val('@Model.categoryID');
+
+        if (categoryID != "28") {
+            if ($(".selectedregioncheckbox:checked").length == 0) {
+                //$("#regionsvalidationmsg").text("Please select atleast one region");
+                notify("Please select atleast one region", "danger");
+                return;
+            }
+        }
+
+        var selectedregions = "";
+        $(".selectedregioncheckbox:checked").each(function () {
+            selectedregions = selectedregions + $(this).val() + ",";
+        })
+
+        if (selectedregions != "") {
+            selectedregions = selectedregions.substring(0, selectedregions.length - 1);
+        }
+
+        $("#hdnselectedRegions").val(selectedregions);
+        $(".select_regn_popup, .overlay3").fadeOut('');
+
+
+
+
+        var isfromhome = $("#hdnisfromHome").val();
+        if ($(".radiocategory:checked").val() == 28) {
+
+            if (isfromhome == "1") {
+
+                if ('@Model.makeID' != "0") {
+                    btnApplyFilter();
+                }
+                else {
+                    FilterbyBrand();
+                }
+
+            } else {
+                FilterbyBrand();
+            }
+
+        }
+        else { 
+            btnApplyFilter();
+        }
+
+        if ($("#checkboxRegionSelection:checked").length > 0) {
+
+            var data = {};
+            data.regionids = selectedregions;
+
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'GET',
+                data: data,
+                url: '@Url.Action("SetRegionSession", "Car")',
+                success: function (data) {
+                    if (data == true) {
+
+                    }
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        GetHeaderRegion();
+
+                        $('.language-dropdown').click(function (e) {
+                            $(this).addClass('d-block');
+                            e.stopPropagation();
+                        });
+
+                        //$('body').click(function (e) {
+                        //    $(".language-dropdown").removeClass('d-block');
+                        //    e.stopPropagation();
+                        //});
+
+                        $(".menuarrow").click(function (e) {
+                            $(".language-dropdown").toggleClass('d-block');
+                            e.stopPropagation();
+                            $(this).parent("li").children(".subMenu").toggle();
+                            $(this).toggleClass("fa fa-angle-down fa fa-angle-up");
+                        });
+
+                    }, 2000); 
+                }
+            });
+        }
+    }
+
+</script>

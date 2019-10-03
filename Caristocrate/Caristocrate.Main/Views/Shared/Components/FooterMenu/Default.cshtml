@@ -1,0 +1,107 @@
+﻿@using Caristocrate.Common.Models
+@using Caristocrate.Common
+@using Microsoft.AspNetCore.Http
+@{
+    string encryptionKey = "E546C8DF278CD5931069B522E695D4F2";
+}
+@model CategoryModel.Response
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+
+            <div class="col-md-3">
+                <h3>LUXURY MARKET <i class="fa fa-plus-square-o" aria-hidden="true"></i></h3>
+                <div class="mobMenuFot">
+                    <ul>
+                        @foreach (var item in Model.data.Where(a => a.slug == "luxury-market").FirstOrDefault().child_category)
+                        {
+                            <li><a href="@Url.Action("Index","Car", new { data= General.EncryptString("categoryID=" + item.id , encryptionKey) })">@item.name</a></li>
+                        }
+                        @*<li><a href="@Url.Action("Index", "Car", new { data = General.EncryptString("categoryID=28", encryptionKey) })">Luxury New Cars</a></li>
+                            <li><a href="@Url.Action("Index", "Car", new { data = General.EncryptString("categoryID=25", encryptionKey) })">The Outlet Mall</a></li>
+                            <li><a href="@Url.Action("Index", "Car", new { data = General.EncryptString("categoryID=26", encryptionKey) })">Approved Pre-Owned</a></li>
+                            <li><a href="@Url.Action("Index", "Car", new { data = General.EncryptString("categoryID=27", encryptionKey) })">Classic Cars</a></li>*@
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <h3>THE CONSULTANT <i class="fa fa-plus-square-o" aria-hidden="true"></i></h3>
+                <div class="mobMenuFot">
+                    <ul>
+                        @*<li><a href="@Url.Action("CompareCar", "Car")">Compare Cars</a></li>
+        <li><a href="@Url.Action("EvaluateCar", "Car")">Evaluate My Car</a></li>
+        <li><a href="@Url.Action("VinCheck", "Car")">VIN Check</a></li>
+        <li><a href="@Url.Action("Reviews", "Car")">Reviews </a></li>
+        <li><a href="@Url.Action("AskForConsultancy", "Car")">Ask For Consultancy</a></li>*@
+
+                        @if (Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "compare").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("CompareCar", "Car")">@Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "compare").FirstOrDefault().name</a></li>
+                        }
+                        @if (Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "evaluate-my-car").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("EvaluateCar", "Car")">@Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "evaluate-my-car").FirstOrDefault().name</a></li>
+                        }
+                        @if (Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "vin-check").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("VinCheck", "Car")">@Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "vin-check").FirstOrDefault().name</a></li>
+                        }
+                        @if (Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "reviews").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("Reviews", "Car")">@Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "reviews").FirstOrDefault().name</a></li>
+                        }
+                        @if (Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "ask-for-consultancy").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("AskForConsultancy", "Car")">@Model.data.Where(a => a.slug == "the-consultant").FirstOrDefault().child_category.Where(a => a.slug == "ask-for-consultancy").FirstOrDefault().name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <h3>AUTOLIFE <i class="fa fa-plus-square-o" aria-hidden="true"></i></h3>
+                <div class="mobMenuFot">
+                    <ul>
+
+                        @foreach (var item in Model.data.Where(a => a.slug == "auto-life").FirstOrDefault().child_category)
+                        {
+                            <li><a href="@Url.Action("AutolifeChild","Car", new { slug = item.slug })">@item.name</a></li>
+                        }
+                        @*<li><a href="@Url.Action("AutolifeChild", "Car", new { slug = "news" })">News</a></li>
+                            <li><a href="@Url.Action("AutolifeChild", "Car", new { slug = "events" })">Events</a></li>
+                            <li><a href="@Url.Action("AutolifeChild", "Car", new { slug = "interviews" })">Interviews</a></li>
+                            <li><a href="@Url.Action("AutolifeChild", "Car", new { slug = "motor-sports" })">Motor Sport</a></li>
+                            <li><a href="@Url.Action("AutolifeChild", "Car", new { slug = "test-drives" })">Test Drives</a></li>*@
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <h3 class="showMob">Quick links <i class="fa fa-plus-square-o" aria-hidden="true"></i></h3>
+                <div class="mobMenuFot">
+                    <ul class="quick_links">
+                        @if (Model.data.Where(a => a.slug == "for-women-only").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("WomenOnly", "Car")">@Model.data.Where(a => a.slug == "for-women-only").FirstOrDefault().name</a></li>
+                        }
+
+                        @if (Model.data.Where(a => a.slug == "careducation").ToList().Count > 0)
+                        {
+                            <li><a href="@Url.Action("CarEducation", "Car")">@Model.data.Where(a => a.slug == "careducation").FirstOrDefault().name</a></li>
+                        }
+                        @*<li><a href="@Url.Action("WomenOnly", "Car")">For Women Only</a></li>
+                            <li><a href="@Url.Action("CarEducation", "Car")">Car Education</a></li>*@
+                        <li><a href="@Url.Action("Index", "Coach")">The Coach</a></li>
+                        @*<li><a href="javascript:;">Motor Hub</a></li>*@
+                    </ul>
+                </div>
+                <div class="AppsLinkdiv"></div>                
+            </div>
+
+        }
+    }
+}

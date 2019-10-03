@@ -1,0 +1,229 @@
+﻿@using Caristocrate.Common.Models
+@model SettingModel.Response
+@{
+    ViewData["Title"] = "Ask For Consultancy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page preownDetail";
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+
+<style type="text/css">
+    #ValidationMessage {
+        text-align: center;
+        color: black;
+        animation: ValidationMessage 5s 1;
+        -webkit-animation: ValidationMessage 5s 1;
+        animation-fill-mode: forwards;
+        animation-delay: 10s;
+        -webkit-animation-delay: 5s; /* Safari and Chrome */
+        -webkit-animation-fill-mode: forwards;
+    }
+
+        #ValidationMessage span {
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 15px;
+            color: red;
+        }
+
+    @@keyframes ValidationMessage {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @@-webkit-keyframes ValidationMessage {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+</style>
+
+<section class="banner_sec">
+    @*<figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/preowned-banner.jpg")');">
+        </figure>*@
+    @if (categories != null)
+    {
+        foreach (var item in categories.data.Where(x => x.slug == "the-consultant"))
+        {
+            foreach (var subitem in item.child_category.Where(a => a.slug == "ask-for-consultancy").Take(1))
+            {
+                <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1><span>@subitem.name</span></h1>
+                            <p>@subitem.subtitle</p>
+                        </div>
+                    </div>
+                </figure>
+            }
+        }
+    }
+    else
+    {
+        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/preowned-banner.jpg")');">
+            <div style="display:none" class="container">
+                <div class="banner_text">
+                    <h1><span>Luxury Market</span></h1>
+                    <p>Your luxury cars search ends here</p>
+                </div>
+            </div>
+        </figure>
+    }   
+</section>
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="javascript:;">Ask for Consultancy</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="ownedDetail_sec">
+    <div class="container">
+        <div class="head">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="page-title">Ask for Consultancy</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="evaluate_sec">
+            <div class="btns_parent">
+                <a href="javascript:;" onclick="ConsultancyToggle(this, 10)" class="custBtn current">Ask for Consultancy</a>
+                <a href="javascript:;" onclick="ConsultancyToggle(this, 20)" class="custBtn">Personal Shopper</a>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    
+                    @if (Model != null)
+                    {
+                        if (Model.data != null)
+                        {
+                            if (Model.data.Count > 0)
+                            {
+                                if (Model.data.FirstOrDefault().personal_shopper != null)
+                                {
+                                    <div class="page-info" id="descAskforConsultancy">
+                                        <h3 class="page-title">Description</h3>
+                                        @Html.Raw(Model.data.FirstOrDefault().ask_for_consultancy)
+                                    </div>
+
+                                    <div class="page-info" id="descPersonalShopper"  style="display:none;">
+                                        <h3 class="page-title">Description</h3>
+                                        @Html.Raw(Model.data.FirstOrDefault().personal_shopper)
+                                    </div>
+
+                                }
+                            }
+                        }
+                    }
+
+                    <form enctype="multipart/form-data" method="post" action="@Url.Action("AskForConsultancy","Car")">
+                        <div class="evalute_form">
+                            <div class="row">
+                                <input type="hidden" id="hdnConsultancyType" name="hdnConsultancyType" value="10" />
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-user1"></span><input required id="txtName" type="text" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" name="txtName" placeholder="Full Name"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-msg"></span><input required type="email" id="txtEmail" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" name="txtEmail" placeholder="Email Address"></div>
+                                </div>
+                                <div class="col-md-12" id="PSPhoneCodeFIeld">
+                                    <div class="icon_field">
+                                        <span class="icon-call icon"></span>
+                                        <input class="selected-dial-code" type="hidden" id="txtPhoneCode" required name="txtPhoneCode" placeholder="+971">
+                                        <input type="text" class="pncode phone" id="txtPhoneNo" name="txtPhoneNo" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" required placeholder="Phone Number">                                        
+                                    </div>
+                                </div>                                
+                                                                    
+                                <div class="col-md-12">
+                                    <button type="submit" class="custBtn">submit request</button>
+                                    @if (ViewData["Message"].ToString() != "")
+                                    {
+                                        <div class="password_success" id="ValidationMessage"><img src="@Url.Content("~/assets/images/check.png")" alt="">We have received your details. one of our experts will be in touch with your shortly!</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</section>
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () { 
+
+        if ('@ViewData["Message"].ToString()' != '') { 
+            notify("We have received your details. one of our experts will be in touch with your shortly!", "success")
+        }
+
+        $(".pncode").on("countrychange", function (e, countryData) {            
+            $("#txtPhoneCode").val("+" + countryData.dialCode)
+        });
+
+        setTimeout(function () {
+            if ('@ViewData["UserCountryCode"]' != null) {
+                debugger;
+                if ('@ViewData["UserCountryCode"].ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@ViewData["UserCountryCode"].ToString()') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 10000);
+
+    })
+
+    function ConsultancyToggle($this, type) {
+
+        $(".btns_parent").find("a.custBtn").each(function () {
+            $(this).removeClass("current")
+        })
+
+        $($this).addClass("current");
+        $("#hdnConsultancyType").val(type);
+
+        if (type == 10) {
+            $("#descAskforConsultancy").show();
+            $("#descPersonalShopper").hide();
+        }
+        else {
+            $("#descAskforConsultancy").hide();
+            $("#descPersonalShopper").show(); }
+
+    }
+</script>

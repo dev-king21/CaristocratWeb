@@ -1,0 +1,90 @@
+﻿@using Caristocrate.Common.Models
+@model CustTradeInModel.Response
+@{
+    ViewData["Title"] = "My Evaluations";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "dashPages";
+}
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">Home</a></li>
+                    <li><a href="javascript:;">Evaluation Offers</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="main_sec">
+    <div class="container">
+        <div class="headBar">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="page-title">Evaluation Offers</h2>
+                </div>
+                <div style="display:none;" class="col-md-4 right my-auto">
+                    <select>
+                        <option value="">Newest</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="topOffers trade3">
+            <div class="row mb-4">
+                @if (Model != null)
+                {
+                    if (Model.data != null)
+                    {
+                        if (Model.data.Count > 0)
+                        {
+                            foreach (var item in Model.data)
+                            {
+                                if (item.trade_against != null)
+                                {
+                                    <div class="col-md-4">
+                                        <a target="_blank" href="@Url.Action("MyEvaluationbyID", "Customer", new { id = item.id })">
+                                            <figure class="img_wrap" style="background-image: url('@(item.trade_against.media != null ? (item.trade_against.media.Count > 0 ? item.trade_against.media.FirstOrDefault().file_url : "") : "" ) ');"></figure>
+                                            <div class="content">
+                                                @*<h2>@item.trade_against.name</h2>*@
+                                                <h2>@item.trade_against.car_model.brand.name @item.trade_against.car_model.name</h2>
+                                                <ul class="offer_call">
+                                                    @*<li><label>Call</label> <a href="tel:+971  04 451 3659">@(item.trade_against.top_bids != null ? item.trade_against.top_bids.FirstOrDefault().evaluation_details != null ? item.trade_against.top_bids.FirstOrDefault().evaluation_details.FirstOrDefault().user.details.phone : "" : "")</a></li>
+                                                        <li><label>Email</label> <a href="mailto:syed@alnabooda.com">@(item.trade_against.top_bids != null ?  item.trade_against.top_bids.FirstOrDefault().evaluation_details.FirstOrDefault().user.email : "")</a></li>*@
+                                                    <li><label>Model Year</label> @item.trade_against.year</li>
+                                                    <li><label>Chassis</label> @item.trade_against.chassis</li>
+                                                </ul>
+                                                @*<p class="offer_price">Best Offers <strong>@item.trade_against.currency @item.trade_against.amount</strong></p>*@
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center; width:100%; font-weight:bold;"> No Record Found</div>
+                        }
+                    }
+                    else
+                    {
+                        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                }
+
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+

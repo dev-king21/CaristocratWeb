@@ -1,0 +1,227 @@
+﻿@using Caristocrate.Common.Models;
+@{
+    NewsModel.Response GetNewsobj = ViewData["GetNewsobj"] as NewsModel.Response;
+    NewsModel.Response GetNewsobj2 = ViewData["GetNewsobj2"] as NewsModel.Response;
+    NewsModel.Response GetNewsobj3 = ViewData["GetNewsobj3"] as NewsModel.Response;
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+<section class="blog_sec">
+    <div class="container">
+        @if (GetNewsobj3 != null)
+        {
+            if (GetNewsobj3.data != null)
+            {
+                if (GetNewsobj3.data.Count > 0)
+                {
+                    if (GetNewsobj3.data.Where(x => x.category_id == 3) != null)
+                    {
+                        if (GetNewsobj3.data.Where(x => x.category_id == 3).ToList().Count > 0)
+                        {
+
+                            <div class="row head" style="font-style:normal !important;">
+                                <div class="col-md-6">
+                                    <h3 class="title_blog">For Women Only</h3>
+                                </div>
+                                <div class="col-md-6 my-auto text-right">
+                                    <a href="@Url.Action("WomenOnly","Car")">View More</a>
+                                </div>
+                            </div>
+
+                            <div class="row  multiple-items">
+
+                                @if (GetNewsobj3 != null)
+                                {
+                                    if (GetNewsobj3.data != null)
+                                    {
+                                        if (GetNewsobj3.data.Count > 0)
+                                        {
+                                            foreach (var item in GetNewsobj3.data.Where(x => x.category_id == 3).Take(3))
+                                            {
+                                                try
+                                                {
+                                                    <div class="col-md-4">
+                                                        <a href="@(Url.Action("WomenOnlybyID", "Car", new { id = item.slug }))">
+                                                            <div class="blogBox AutolifecategoryDesc">
+
+                                                                @if (item.media.FirstOrDefault().media_type == 20)
+                                                                {
+
+                                                                    @*<iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*@
+                                                                    @*<figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/video-placeholder.jpg")');"></figure>*@
+                                                                    <iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                                    //  <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().thumnail');"></figure>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <figure class="img_wrap" style="background-image: url(@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : ""));"></figure>
+                                                                }
+                                                                @*<h2>@item.headline</h2>*@
+                                                                <h2>@(item.headline != null ? Html.Raw(item.headline.Length > 65 ? item.headline.Substring(0, 65) + "..." : item.headline) : Html.Raw(""))</h2>
+                                                                @*<p class="AutolifecategoryDesc">@(item.description != null ? Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description) : Html.Raw("") )</p>*@
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                }
+                                                catch
+                                                { }
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                            </div>
+
+                        }
+                    }
+                }
+            }
+        }
+    </div>
+</section>
+
+<section class="blog_sec">
+    <div class="container">
+        @if (GetNewsobj != null)
+        {
+            if (GetNewsobj.data != null)
+            {
+                if (GetNewsobj.data.Count > 0)
+                {
+                    if (GetNewsobj.data.Where(x => x.category_id == 4 || x.category_id == 5 || x.category_id == 6 || x.category_id == 8 || x.category_id == 49) != null)
+                    {
+                        if (GetNewsobj.data.Where(x => x.category_id == 4 || x.category_id == 5 || x.category_id == 6 || x.category_id == 8 || x.category_id == 49).ToList().Count > 0)
+                        {
+
+                            <div class="row head" style="font-style:normal !important;">
+                                <div class="col-md-6">
+                                    <h3 class="title_blog">Autolife</h3>
+                                </div>
+                                <div class="col-md-6 my-auto text-right">
+                                    <a href="@Url.Action("News","Car")">View More</a>
+                                </div>
+                            </div>
+
+                            <div class="row  multiple-items">
+
+                                @if (GetNewsobj != null)
+                                {
+                                    if (GetNewsobj.data != null)
+                                    {
+                                        if (GetNewsobj.data.Count > 0)
+                                        {
+                                            foreach (var item in GetNewsobj.data.Take(3))
+                                            {
+                                                try
+                                                {
+                                                    string slugname = categories.data.FirstOrDefault().child_category.Where(a => a.id == item.category_id).FirstOrDefault().slug;
+
+
+
+                                                    <div class="col-md-4">
+                                                        <a href="@(Url.Action("NewsbyID", "Car", new { slug = slugname, id = item.slug }))">
+                                                            <div class="blogBox AutolifecategoryDesc">
+                                                                @if (item.media.FirstOrDefault().media_type == 20)
+                                                                {
+
+                                                                    <iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                                  //  <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().thumnail');"></figure>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <figure class="img_wrap" style="background-image: url(@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : ""));"></figure>
+                                                                }
+                                                                @*<h2>@item.headline</h2>*@
+                                                                <h2>@(item.headline != null ? Html.Raw(item.headline.Length > 65 ? item.headline.Substring(0, 65) + "..." : item.headline) : Html.Raw(""))</h2>
+                                                                @*<p class="AutolifecategoryDesc">@(item.description != null ? Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description) : Html.Raw("") )</p>*@
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                }
+                                                catch
+                                                { }
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                            </div>
+
+                        }
+                    }
+                }
+            }
+        }
+    </div>
+</section>
+
+<section class="blog_sec">
+    <div class="container">
+        @if (GetNewsobj2 != null)
+        {
+            if (GetNewsobj2.data != null)
+            {
+                if (GetNewsobj2.data.Count > 0)
+                {
+                    if (GetNewsobj2.data.Where(x => x.category_id == 2) != null)
+                    {
+                        if (GetNewsobj2.data.Where(x => x.category_id == 2).ToList().Count > 0)
+                        {
+
+                            <div class="row head" style="font-style:normal !important;">
+                                <div class="col-md-6">
+                                    <h3 class="title_blog">Car Education</h3>
+                                </div>
+                                <div class="col-md-6 my-auto text-right">
+                                    <a href="@Url.Action("CarEducation","Car")">View More</a>
+                                </div>
+                            </div>
+
+                            <div class="row  multiple-items">
+                                @if (GetNewsobj2 != null)
+                                {
+                                    if (GetNewsobj2.data != null)
+                                    {
+                                        if (GetNewsobj2.data.Count > 0)
+                                        {
+                                            foreach (var item in GetNewsobj2.data.Where(x => x.category_id == 2).Take(3))
+                                            {
+                                                try
+                                                {
+
+                                                    <div class="col-md-4">
+                                                        <a href="@(Url.Action("CarEducationbyID", "Car", new { id = item.slug }))">
+                                                            <div class="blogBox AutolifecategoryDesc">
+                                                                @if (item.media.FirstOrDefault().media_type == 20)
+                                                                {
+
+                                                                    <iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                                    //  <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().thumnail');"></figure>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <figure class="img_wrap" style="background-image: url(@(item.media.Count > 0 ? item.media.FirstOrDefault().file_url : ""));"></figure>
+                                                                }
+                                                                @*<h2>@item.headline</h2>*@
+                                                                <h2>@(item.headline != null ? Html.Raw(item.headline.Length > 65 ? item.headline.Substring(0, 65) + "..." : item.headline) : Html.Raw(""))</h2>
+                                                                @*<p class="AutolifecategoryDesc">@(item.description != null ? Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description) : Html.Raw("") )</p>*@
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                }
+                                                catch
+                                                { }
+                                            }
+                                        }
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                }
+            }
+        }
+    </div>
+</section>

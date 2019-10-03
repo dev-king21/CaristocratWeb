@@ -1,0 +1,310 @@
+﻿@using Caristocrate.Common.Models
+@using Caristocrate.Common
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpcontext
+@{
+    Layout = null;
+    string encryptionKey = "E546C8DF278CD5931069B522E695D4F2";
+    CategoryModel.Response categories = ViewData["Maincategories"] as CategoryModel.Response;
+}
+
+<style type="text/css">
+    /*#headermenu1 a {
+        text-transform: lowercase;
+    }
+
+        #headermenu1 a::first-letter {
+            text-transform: uppercase;
+        }
+
+    #headermenu2 a {
+        text-transform: lowercase;
+    }
+
+        #headermenu2 a::first-letter {
+            text-transform: uppercase;
+        }*/
+
+
+    .badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        padding: 5px 10px;
+        border-radius: 50%;
+        background: red;
+        color: white;
+    }
+</style>
+
+
+<header class="header">
+    <div class="topBar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="javascript:;"><i class="fa fa-phone" aria-hidden="true"></i>  &nbsp; +44 36 3456 5976</a>
+                    <a href="javascript:;" class="border0"><i class="fa fa-envelope" aria-hidden="true"></i> &nbsp; info@caristocrat.com </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="socialBox">
+                        <a href="javascript:;"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="javascript:;"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a href="javascript:;"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        <a href="javascript:;"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="javascript:;"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="logoBar">
+        <div class="container">
+            <div class="row justify-content-end">
+                @*<div class="col-md-4 hidesmall"></div>*@
+                <div class="col-lg-4 col-md-6">
+                    <a href="/" class="logo"><img src='@Url.Content("~/assets/images/logo-new.svg")' alt="" class="img-responsive"></a>
+                </div>
+                <div class="col-lg-5 col-md-6 my-auto">
+                    <div class="topRight clearfix">
+                        <div class="searchBar">
+                            <div class="field">
+                                <input type="text" name="" class="txtMainSearch" placeholder="Search...">
+                                <button onclick="HideSearch(this)" type="submit">&times;</button>
+                            </div>
+                        </div>
+                        <div class="searchBox">
+                            <span onclick="ShowSearch(this)" class="icon-search"></span>
+                        </div>
+
+                        <div class="langBox">
+                            <img src='@Url.Content("~/assets/images/lang-icon.png")' alt="">
+                            <i class="menuarrow fa-angle-down fa"></i>
+                            <div class="language-dropdown d-none" id="ddllanguage1">
+                                
+                            </div>
+                        </div>
+
+                        @*<div class="langBox" style="display:none">
+                            <img src='@Url.Content("~/assets/images/lang-icon.png")' alt="">
+                            <select>
+                                <option value="">UAE</option>
+                                <option value="">Eng</option>
+                            </select>
+                        </div>*@
+                        <div class="loginBox">
+                            @if (Context.Session.Keys.Count() > 0)
+                            {
+
+                                @*<ul>
+                    <li><a href="@Url.Action("Profile", "Customer")">My Account</a></li>
+                </ul>*@
+                                <div class="user_wid">
+                                    <h3>@httpcontext.HttpContext.Session.GetString("UserName").ToString() <span>Your Profile is @httpcontext.HttpContext.Session.GetString("UserProfileCompletion").ToString()% Completed</span></h3>
+                                    <a href="@Url.Action("Profile", "Customer")">
+                                        @if (httpcontext.HttpContext.Session.GetString("UserProfileCompletion").ToString() == "100")
+                                        {
+                                            <figure style="border:3px solid green"><img src="@httpcontext.HttpContext.Session.GetString("UserImage").ToString()" alt=""></figure>
+                                        }
+                                        else
+                                        {
+                                            <figure><img src="@httpcontext.HttpContext.Session.GetString("UserImage").ToString()" alt=""><span></span></figure>
+                                        }
+                                    </a>
+                                    <a href="@Url.Action("Notification", "Customer")" class="notificationBtn"><span class="icon-notification"></span><span class="badge" style="display:none"></span></a>
+                                </div>
+                            }
+                            else
+                            {
+                                <ul>
+                                    <li><a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="btnShowLogin">Login</a></li>
+                                    <li><a href="@Url.Action("Register", "Account")">Signup</a></li>
+                                </ul>
+                            }
+                        </div>
+                        @*<a style="display:none;" href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="hdnbtnShowLogin"></a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <i class="fa fa-bars" aria-hidden="true menuBtn"></i>
+    <div class="mainNav">
+        <a href="javascript:void(0)" class="closebtn">×</a>
+        <div class="container" id="headermenu1">
+            @await Component.InvokeAsync("HeaderMenu")
+        </div>
+    </div>
+
+    <div class="sticky_header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-1 col-md-1 stickylogo">
+                    <a href="/" class="logo"><img src="@Url.Content("~/assets/images/logo-new.svg")" alt="" class="img-responsive"></a>
+                </div>
+               <!-- <div class="col-lg-7 col-md-7"> -->
+                    <div class="col-lg-8 col-md-8">
+                        <div class="stikyNav" id="headermenu2">
+                            @await Component.InvokeAsync("HeaderMenu")
+                        </div>
+                    </div>
+                <!--<div class="col-lg-4 col-md-4 topRight ">--> 
+                <div class="col-lg-3 col-md-3 topRight ">
+                    <div class="searchBar2">
+                        <div class="field">
+                            <input type="text" name="" class="txtMainSearch2" placeholder="Search...">
+                            <button onclick="HideSearch2(this)" type="submit">&times;</button>
+                        </div>
+                    </div>
+                    <div class="searchBox2">
+                        <span onclick="ShowSearch2(this)" class="icon-search"></span>
+                    </div>
+                    @*<div style="display:none;" class="langBox">
+                <img src='@Url.Content("~/assets/images/lang-icon.png")' alt="">
+                <select>
+                    <option value="">UAE</option>
+                    <option value="">Eng</option>
+                </select>
+            </div>*@
+                    <div class="langBox">
+                        <img src='@Url.Content("~/assets/images/lang-icon.png")' alt="">
+                        <i class="menuarrow fa-angle-down fa"></i>
+                        <div class="language-dropdown d-none" id="ddllanguage2">
+
+                        </div>
+                    </div>
+                    @if (Context.Session.Keys.Count() > 0)
+                    {
+                        <ul class="user_wid">
+                            <li>
+                                <h3>@httpcontext.HttpContext.Session.GetString("UserName").ToString() <span>Your Profile is @httpcontext.HttpContext.Session.GetString("UserProfileCompletion").ToString()% Completed</span></h3>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Profile", "Customer")">
+                                    @if (httpcontext.HttpContext.Session.GetString("UserProfileCompletion").ToString() == "100")
+                                    {
+                                        <figure style="border:3px solid green"><img src="@httpcontext.HttpContext.Session.GetString("UserImage").ToString()" alt=""></figure>
+                                    }
+                                    else
+                                    {
+                                        <figure><img src="@httpcontext.HttpContext.Session.GetString("UserImage").ToString()" alt=""><span></span></figure>
+                                    }
+                                </a>
+                            </li>
+                            <li><a href="@Url.Action("Notification", "Customer")" class="notificationBtn"><span class="icon-notification"></span><span class="badge" style="display:none"></span></a></li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul>
+                            <li><a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="btnShowLogin">Login</a> | </li>
+                            <li><a href="@Url.Action("Register", "Account")">Signup</a></li>
+                        </ul>
+                    }
+                    @*<ul>
+
+                <li><a href="#">Login</a> | </li>
+                <li><a href="#">Sign up</a></li>
+            </ul>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+</header><!-- /header -->
+
+<script type="text/javascript">
+
+
+    $(window).bind("load", function () {
+        setTimeout(function () {
+            GetCustNotificationCount();
+        }, 2000);
+    });
+
+    $(document).ready(function () {
+        //GetHeaderMenu();
+        $('#headermenu1').find("a").each(function () {
+            $(this).text(titleCase($(this).text()));
+        });
+        $('#headermenu2').find("a").each(function () {
+            $(this).text(titleCase($(this).text()));
+        });
+    })
+
+    function GetCustNotificationCount() {
+        $(".badge").hide();
+        $.ajax({
+            dataType: "text",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("GetCustomerNotificationCount", "Home")',
+            success: function (data) {
+                if (data > 0) {
+                    $(".badge").text(data);
+                    $(".badge").show();
+                }
+            }, complete: function () { 
+
+                
+            }
+        });
+    }
+
+    function GetHeaderMenu() {   
+        $('#headermenu1').html('');
+        $('#headermenu2').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("HeaderMenu", "Home")',
+            type: 'GET',
+            success: function (data) {
+                $('#headermenu1').html(data);
+                $('#headermenu2').html(data);
+            }, complete: function () { 
+
+                $('#headermenu1').find("a").each(function () {
+                    $(this).text(titleCase($(this).text()));
+                });
+                $('#headermenu2').find("a").each(function () {
+                    $(this).text(titleCase($(this).text()));
+                });
+            }
+        });
+    }
+
+    
+
+    @*function GetHeaderRegion() {   
+        $('#ddllanguage1').html('');
+        $('#ddllanguage2').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("HeaderRegions", "Home")',
+            type: 'GET',
+            success: function (data) {
+                $('#ddllanguage1').html(data);
+                $('#ddllanguage2').html(data);
+            }, complete: function () { 
+                //$('.language-dropdown .round').on('click', function () {
+                //    //$('.chk .active-check').toggleClass('active-check');
+                //    $(this).toggleClass('active-check');
+                //});
+
+                $(".menuarrow").click(function () {
+                    $(".language-dropdown").toggleClass('d-none');
+                });
+
+                $(".menuarrow").click(function () {
+                    $(this).parent("li").children(".subMenu").toggle();
+                    $(this).toggleClass("fa fa-angle-down fa fa-angle-up");
+                });
+                
+            }
+        });
+    }*@
+</script>

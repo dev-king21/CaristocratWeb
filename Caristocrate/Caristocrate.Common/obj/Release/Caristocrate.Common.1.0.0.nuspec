@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Caristocrate.Common</id>
+    <version>1.0.0</version>
+    <authors>Caristocrate.Common</authors>
+    <owners>Caristocrate.Common</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp2.0">
+        <dependency id="Microsoft.AspNetCore.Http" version="2.2.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Common\bin\Release\netcoreapp2.0\Caristocrate.Common.dll" target="lib\netcoreapp2.0\Caristocrate.Common.dll" />
+  </files>
+</package>

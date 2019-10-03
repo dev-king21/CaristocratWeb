@@ -1,0 +1,152 @@
+﻿@using Caristocrate.Common.Models
+@model CoursesModel.ResponsebyID
+@{
+    ViewData["Title"] = "Online Course";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "online-course-page coach-pages";
+}
+
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/online-course.jpg")');">
+
+        <div class="course_ban_text">
+            <h1>Online Courses</h1>
+            <p>Home  /  Online Courses</p>
+        </div>
+
+    </figure>
+</section>
+
+<div class="onlineCourse">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="page-title">@Model.data.title</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="course_timing">
+                            <li><span class="icon-clock"></span>@Model.data.duration</li>
+                            <li><span class="icon-translate"></span>@Model.data.language</li>
+                        </ul>
+                        <h2 class="head_price">Price: @Model.data.currency @Model.data.price.ToString("C0").Replace("$", "") </h2>
+                    </div>
+
+
+                    <div class="col-md-6 my-auto">
+
+                        @if (ViewData["UserName"].ToString() != "")
+                        {
+                            if (ViewData["IsEnrolled"].ToString() == "0")
+                            {
+                                <a onclick="Enroll(this)" href="javascript:;" class="enrolBtn">Enroll Now</a>
+                            }
+                        }
+                        else
+                        {
+                            <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="enrolBtn">Enroll Now</a>
+                        }
+
+                    </div>
+
+
+                </div>
+
+                <div class="brdr-wid course_video_wrap">
+                    @*<h2>@Model.data.subtitle</h2>*@
+                    @Html.Raw(Model.data.description)
+                    <div class="video_holder" style="height:50vh;">
+                        @*<a href="javascript:;"><img src="@Url.Content("~/assets/images/video-img.jpg")" alt="" class="img-fluid"></a>*@
+                        <iframe width="100%" height="100%" src="@Model.data.intro_link" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <div class="brdr-wid course_dtl">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Course Details</h2>
+                        </div>
+                        <div class="col-md-6 my-auto">
+                            <span>Updated on @(Convert.ToDateTime(Model.data.created_at).ToString("MMMM dd, yyyy"))</span>
+                        </div>
+                    </div>
+                    @Html.Raw(Model.data.about == null ? Model.data.description : Model.data.about)
+                </div>
+
+
+                <h2 class="large">Art of Small Talk</h2>
+
+                <div class="slides_list">
+                    @if (Model.data.chapters != null)
+                    {
+                        if (Model.data.chapters.Count > 0)
+                        {
+                            foreach (var item in Model.data.chapters.OrderByDescending(x => x.created_at))
+                            {
+                                <div class="brdr-wid">
+                                    <div class="row">
+                                        <div class="col-md-6 my-auto">
+                                            <h3><span class="icon-slides"></span>@item.title</h3>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <span class="course_duration">( @item.duration )</span>
+                                            @if (ViewData["IsEnrolled"].ToString() == "1")
+                                            {
+                                                <a onclick="ChapterAssociation(this, '@item.course_id', '@item.id')" href="@(Url.Action("ChapterDetail", "Coach", new { id = item.id, course_id = item.course_id }))" class="enrolBtn blue">Start Now</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="EvaluationForm" value="@ViewData["UserName"]" />
+
+<form id='paypalForm' action='https://www.paypal.com/cgi-bin/webscr' target="_blank" method='post'>
+    <input id='business' type='hidden' value='ocostache@dsmm.me' name='business'>
+    <input id='item_name' type='hidden' value='@Model.data.title' name='item_name'>
+    <input id='no_note' type='hidden' value='1' name='no_note'>
+    <input id='invoice' type='hidden' value='@("CourseID-" + Model.data.id.ToString())' name='invoice'>
+    <input id='cmd' type='hidden' value='_xclick' name='cmd'>
+    <input id='pp_amt' type='hidden' value='@((Model.data.price * 0.27).ToString("F2"))' name='amount'>
+    <input id='currency_code' type='hidden' value='USD' name='currency_code'>
+    <input id='paypalbtnSumbit' type='submit' value='submit' style="display:none" />
+</form>
+
+
+<script type="text/javascript">
+
+    function Enroll($this) {
+        $("#paypalbtnSumbit").click();
+
+        var data = {};
+        data.course_id = '@Model.data.id';
+        data.chapter_id = 0;
+        var _url = '@Url.Action("MarkUserChapterAssociation", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "User Chapter Association saved successfully") {
+
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                window.location.reload();
+            }
+        });
+
+    }
+
+</script>

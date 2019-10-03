@@ -1,0 +1,114 @@
+﻿@using Caristocrate.Common
+@using Caristocrate.Common.Models
+@{
+    Layout = null;
+    string encryptionKey = "E546C8DF278CD5931069B522E695D4F2";
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+<style type="text/css">
+    /*#footermenu a {
+        text-transform: lowercase;
+    }
+
+        #footermenu a::first-letter {
+            text-transform: uppercase;
+        }*/
+</style>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12 linksParent">
+                <div class="row" id="footermenu">
+
+                    @await Component.InvokeAsync("FooterMenu")
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 newsletterBox">
+                <h3>Join Caristocrat Newsletter  <i class="fa fa-plus-square-o" aria-hidden="true"></i></h3>
+                <div class="mobMenuFot">
+                    <p>Get the Latest updates!</p>
+                    <div class="field">
+                        <input id="txtSubscriber" type="text" name="" placeholder="Enter your Email">
+                        <img class="Subscriberloaderdiv" src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                        <button onclick="Subscriber(this);" type="submit">Sign up</button>
+                    </div>
+
+                    <div class="socialBox">
+                        <h4>Follow Caristocrat </h4>
+                        <a href="https://www.facebook.com/Caristocrat-352771678617532/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="https://twitter.com/CaristocratME/" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a href="https://www.youtube.com/channel/UCHlgcWcP5dZGyCGWJHPVTHA" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        <a href="https://www.linkedin.com/company/caristocrat/about/" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="https://www.instagram.com/caristocrat.me/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright_sec">
+            <div class="cards_sec">
+                <ul>
+                    <li><img src="assets/images/visa-c.png" alt="" class="img-responsive" width=""></li>
+                    <li><img src="assets/images/mastercard.png" alt="" class="img-responsive"></li>
+                    <li><img src="assets/images/verified-visa.jpg" alt="" class="img-responsive"></li>
+                </ul>
+            </div>
+            <ul>
+                <li><a href="@Url.Action("Index","Home")">HOME</a></li>
+                <li><a href="@Url.Action("About","Home")">ABOUT US</a></li>
+                <li><a href="javascript:;">CONTACT US</a></li>
+                <li><a href="@Url.Action("TermandConditions","Home")">TERMS OF USE</a></li>
+                <li><a href="@Url.Action("PrivacyPolicy","Home")">PRIVACY POLICY</a></li>
+                <li><a href="@Url.Action("CookiePolicy","Home")">COOKIES POLICY</a></li>
+                <li><a target="_blank" href="@ViewData["DelaerLoginURL"]">DEALER LOGIN</a></li>
+            </ul>
+            <p>
+                Copyright &copy;
+                @DateTime.Now.Year CARISTOCRAT</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //GetFooterMenu();
+
+        $('#footermenu').find("a").each(function () {
+            $(this).text(titleCase($(this).text()));
+        });
+
+        BindAppinks();
+    })
+
+    function BindAppinks() { 
+
+        var html = '<a href="https://itunes.apple.com/us/app/caristocrat-luxury-automotive/id1461779305?ls=1&mt=8" target="_blank" class="btn-ios"><img src="@Url.Content("~/assets/images/btn-app-store.png")" alt="" class="img-responsive" /></a>' +
+            '<a href="https://play.google.com/store/apps/details?id=com.application.caristocrat" target="_blank"><img src="@Url.Content("~/assets/images/btn-android.png")" alt="" class="img-responsive" /></a>';
+
+        $(".AppsLinkdiv").html(html);
+
+    }
+
+    function GetFooterMenu() {
+        $('#footermenu').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("FooterMenu", "Home")',
+            type: 'GET',
+            success: function (data) {
+                $('#footermenu').html(data);
+            }, complete: function () {
+                $('#footermenu').find("a").each(function () {
+                    $(this).text(titleCase($(this).text()));
+                });
+                BindAppinks();
+            }
+        });
+    }
+</script>

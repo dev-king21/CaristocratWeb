@@ -1,0 +1,89 @@
+﻿@using Caristocrate.Common.Models
+@model CustNotificationModel.Response
+@{
+    ViewData["Title"] = "Notification";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "dashPages notiPage";
+}
+
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">Home</a></li>
+                    <li><a href="@Url.Action("Notification", "Customer")">Notifications</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="main_sec notiSec">
+    <div class="container">
+        <div class="noti_head">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2 class="page-title">Notifications</h2>
+                </div>
+                <div class="col-md-8 my-auto right">
+                    <ul class="read_btns">
+                        <li class="act"><a href="javascript:;"><span class="icon-allread"></span> All (@Model.data.Count)</a></li>
+                        @*<li><a href="javascript:;"><span class="icon-unread"></span> Unread (@Model.data.Where(x => x.action_type == 10).ToList().Count)</a></li>
+                            <li><a href="javascript:;"><span class="icon-read"></span> Read (@Model.data.Where(x => x.action_type == 20).ToList().Count)</a></li>*@
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="noti_list">
+            @if (Model != null)
+            {
+                if (Model.data != null)
+                {
+                    if (Model.data.Count > 0)
+                    {
+                        foreach (var item in Model.data)
+                        {
+                            if (item.action_type == 10 || item.action_type == 20)
+                            {
+                                <div class="noti_row clearfix notificationdiv" actiontypeID="@item.action_type">
+                                    <a target="_blank" href="@(item.action_type == 10 ? Url.Action("MyTradeInsbyID", "Customer", new { id = item.ref_id }) : Url.Action("MyEvaluationbyID", "Customer", new { id = item.ref_id }) )">
+                                        <figure class="img_wrap" style="background-image: url('@item.image_url');"></figure>
+                                        <div class="content">
+                                            <h3>@item.message</h3>
+                                            <h3>@item.car_name</h3>
+                                            <p>Model: <strong>@item.model_year</strong> &nbsp;|&nbsp; Chassis: <strong>@item.chassis</strong></p>
+                                            <span class="date">@(Convert.ToDateTime(item.created_at).ToString("MMMM dd, yyyy"))</span>
+                                            @*<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus felis in sapien pellentesque tincidunt. Curabitur sem urna, molestie a facilisis ligula. Donec porttitor commodo sem, vitae consequat massa ullamcorper ut.</p>*@
+                                            @*<a href="javascript:;" class="viewBtn">Click to View Details</a>*@
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                        <div class="row">No Record Found</div>
+                    }
+                }
+                else
+                {
+
+                    <div class="row">No Record Found</div>
+                }
+            }
+            else
+            {
+
+                <div class="row">No Record Found</div>
+            }
+        </div>
+    </div>
+</section>
+

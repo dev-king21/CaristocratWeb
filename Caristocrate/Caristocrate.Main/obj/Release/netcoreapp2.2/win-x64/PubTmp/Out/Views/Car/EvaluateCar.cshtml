@@ -1,0 +1,893 @@
+﻿@using Caristocrate.Common.Models
+@model CustMyCars.Response
+@{
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+    string pagename = categories.data.Where(a => a.slug == "evaluate-my-car").FirstOrDefault().name;
+    ViewData["Title"] = pagename;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.BodyClass = "inner-page";
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response getCarTypeobj = ViewData["getCarTypeobj"] as CarType.Response;
+    RegionalSpecificationModel.Response regionalSpecificationModelObj = ViewData["regionalSpecificationModelObj"] as RegionalSpecificationModel.Response;
+    CarAttributesModel.Response InteriorColorObj = ViewData["InteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response ExteriorColorObj = ViewData["ExteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response AccidentObj = ViewData["AccidentObj"] as CarAttributesModel.Response;
+    AdvertisementBannersModel.Response AdvertisementBannersobj = ViewData["AdvertisementBannersobj"] as AdvertisementBannersModel.Response;
+}
+
+<style type="text/css">
+    .uploadInnerdiv {
+        display: inline-block;
+        vertical-align: middle;
+        height: 100px;
+        text-align: center;
+        width: 15%;
+    }
+
+        .uploadInnerdiv a {
+            text-align: center;
+        }
+
+        .uploadInnerdiv .uploadInnerDivSpan {
+            text-align: center;
+            width: 100%;
+        }
+
+    .uploadBtn {
+        background-image: url('');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+        .uploadBtn span {
+            opacity: 0.5;
+        }
+
+    .uploadInnerdiv span {
+        margin-left: 0px !important;
+    }
+
+    .uploadBtn {
+        width: 100px !important;
+    }
+
+    .carDetailForm2 {
+        color: #333;
+        display: block;
+        border-bottom: solid 1px #e6e6e6;
+        padding: 0 0 12px;
+    }
+
+        .carDetailForm2 i {
+            display: inline-block;
+            font-size: 34px;
+            color: #707070;
+            vertical-align: middle;
+            margin: 0 12px 0 0;
+            font-style: normal;
+            border: solid 1px #707070;
+            border-radius: 100%;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            padding: 0 0;
+            line-height: initial;
+        }
+
+        .carDetailForm2 p {
+            display: inline-block;
+            font-size: 20px;
+            vertical-align: middle;
+        }
+
+            .carDetailForm2 p span {
+                display: block;
+                font-size: 14px;
+            }
+
+        .carDetailForm2:hover {
+            color: #000;
+        }
+</style>
+
+@*<section class="banner_sec">
+        @if (categories != null)
+        {
+            foreach (var item in categories.data.Where(x => x.slug == "the-consultant"))
+            {
+                foreach (var subitem in item.child_category.Where(a => a.slug == "evaluate-my-car").Take(1))
+                {
+                    <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1><span>@subitem.name</span></h1>
+                                <p>@subitem.subtitle</p>
+                            </div>
+                        </div>
+                    </figure>
+                }
+            }
+        }
+        else
+        {
+            <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/evaluate-banner.jpg")');">
+                <div style="display:none" class="container">
+                    <div class="banner_text">
+                        <h1><span>Luxury Market</span></h1>
+                        <p>Your luxury cars search ends here</p>
+                    </div>
+                </div>
+            </figure>
+        }
+    </section>*@
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (AdvertisementBannersobj != null)
+        {
+            if (AdvertisementBannersobj.data != null)
+            {
+                if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 40).ToList().Count > 0)
+                {
+                    foreach (var item in AdvertisementBannersobj.data.Where(a => a.banner_type_id == 40).OrderByDescending(a => a.media_type))
+                    {
+                        if (item.media_type == "20")
+                        {
+                            <div class="slide">
+                                <iframe width="100%" height="100%" src="@item.video_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var subitem in item.banner_images.OrderBy(x => Guid.NewGuid()))
+                            {
+                                <div class="slide">
+                                    <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                        <div class="container">
+                                            <div class="banner_text">
+                                                <h1>@item.title</h1>
+                                                <p>@item.description</p>
+                                                @if (item.is_read_more == 1)
+                                                {
+                                                    <a onclick="MarkBannersViewed(this, '@item.id')" url="@item.source_url" href="@item.source_url" target="_blank" class="custBtn">readmore</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                            <div class="container">
+                                <div class="banner_text">
+                                    <h1>Welcome To<span>Caristocrat</span></h1>
+                                    @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                                @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                            @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+    </div>
+    @if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 40).ToList().Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+
+<div class="evaluate_sec">
+    <div class="container">
+        <h3 class="page-title">@pagename</h3>
+        <h4 style="font-weight:bold; margin-bottom:5px;" class="page-info">Select a car from below or add a new one for evaluation</h4>        
+        <h5 style="margin-bottom:5px;">- Within 24 to 48 hours, you will receive the best offers for your car</h5>
+        <h5 style="margin-bottom:5px;">- All offers are sent by the Dealers and Carsitocrat is not involved in the offers</h5>
+        <h5 style="margin-bottom:5px;">- Visit the Dealers (who placed an offer for your car) within 5 working days for physical inspection and offer confirmation</h5>
+        <h5 style="margin-bottom:5px;">- Your car details will be sent to the top Dealers</h5>
+
+
+        <div class="evaluate_new">
+            @{
+                string divclass = "act";
+                string anchorstyle = "none";
+
+                if (Model != null)
+                {
+                    if (Model.data != null)
+                    {
+                        if (Model.data.Count > 0)
+                        {
+                            divclass = "";
+                            anchorstyle = "block";
+                        }
+                    }
+                }
+            }
+
+            <a href="javascript:;" style="@("display:" + anchorstyle)" id="anchorcollapsform" onclick="oncarDetailForm(this)" class="carDetailForm2"><i>+</i> <p>Add New Car <span> Enter the details of your car</span></p></a>
+            <div class="evalute_form car_detail_form @divclass">
+
+                <a style="@("display:" + anchorstyle)" id="anchorcollapsformclose" href="javascript:;" class="close"> X </a>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="icon_field"><span class="icon-user1"></span><label>Full Name</label><input id="txtUserNameMC" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Full Name"></div>
+                    </div>
+                    <div class="col-md-6">
+                        @if (ViewData["UserEmail"].ToString() != "")
+                        {
+                            <div class="icon_field"><span class="icon-msg"></span><label>Email Address</label><input id="txtEmailMC" readonly="readonly" type="text" name="" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" placeholder="Email Address"></div>
+                        }
+                        else
+                        {
+                            <div class="icon_field"><span class="icon-msg"></span><label>Email Address</label><input id="txtEmailMC" type="text" name="" placeholder="Email Address"></div>
+                        }
+                    </div>
+
+
+
+                    <div class="col-md-12" id="PSPhoneCodeFIeld">
+                        <div class="icon_field">
+                            <span class="icon-call icon"></span>
+                            <label class="phoneno">Phone Number</label>
+                            <input id="txtPhoneNoMC" type="text" class="pncode phone" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" name="" placeholder="Phone Number">
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-make"></span><label>Make</label><div class="select_parent">
+                                <select class="ddlMake" id="dllMakeMC" onchange="GetModels(this)">
+                                    <option value="0">Make</option>
+                                    @if (getMake.success == true)
+                                    {
+                                        foreach (var item in getMake.data.ToList())
+                                        {
+                                            <option value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-icon-5"></span><label>Model</label><div class="select_parent">
+                                <select class="ddlModel" id="ddlModelMC" onchange="GetVersions(this);">
+                                    <option value="0">Model</option>
+                                    @if (getModel.success == true)
+                                    {
+                                        foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                        {
+                                            <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix"><span class="icon-icon-6"></span><label>Version</label><input id="ddlVersionMC" type="text" name="" placeholder="Version"></div>
+                    </div>
+                    @*<div class="col-md-3">
+                            <div class="icon_field"><span class="icon-icon-6"></span><label>Year</label><input id="ddlYearMC" type="text" name="" placeholder="Year"></div>
+                        </div>*@
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-icon-6"></span><label>Year</label><div class="select_parent">
+                                <select class="ddlYear" id="ddlYearMC">
+                                    <option value="0">Year</option>
+                                    @for (int i = 2005; i <= DateTime.Now.Year; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field"><span class="icon-icon-7"></span><label>KM</label><input type="text" id="txtKMMC" name="" placeholder="KM"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field"><span class="icon-icon-8"></span><label>Chassis</label><input type="text" id="txtChassisMC" name="" placeholder="Chassis"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-icon-9"></span><label>Regional specs</label><div class="select_parent">
+                                <select id="ddlRegionalSpecsMC">
+                                    <option value="0">Regional specs</option>
+                                    @if (regionalSpecificationModelObj.success == true)
+                                    {
+                                        foreach (var item in regionalSpecificationModelObj.data.ToList())
+                                        {
+                                            <option value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-icon-10"></span><label>Exterior Color</label><div class="select_parent">
+                                <select id="ddlExteriorColorMC">
+                                    <option value="0">Exterior Color</option>
+                                    @if (ExteriorColorObj.success == true)
+                                    {
+                                        foreach (var item in ExteriorColorObj.data.option_array)
+                                        {
+                                            <option value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-icon-11"></span><label>Interior Color</label><div class="select_parent">
+                                <select id="ddlInteriorColorMC">
+                                    <option value="0">Interior Color</option>
+                                    @if (InteriorColorObj.success == true)
+                                    {
+                                        foreach (var item in InteriorColorObj.data.option_array)
+                                        {
+                                            <option value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field clearfix">
+                            <span class="icon-icon-17"></span><label>Accident?</label><div class="select_parent">
+                                <select id="ddlAccidentMC">
+                                    <option value="0">Accident?</option>
+                                    @if (AccidentObj.success == true)
+                                    {
+                                        foreach (var item in AccidentObj.data.option_array)
+                                        {
+                                            <option value="@item.id">@item.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field"><span class="icon-icon-14"></span><label>Warranty Remaining</label><input id="txtWarrantyRemMC" class="numericonly" type="text" name="" placeholder="Warranty Remaining (In Month)"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field"><span><img src="@Url.Content("~/assets/images/serivec-icon.png")" alt=""></span><label>Service Remaining</label><input class="numericonly" id="txtServiceRemMC" type="text" name="" placeholder="Service Remaining (In Month)"></div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="upload_container">
+                            <p>Upload images</p>
+                            <br />
+                            <div class="col-md-2 uploadInnerdiv">
+                                <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fufrontMC" type="file" name=""></a>
+                                <br />
+                                <div class="uploadInnerDivSpan">
+                                    <span class="uploadInnerspan">Front</span>
+                                    <br />
+                                    <span class="uploadedimagename"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 uploadInnerdiv">
+                                <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuBackMC" type="file" name=""></a>
+                                <br />
+                                <div class="uploadInnerDivSpan">
+                                    <span class="uploadInnerspan">Back</span>
+                                    <br />
+                                    <span class="uploadedimagename"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 uploadInnerdiv">
+                                <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRightMC" type="file" name=""></a>
+                                <br />
+                                <div class="uploadInnerDivSpan">
+                                    <span class="uploadInnerspan">Right Side</span>
+                                    <br />
+                                    <span class="uploadedimagename"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 uploadInnerdiv">
+                                <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuLeftMC" type="file" name=""></a>
+                                <br />
+                                <div class="uploadInnerDivSpan">
+                                    <span class="uploadInnerspan">Left Side</span>
+                                    <br />
+                                    <span class="uploadedimagename"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 uploadInnerdiv">
+                                <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuInteriorMC" type="file" name=""></a>
+                                <br />
+                                <div class="uploadInnerDivSpan">
+                                    <span class="uploadInnerspan">Interior</span>
+                                    <br />
+                                    <span class="uploadedimagename"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 uploadInnerdiv">
+                                <a href="javascript:;" class="uploadBtn"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRegistrationCardMC" type="file" name=""></a>
+                                <br />
+                                <div class="uploadInnerDivSpan">
+                                    <span class="uploadInnerspan">Registration Card</span>
+                                    <br />
+                                    <span class="uploadedimagename"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="icon_field note_msg"><textarea id="txtNotesMC" name="" placeholder="Additional notes (if any)"></textarea></div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="loaderdiv" style="display:none; padding:10px;">
+                            <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                        </div>
+                        <div class="row">                            
+                            <input style="margin-top: .5%;" type="checkbox" class="chkTermsConditions" /> &nbsp; I have read and agreed with the term of use
+                        </div>
+                        <button type="submit" onclick="AddMyCar(this)">Add Car</button>
+                        @*<p><strong>Disclaimer!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi hendrerit et mi at dictum. Ut fringilla eros id urna auctor pulvinar. Etiam felis ligula, aliquet et feugiat vel, finibusarcu. Suspendisse ligula dolor</p>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="women_sec carDetailsPage" id="carDetailsPage">
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="EvaluationForm" value="@ViewData["UserName"]" />
+
+
+<div class="modal fade loginModal" id="RequestTradeInModal" tabindex="-1" role="dialog" aria-labelledby="RequestTradeInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <div class="form">
+                        <label style="width:100%; text-align:center; font-weight:bold; word-break:break-all;" class="TradeInMessage"></label>
+                        <input type="hidden" id="hdnNewCarID" />
+                    </div>
+                </div>
+                <div class="foot">
+                    <div class="loaderdiv2" style="display:none; margin-left:45%; padding:10px;">
+                        <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                    </div>
+                    <button onclick="TradeinYourCar(this)" class="custBtn">Yes</button>
+                    <button data-dismiss="modal" aria-label="Close" id="TRadeinClosebtn" class="custBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function uploadImage($this) {
+        var filename = $($this).val();
+        if (filename != "") {
+            var path = filename;
+            filename = path.replace(/^.*\\/, "");
+            //$($this).parents(".uploadInnerdiv").find(".uploadedimagename").text(filename);
+
+            var formData = new FormData();
+            formData.append('file', $($this)[0].files[0]);
+
+            var baseurl = window.location.origin;
+            var fullpath = baseurl + "/uploads/" + filename;
+            debugger;
+            $.ajax({
+                dataType: "html",
+                async: true,
+                type: 'POST',
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                url: '@Url.Action("FileUpload", "Car")',
+                success: function (data) {
+                    if (data != "") {
+                        debugger;
+                        $($this).parents(".uploadInnerdiv").find("a").css('background-image', 'url(' + fullpath + ')');
+                    }
+                }, complete: function (data) {
+                }
+            });
+        }
+    }
+
+    function oncarDetailForm() { 
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $('.evaluate_sec .car_detail_form').removeClass('act');
+            $(".btnShowLogin").trigger("click");
+
+        }
+        else { 
+            $('.evaluate_sec .car_detail_form').addClass('act');
+        }
+    }
+
+    $(document).ready(function () {
+        
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+
+            $("#anchorcollapsform").show();
+            $('.evaluate_sec .car_detail_form').removeClass('act');
+            //$(".btnShowLogin").trigger("click");
+            //$(".evaluate_sec").hide();
+        }
+        else { 
+            GetCustomerMyCars();
+        }
+
+
+
+        $("#ddlModelMC").find("option").each(function () {
+            $(this).hide();
+        });
+
+        setTimeout(function () {
+            if ('@ViewData["UserCountryCode"]' != null) {
+                if ('@ViewData["UserCountryCode"].ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@ViewData["UserCountryCode"].ToString()') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 10000);
+    });
+
+
+    function AddMyCar($this) {
+        
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLogin").trigger("click");
+            return;
+        }
+
+        var txtUserNameMC = $("#txtUserNameMC").val();
+        var txtEmailMC = $("#txtEmailMC").val();
+        var txtPhoneNoMC = $("#txtPhoneNoMC").val();
+        var PSPhoneCodeFIeld = $("#PSPhoneCodeFIeld").find(".selected-dial-code").text();;
+        var dllMakeMC = $("#dllMakeMC").val();
+        var ddlModelMC = $("#ddlModelMC").val();
+        var ddlYearMC = $("#ddlYearMC").val();
+        var ddlVersionMC = $("#ddlVersionMC").val();
+        var txtKMMC = $("#txtKMMC").val();
+        var txtChassisMC = $("#txtChassisMC").val();
+        var ddlRegionalSpecsMC = $("#ddlRegionalSpecsMC").val();
+        var ddlExteriorColorMC = $("#ddlExteriorColorMC").val();
+        var ddlInteriorColorMC = $("#ddlInteriorColorMC").val();
+        var ddlAccidentMC = $("#ddlAccidentMC").val();
+        var txtWarrantyRemMC = $("#txtWarrantyRemMC").val();
+        var txtServiceRemMC = $("#txtServiceRemMC").val();
+        var txtNotesMC = $("#txtNotesMC").val();
+        var tradeincarid = $("#hdnOriginalCarID").val();
+        var tradeincaramount = $("#hdnTRadeinAmount").val();
+
+        var validationcount = 0;
+        if (txtUserNameMC == "") {
+            $("#txtUserNameMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtUserNameMC").css("border", "none"); }
+
+        if (txtEmailMC == "") {
+            $("#txtEmailMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailMC").css("border", "none"); }
+
+        if (txtPhoneNoMC == "") {
+            $("#txtPhoneNoMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneNoMC").css("border", "none"); }
+
+        if (dllMakeMC == "0") {
+            $("#dllMakeMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#dllMakeMC").css("border", "none"); }
+
+        if (ddlModelMC == "0") {
+            $("#ddlModelMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlModelMC").css("border", "none"); }
+
+        if (ddlYearMC == "0") {
+            $("#ddlYearMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlYearMC").css("border", "none"); }
+
+        if (ddlRegionalSpecsMC == "0") {
+            $("#ddlRegionalSpecsMC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#ddlRegionalSpecsMC").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv").show();
+
+        var formData = new FormData();
+        formData.append('front', $('#fufrontMC')[0].files[0]);
+        formData.append('Back', $('#fuBackMC')[0].files[0]);
+        formData.append('Right', $('#fuRightMC')[0].files[0]);
+        formData.append('Left', $('#fuLeftMC')[0].files[0]);
+        formData.append('Interior', $('#fuInteriorMC')[0].files[0]);
+        formData.append('RegCard', $('#fuRegistrationCardMC')[0].files[0]);
+        formData.append('username', txtUserNameMC);
+        formData.append('email', txtEmailMC);
+        formData.append('countrycode', PSPhoneCodeFIeld);
+        formData.append('phone', txtPhoneNoMC);
+        formData.append('makeid', dllMakeMC);
+        formData.append('modelid', ddlModelMC);
+        formData.append('year', ddlYearMC);
+        formData.append('version_app', ddlVersionMC);
+        formData.append('KM', txtKMMC);
+        formData.append('Chassis', txtChassisMC);
+        formData.append('regionalSpecid', ddlRegionalSpecsMC);
+        formData.append('exteriorcolorid', ddlExteriorColorMC);
+        formData.append('interiorcolorid', ddlInteriorColorMC);
+        formData.append('accidentid', ddlAccidentMC);
+        formData.append('warrantyrem', txtWarrantyRemMC);
+        formData.append('servicerem', txtServiceRemMC);
+        formData.append('notes', txtNotesMC);
+        formData.append('ownerid', 0);
+        formData.append('amount', 0);
+        formData.append('type', 20);
+
+
+
+        var json = "";
+        var array = [];
+
+        var output = {}
+
+        if (ddlExteriorColorMC != "0") {
+            output = {};
+            output[4] = parseInt(ddlExteriorColorMC);
+            array.push(output);
+        }
+        if (ddlInteriorColorMC != "0") {
+            output = {};
+            output[3] = parseInt(ddlInteriorColorMC);
+            array.push(output);
+        }
+        if (ddlAccidentMC != "0") {
+            output = {};
+            output[23] = parseInt(ddlAccidentMC);
+            array.push(output);
+        }
+        if (txtWarrantyRemMC != "") {
+            output = {};
+            output[5] = parseInt(txtWarrantyRemMC);
+            array.push(output);
+        }
+        if (txtServiceRemMC != "") {
+            output = {};
+            output[6] = parseInt(txtServiceRemMC);
+            array.push(output);
+        }
+
+
+        json = JSON.stringify(array);
+        formData.append('car_attributes', json);
+
+        var _url = '@Url.Action("AddMyCar", "Car")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (result) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                if (result == "Success") {
+                    notify("Car evaluation request post successfully", "success");
+                }
+            },
+            error: function (jqXHR) {
+
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv").hide();
+
+                GetCustomerMyCars();
+
+                RestAllCarFields();
+            }
+        });
+
+    }
+
+    function RestAllCarFields() {
+        $("#dllMakeMC").val(0);
+        $("#ddlModelMC").val(0);
+        $("#ddlYearMC").val(0);
+        $("#ddlVersionMC").val('');
+        $("#txtKMMC").val('');
+        $("#txtChassisMC").val('');
+        $("#ddlRegionalSpecsMC").val(0);
+        $("#ddlExteriorColorMC").val(0);
+        $("#ddlInteriorColorMC").val(0);
+        $("#ddlAccidentMC").val(0);
+        $("#txtWarrantyRemMC").val('');
+        $("#txtServiceRemMC").val('');
+        $("#txtNotesMC").val('');
+        $(".uploadInnerdiv").find("input").each(function () { $(this).val('') });
+        $(".uploadInnerdiv").find("a").each(function () { $(this).css("background-image", "none") });
+    }
+
+    function GetModels($this) {
+
+        var makeid = $($this).find("option:selected").val();
+
+        $("#ddlModelMC").find("option").each(function () {
+            $(this).hide();
+        })
+
+        $("#ddlModelMC").val(0);
+
+        $("#ddlModelMC").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+    }
+
+    function GetVersions($this) {
+
+        @*$("#ddlVersionMC").html("");
+        $("#ddlVersionMC").html('<option value="0">Version (Optional)</option>')
+
+        var modelid = $($this).val();
+        var data = {};
+        data.modelid = modelid;
+
+        $.ajax({
+            dataType: "json",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("getVersions", "Car")',
+            success: function (data) {
+                for (var i = 0; i < data.data.length; i++) {
+                    $("#ddlVersionMC").append('<option value="' + data.data[i].id + '">' + data.data[i].name + '</option>');
+                }
+            },
+        });*@
+    }
+
+
+
+    function TradeinYourCar($this) {
+        $(".loaderdiv2").show();
+        $($this).hide();
+        $("#TRadeinClosebtn").hide();
+
+        var data = {};
+        data.customer_car_id = $("#hdnNewCarID").val();
+        data.amount = 0;
+        data.type = 20;
+
+        $.ajax({
+            dataType: "html",
+            async: true,
+            data: data,
+            type: 'GET',
+            url: '@Url.Action("EvaluationRequest", "Car")',
+            success: function (data) {
+                if (data == "Success") {
+                    notify("Car evaluation request post successfully", "success");
+                }
+            }, complete: function (data) {
+
+                $(".loaderdiv2").hide();
+                $($this).show();
+                $("#TRadeinClosebtn").show();
+                $("#TRadeinClosebtn").trigger("click");
+
+
+            }
+        });
+
+
+    }
+
+
+    function TradeInthisCar($this, NewCarID) {
+        $(".TradeInMessage").text("Please confirm, do you want to submit your car for Evaluation?");
+        $("#hdnNewCarID").val(NewCarID);
+        $('#RequestTradeInModal').modal('show');
+
+    }
+
+    function GetCustomerMyCars() {
+        $('.loading').fadeIn();
+        $('#carDetailsPage').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("CustCars", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#carDetailsPage').html(data);
+            }, complete: function (data) {
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+
+</script>

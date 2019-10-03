@@ -1,0 +1,77 @@
+﻿@using Caristocrate.Common.Models
+@model ReviewsModel.Response
+
+
+<div class="col-md-12" id="CustomerReviewsHeader">
+    <h2>
+        User Reviews
+        @if (Model.data != null)
+        {
+            if (Model.data.Count > 0)
+            {
+                <span>(@Model.data.Count)</span>
+            }
+        }
+        <a style="display:none" href="javascript:;">Read All Reviews</a>
+        <input type="hidden" id="hdnOverallCarReviews" value="@ViewData["overallcarRating"]" />
+    </h2>
+</div>
+@if (Model.data != null)
+{
+    if (Model.data.Count > 0)
+    {
+        foreach (var item in Model.data)
+        {
+            <div class="col-md-12 Ratingchildlisting">
+                <div class="review_block">
+                    <figure style="background-image: url(@item.user_details.image_url); background-size:contain;"></figure>
+                    <article>
+                        <h3>@item.user_details.user_name</h3>
+                        <div class="rating">
+                            <input id="input-id" name="input-name" value="@item.average_rating" type="number" hoverEnabled=0 class="rating listingrating" min=0 max=5 step=0.1 data-size="lg">
+                            @*@{
+                                    decimal ratingcount = Math.Round(item.average_rating);
+                                    for (int j = 1; j <= ratingcount; j++)
+                                    {<i class="fa fa-star fill"></i>}
+                                    for (int j = 1; j <= 5 - ratingcount; j++)
+                                    {<i class="fa fa-star"></i>}
+                                }*@
+                            <p class="postedRating">(@item.average_rating.ToString("F1")/5)</p>
+
+                        </div>
+                        <h4>@item.review_message</h4>
+                    </article>
+                    <div class="col-md-12 lastrow">
+                        <ul>
+                            @if (item.details != null)
+                            {
+                                foreach (var detail in item.details)
+                                {
+                                    <li aspectid="@detail.aspect_id">
+                                        <h6>@detail.aspect_title</h6>
+
+                                        @{
+                                            decimal subratingcount = Math.Round(detail.rating);
+                                            <div class="rating">
+                                                <input id="input-id" name="input-name" value="@detail.rating" type="number" hoverEnabled=0 class="rating listingrating" min=0 max=5 step=0.1 data-size="lg">
+                                                @*@for (int j = 1; j <= subratingcount; j++)
+                                                    {<i class="fa fa-star fill"></i>}
+                                                    @for (int j = 1; j <= 5 - subratingcount; j++)
+                                                    {<i class="fa fa-star"></i>}*@
+                                            </div>
+                                        }
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    { <div style="text-align:center; width:100%; font-weight:bold;">There is no review found</div> }
+}
+else
+{ <div style="text-align:center; width:100%; font-weight:bold;">There is no review found</div>}

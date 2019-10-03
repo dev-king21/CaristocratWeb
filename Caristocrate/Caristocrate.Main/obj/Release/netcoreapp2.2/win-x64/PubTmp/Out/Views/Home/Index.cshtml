@@ -1,0 +1,383 @@
+﻿@using Caristocrate.Common
+@using Microsoft.AspNetCore.Http
+@using Caristocrate.Common.Models;
+@model GetCars.Response
+@{
+    ViewBag.Title = "Caristocrat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "home-page";
+
+    string encryptionKey = "E546C8DF278CD5931069B522E695D4F2";
+    AdvertisementBannersModel.Response AdvertisementBannersobj = ViewData["AdvertisementBannersobj"] as AdvertisementBannersModel.Response;
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+@section HeadMeta
+    {
+    <meta property="og:title" content="Caristocrat" />
+    <meta property="og:image" content="@Url.Content("~/assets/images/logo-new.svg")" />
+    <meta property="og:image:width" content="150" />
+    <meta property="og:image:height" content="150" />
+}
+
+<style type="text/css">
+    .AutolifecategoryDesc p {
+        word-break: break-all;
+    }
+
+    /*.AutolifecategoryDesc h2 {
+        text-transform: lowercase !important;
+    }
+
+        .AutolifecategoryDesc h2:first-letter {
+            text-transform: capitalize !important;
+        }*/
+    .blogBox iframe {
+        min-height: 210px;
+    }
+</style>
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (AdvertisementBannersobj != null)
+        {
+            if (AdvertisementBannersobj.data != null)
+            {
+                foreach (var item in AdvertisementBannersobj.data.Where(a => a.banner_type_id == 10).OrderByDescending(a => a.media_type))
+                {
+                    if (item.media_type == "20")
+                    {
+                        <div class="slide">
+                            <iframe width="100%" height="100%" src="@item.video_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var subitem in item.banner_images.OrderBy(x => Guid.NewGuid()))
+                        {
+                            <div class="slide">
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                    <div class="container">
+                                        <div class="banner_text">
+                                            <h1>@item.title</h1>
+                                            <p>@item.description</p>
+                                            @if (item.is_read_more == 1)
+                                            {
+                                                <a onclick="MarkBannersViewed(this, '@item.id')" url="@item.source_url" href="@item.source_url" target="_blank" class="custBtn">readmore</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </figure>
+                            </div>
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                                @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                            @*<p>Lorem Ipsum is simply dummy text of the printing and <br /> typesetting industry. Lorem Ipsum has been the industry's <br /> standard dummyt text ever since the 1500s.</p>*@
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+
+
+    </div>
+    @if (AdvertisementBannersobj.data.Where(a => a.banner_type_id == 10).ToList().Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+
+@*<section class="banner_sec">
+        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/banner-new.jpg")');">
+            <div class="container">
+                <div class="banner_text">
+                    <h1>Welcome To<span>Caristocrat</span></h1>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummyt text ever since the 1500s.</p>
+                </div>
+            </div>
+        </figure>
+    </section>*@
+
+<section class="features_sec">
+    <div class="container">
+        <div class="row multiple-items">
+            <div class="col-md-4">
+                <a href="@Url.Action("CompareCar","Car")"><h2>Compare Cars</h2></a>
+                <!--<p>Compare Specs of two or more Cars</p>-->
+            </div>
+            <div class="col-md-4">
+                <a href="@Url.Action("CompareSegments","Car")"><h2>Professional Comparison</h2></a>
+                <!--<p>Professional Comparison of Cars from the same Segment</p>-->
+            </div>
+            <div class="col-md-4">
+                <a href="@Url.Action("AskForConsultancy","Car")"><h2>Ask for Consultancy</h2></a>
+              <!--  <p>The First Automotive Consultancy and Advisory for Car Buyers</p>-->
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="search_sec" id="GetMainFilter"></section>
+
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        <section class="cars_slider">
+            <div class="container-fluid">
+                <div class="row justify-content-end">
+                    <div class="col-lg-7 col-md-12 car_parent">
+                        <div class="content">
+                            <h2>NEW TO THE</h2>
+                            <h3>Luxury Market</h3>
+                            <p>If you’re looking for expert suggestion on buying your brand new dream car or looking for pre-approved vehicles then you are at the perfect place!</p>
+                        </div>
+
+                        <div class="arrowParent">
+                            <div class="prevCar arrow"><span class="icon-arrow-left1"></span></div>
+                            <div class="nextCar arrow"><span class="icon-arrow-right1"></span></div>
+                        </div>
+
+                        <div class="slider_wrap swiper-container">
+                            <div class="swiper-wrapper">
+                                @foreach (var item in Model.data.Where(x => x.is_featured == 1).OrderBy(x => Guid.NewGuid()))
+                                {
+                                    <div class="carBox swiper-slide mainCategoryListing" categoryid="@item.category.id">
+                                        <a href="@(item.category.id == 28 ? Url.Action("CarDetail", "Car", new { brand = item.car_model.brand.slug, model = item.car_model.slug, id = item.slug }) : Url.Action("PreOwnedCarDetail", "Car", new { brand = item.car_model.brand.slug, model = item.car_model.slug, id = item.slug }))">
+                                            <div class="overlayBox"></div>
+
+                                            <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');">
+                                                <div class="car_dtl clearfix">
+                                                    <p>@item.name <span>@item.year</span></p>
+                                                    @*<p>@item.name <span>@item.year  <p style="@(item.average_mkp != null && item.average_mkp > 0 ? "display:block" : "display:none")">•  A.V.G Price @Convert.ToDecimal(item.average_mkp).ToString("C0").Replace("$", "")</p></span></p>*@
+
+                                                    <h4>@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "")</h4>
+
+                                                </div>
+                                                @if (item.is_featured == 1)
+                                                {
+                                                    <div class="sale">Featured</div>
+                                                }
+                                            </figure>
+                                        </a>
+
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="car_tabs">
+                            <ul>
+                                @*<li><a href="javascript:;" onclick="ShowCategoryCars(28)">New Cars</a></li>
+                                    <li><a href="javascript:;" onclick="ShowCategoryCars(25)">Outlet Mall</a></li>
+                                    <li><a href="javascript:;" onclick="ShowCategoryCars(26)">Approved Pre-OwnED</a></li>
+                                    <li><a href="javascript:;" onclick="ShowCategoryCars(27)">Classic Cars</a></li>*@
+                                <li><a href="@Url.Action("Index","Car", new { data= General.EncryptString("categoryID=28", encryptionKey) })">New Cars</a></li>
+                                <li><a href="@Url.Action("Index","Car", new { data= General.EncryptString("categoryID=25", encryptionKey) })">The Outlet Mall</a></li>
+                                <li><a href="@Url.Action("Index","Car", new { data= General.EncryptString("categoryID=26", encryptionKey) })">Approved Pre-Owned</a></li>
+                                <li><a href="@Url.Action("Index","Car", new { data= General.EncryptString("categoryID=27", encryptionKey) })">Classic Cars</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+@*@await Component.InvokeAsync("HomePageNews")*@
+<div id="NewsSection">
+
+
+
+</div>
+
+<section class="carGrids">
+    <div class="container-fluid p-0">
+        <div class="row no-gutters multiple-items">
+            <div class="col-md-4">
+                <a href="@Url.Action("EvaluateCar","Car")">
+                    <div class="img_wrap" style="background-image: url(@Url.Content("~/assets/images/car-img1.jpg"));">
+                        <div class="overlayBox"></div>
+                        <div class="content">
+                            <h2>Evaluate Your Car</h2>
+                            <p>Evaluate your ride. It's simple</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="javascript:;">
+                    <div class="img_wrap" style="background-image: url(@Url.Content("~/assets/images/car-img2.jpg"));">
+                        <div class="overlayBox"></div>
+                        <div class="content">
+                            <h2>Motor Hub</h2>
+                            <p>Motor Hub</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="@Url.Action("Index","Coach")">
+                    <div class="img_wrap" style="background-image: url(@Url.Content("~/assets/images/car-img3.jpg"));">
+                        <div class="overlayBox"></div>
+                        <div class="content">
+                            <h2>The Coach</h2>
+                            <p>The Coach</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href='@Url.Content("~/assets/css/semantic.min.css")'>
+<script src=" https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
+<script type="text/javascript">
+
+    $(window).bind("load", function () {
+
+        //HomeSearchFilters();
+        //BindNews();        
+
+        var mySwiper = new Swiper('.slider_wrap.swiper-container', {
+            spaceBetween: 10,
+            freeMode: true,
+
+            loop: true,
+            autoplay: true,
+            speed: 1000,
+            slidesPerView: 3,
+            navigation: {
+                nextEl: '.nextCar',
+                prevEl: '.prevCar',
+            },
+            breakpoints: {
+
+                1367: {
+                    slidesPerView: 2,
+                    freeMode: false,
+                    spaceBetween: 10
+                },
+                320: {
+                    slidesPerView: 1,
+                    freeMode: false,
+                    spaceBetween: 10
+                },
+
+                480: {
+                    slidesPerView: 1,
+                    spaceBetween: 10
+                },
+
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20
+                }
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        HomeSearchFilters();
+        BindNews();
+    });
+
+    function BindNews() {
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("HomePageNews", "Home")',
+            type: 'GET',
+            success: function (data) {
+                $('#NewsSection').html(data);
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function HomeSearchFilters() {
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            url: '@Url.Action("HomeSearch", "Home")',
+            type: 'GET',
+            success: function (data) {
+                $('#GetMainFilter').html(data);
+
+                $("#ddlModel").find("option").each(function () {
+                    $(this).hide();
+                })
+            },
+        });
+    }
+
+    function GetModels($this) {
+        var makeid = $($this).find("option:selected").val();
+        $("#ddlModel").find("option").each(function () {
+            $(this).hide();
+        })
+
+        $("#ddlModel").val(0);
+
+        $("#ddlModel").find("option").each(function () {
+            if ($(this).attr("brandID") == makeid) {
+                $(this).show();
+            }
+        })
+    }
+
+    function setCategoryID($this, categoryId) {
+
+        $("#mainSearchUL").find("li").each(function () {
+            $(this).removeClass("current");
+        });
+
+        $($this).parent().addClass("current");
+
+        $("#txtCategoryID").val(categoryId)
+    }
+
+
+    function ShowCategoryCars(categoryID) {
+        $(".mainCategoryListing").each(function () {
+            $(this).hide();
+        });
+
+        $(".mainCategoryListing").each(function () {
+            if ($(this).attr("categoryid") == categoryID) {
+                $(this).show();
+            }
+        });
+    }
+
+</script>

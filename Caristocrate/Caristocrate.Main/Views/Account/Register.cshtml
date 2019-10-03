@@ -1,0 +1,276 @@
+﻿@using Caristocrate.Common.Models
+@model RegionsModel.Response
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page";
+}
+
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/banner1.jpg")');">
+        <div class="container">
+            <div class="banner_text">
+                <h1><span>Trade in your car</span></h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+        </div>
+    </figure>
+</section>
+
+<div class="login_sec mainSec" id="RegistrationSec">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center">
+                <h2 class="page_title">Create A New Account</h2>
+                <p class="page_info">We just need a little bit of information to get you signed up.</p>
+            </div>
+
+            <div class="col-md-8">
+                <form onsubmit="return ValidateForm()" enctype="multipart/form-data" class="formLogin" method="post" action="@Url.Action("Register","Account")">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="icon_field">
+                                <span class="icon-user1"></span>
+                                <input type="text" id="txtFullName" required name="txtFullName" placeholder="Full Name">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="icon_field email">
+                                <span class="icon-email"></span>
+                                <input type="email" name="txtEmail" required id="txtEmail" placeholder="Email Address">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="icon_field password">
+                                <span class="icon-lock"></span>
+                                <input type="password" id="txtPassword" required name="txtPassword" placeholder="Password">
+                                <span class="icon-eye" onclick="showpassword(this, 1)" style="text-decoration:line-through; cursor:pointer;"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="icon_field password">
+                                <span class="icon-lock"></span>
+                                <input type="password" name="txtConfirmPassword" required id="txtConfirmPassword" placeholder="Confirm Password">
+                                <span class="icon-eye" onclick="showpassword(this, 2)" style="text-decoration:line-through; cursor:pointer;"></span>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12" id="PSPhoneCodeFIeld">
+                            <div class="icon_field">
+                                <span class="icon-call icon"></span>
+                                <input class="selected-dial-code" type="hidden" id="ddlPhoneCode" required name="ddlPhoneCode" placeholder="+971">
+                                <input type="text" class="pncode phone" name="txtPhoneNo" id="txtPhoneNo" placeholder="Phone Number">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="icon_field clearfix">
+                                <span><img src='@Url.Content("~/assets/images/lang-icon.png")' alt=""></span>
+                                <div class="select_parent">
+
+                                    <select style="padding:9px 10px 15px 40px;" name="ddlRegion" id="ddlRegion">
+                                        <option value="0">Select Region</option>
+                                        @if (Model != null)
+                                        {
+                                            if (Model.data != null)
+                                            {
+                                                if (Model.data.Count > 0)
+                                                {
+                                                    foreach (var item in Model.data)
+                                                    {
+                                                        <option value="@item.id">@item.name</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="custBtn">Create Account</button>
+                </form>
+                <div class="connetSec" style="display:none">
+                    <div id="status"></div>
+                    <h3><span>Or Connect with</span></h3>
+                    <a href="#" class="twitter"><i class="fa fa-twitter"></i> Connect with Twitter</a>
+                    @*<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>*@
+
+
+
+                    <a onclick="FBLogin();" href="javascript:;" class="fb"><i class="fa fa-facebook-f"></i> Connect with Facebookr</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        document.getElementById('RegistrationSec').scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+        if ('@ViewData["message"].ToString()' != "success" && '@ViewData["message"].ToString()' != "" ) {
+            notify('@ViewData["message"].ToString()', "danger");
+        }
+
+        $(".pncode").on("countrychange", function (e, countryData) {
+            $("#ddlPhoneCode").val("+" + countryData.dialCode)
+        });
+    });
+
+    function ValidateForm() {
+        var txtpassword = $("#txtPassword").val();
+        var txtConfirmpassword = $("#txtConfirmPassword").val();
+
+        if (txtpassword != txtConfirmpassword) {
+            //ShowAlert("Password and Confirm Password should be same");
+            notify("Password and Confirm Password should be same", "danger");
+            return false;
+        }
+    }
+
+    function showpassword($this, type) {
+        if (type == 1) {
+            if ($("#txtPassword").val() != "") {
+                if ($("#txtPassword").attr("type") == "text") {
+                    $("#txtPassword").attr("type", "password");
+                    $($this).css("text-decoration", "line-through");
+                }
+                else {
+                    $("#txtPassword").attr("type", "text");
+                    $($this).css("text-decoration", "none");
+                }
+            }
+        }
+        else {
+            if ($("#txtConfirmPassword").val() != "") {
+                if ($("#txtConfirmPassword").attr("type") == "text") {
+                    $("#txtConfirmPassword").attr("type", "password");
+                    $($this).css("text-decoration", "line-through");
+                }
+                else {
+                    $("#txtConfirmPassword").attr("type", "text");
+                    $($this).css("text-decoration", "none");
+                }
+            }
+        }
+    }
+
+</script>
+
+
+
+
+
+
+
+<script>
+
+
+
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+        console.log('statusChangeCallback');
+        console.log(response);
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            getLoginStatus();
+        } else {
+            // The person is not logged into your app or we are unable to tell.
+            document.getElementById('status').innerHTML = 'Please log into this app.';
+        }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1307376896071992',
+            cookie: true,  // enable cookies to allow the server to access
+            // the session
+            xfbml: true,  // parse social plugins on this page
+            version: 'v3.2' // The Graph API version to use for the call
+        });
+
+        // Now that we've initialized the JavaScript SDK, we call
+        // FB.getLoginStatus().  This function gets the state of the
+        // person visiting this page and can return one of three states to
+        // the callback you provide.  They can be:
+        //
+        // 1. Logged into your app ('connected')
+        // 2. Logged into Facebook, but not your app ('not_authorized')
+        // 3. Not logged into Facebook and can't tell if they are logged into
+        //    your app or not.
+
+        //
+        // These three cases are handled in the callback function.
+        
+        //FB.getLoginStatus(function (response) {
+        //    statusChangeCallback(response);
+        //});
+
+    };
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function FBLogin() {
+        FB.login(function (response) {
+            if (response.authResponse) {                
+                checkLoginState();
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        },{
+            scope: 'email',
+            return_scopes: true
+        });    
+    }
+
+
+    function getLoginStatus() { 
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', { fields: 'id,name,email,picture' }, function (response) {
+            if (response.id) {
+                //console.log('Good to see you, ' + response.name + '.');
+                //document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
+                console.log(response);
+            }
+            else {                 
+                //console.log('Error Occured');
+                //console.log(response);
+                //document.getElementById('status').innerHTML = 'Received empty response';
+                notify("Received empty response from Facebook API", "danger");
+            }
+        });
+    }
+</script>

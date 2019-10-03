@@ -1,0 +1,391 @@
+﻿@using Caristocrate.Common.Models
+@model CustMyCars.ResponsebyID
+@{
+    GetCars.Response favcars = ViewData["CustFavCarsObj"] as GetCars.Response;
+    CustProfileModel.Response profileobj = ViewData["profileobj"] as CustProfileModel.Response;
+    CustNews.Response custnewsObj = ViewData["custnewsObj"] as CustNews.Response;
+
+
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response getCarTypeobj = ViewData["getCarTypeobj"] as CarType.Response;
+    RegionalSpecificationModel.Response regionalSpecificationModelObj = ViewData["regionalSpecificationModelObj"] as RegionalSpecificationModel.Response;
+
+    CarAttributesModel.Response InteriorColorObj = ViewData["InteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response ExteriorColorObj = ViewData["ExteriorColorObj"] as CarAttributesModel.Response;
+    CarAttributesModel.Response AccidentObj = ViewData["AccidentObj"] as CarAttributesModel.Response;
+}
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="head">
+            <h5>Edit Your Car</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+
+                <div style="display:none">
+                    <div class="col-md-6">
+                        <div class="icon_field"><span class="icon-user1"></span><input id="txtUserNameMCU" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Full Name"></div>
+                    </div>
+                    <div class="col-md-6">
+                        @if (ViewData["UserEmail"].ToString() != "")
+                        {
+                            <div class="icon_field"><span class="icon-msg"></span><input id="txtEmailMCU" readonly="readonly" type="text" name="" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" placeholder="Email Address"></div>
+                        }
+                        else
+                        {
+                            <div class="icon_field"><span class="icon-msg"></span><input id="txtEmailMCU" type="text" name="" placeholder="Email Address"></div>
+                        }
+                    </div>
+                    <div class="col-md-12" id="PSPhoneCodeFIeld">
+                        <input id="txtPhoneCodeMCU" type="hidden" value="@(ViewData["UserCountryCode"] != null ? ViewData["UserCountryCode"] : "")" name="" placeholder="Phone Code">
+                        <input id="txtPhoneNoMCU" type="text" class="pncode phone" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" name="" placeholder="Phone Number">                        
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-make"></span>
+                        <label>Make</label>
+                        <select class="ddlMake" id="dllMakeMCU" onchange="GetModels(this)">
+                            <option value="0">Make</option>
+                            @if (getMake.success == true)
+                            {
+                                foreach (var item in getMake.data.ToList())
+                                {
+                                    if (Model.data.car_model.brand.id == item.id)
+                                    {
+                                        <option selected="selected" value="@item.id">@item.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-icon-5"></span>
+                        <label>Model</label>
+                        <select class="ddlModel" id="ddlModelMCU">
+                            <option value="0">Model</option>
+                            @if (getModel.success == true)
+                            {
+                                foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                {
+                                    if (Model.data.car_model.id == item.id)
+                                    {
+                                        <option selected="selected" brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                                    }
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-icon-6"></span><label>Year</label>
+                        <select class="ddlVersion" id="ddlYearMCU">
+                            <option value="0">Year</option>
+                            @for (int i = 2005; i <= DateTime.Now.Year; i++)
+                            {
+                                if (Model.data.year == i)
+                                {
+                                    <option selected="selected" value="@i">@i</option>
+                                }
+                                else
+                                {
+                                    <option value="@i">@i</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                @*<div class="col-md-4">
+                        <div class="field">
+                            <span class="icon-icon-6"></span>
+                            <input id="ddlYearMC" name="" placeholder="Year">
+                        </div>
+                    </div>*@
+
+                <div class="col-md-4">
+                    <div class="field">
+                        <span class="icon-icon-6"></span><label>Version</label>
+                        <input id="ddlVersionMCU" name="" value="@Model.data.version" placeholder="Version">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="field">
+                        <span class="icon-icon-7"></span><label>KM</label>
+                        <input type="text" id="txtKMMCU" value="@Model.data.kilometer" name="" placeholder="KM">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="field">
+                        <span class="icon-icon-8"></span><label>Chassis</label>
+                        <input type="text" id="txtChassisMCU" value="@Model.data.chassis" name="" placeholder="Chassis">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-icon-9"></span><label>Regional specs</label>
+                        <select id="ddlRegionalSpecsMCU">
+                            <option value="0">Regional specs</option>
+                            @if (regionalSpecificationModelObj.success == true)
+                            {
+                                foreach (var item in regionalSpecificationModelObj.data.ToList())
+                                {
+                                    if (Model.data.regional_specs.id == item.id)
+                                    {
+                                        <option selected="selected" value="@item.id">@item.name</option>}
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-icon-10"></span><label>Exterior Color</label>
+                        <select id="ddlExteriorColorMCU">
+                            <option value="0">Exterior Color</option>
+                            @if (ExteriorColorObj.success == true)
+                            {
+                                foreach (var item in ExteriorColorObj.data.option_array)
+                                {
+                                    if (Model.data.my_car_attributes.Where(x => x.attr_id == 4).ToList().Count > 0)
+                                    {
+                                        if (Model.data.my_car_attributes.Where(x => x.attr_id == 4).FirstOrDefault().value == item.id.ToString())
+                                        {
+                                            <option selected="selected" value="@item.id">@item.name</option>}
+                                        else
+                                        {
+                                            <option value="@item.id">@item.name</option>}
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-icon-11"></span><label>Interior Color</label>
+                        <select id="ddlInteriorColorMCU">
+                            <option value="0">Interior Color</option>
+                            @if (InteriorColorObj.success == true)
+                            {
+                                foreach (var item in InteriorColorObj.data.option_array)
+                                {
+                                    if (Model.data.my_car_attributes.Where(x => x.attr_id == 3).ToList().Count > 0)
+                                    {
+                                        if (Model.data.my_car_attributes.Where(x => x.attr_id == 3).FirstOrDefault().value == item.id.ToString())
+                                        {
+                                            <option selected="selected" value="@item.id">@item.name</option>}
+                                        else
+                                        {
+                                            <option value="@item.id">@item.name</option>}
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <span class="icon-icon-17"></span><label>Accident?</label>
+                        <select id="ddlAccidentMCU">
+                            <option value="0">Accident?</option>
+                            @if (AccidentObj.success == true)
+                            {
+                                foreach (var item in AccidentObj.data.option_array)
+                                {
+                                    if (Model.data.my_car_attributes.Where(x => x.attr_id == 23).ToList().Count > 0)
+                                    {
+                                        if (Model.data.my_car_attributes.Where(x => x.attr_id == 23).FirstOrDefault().value == item.id.ToString())
+                                        {
+                                            <option selected="selected" value="@item.id">@item.name</option>}
+                                        else
+                                        {
+                                            <option value="@item.id">@item.name</option>}
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="field">
+                        <span class="icon-icon-14"></span><label>Warranty Remaining</label>
+                        @if (Model.data.my_car_attributes.Where(x => x.attr_id == 5).ToList().Count > 0)
+                        {
+                            <input id="txtWarrantyRemMCU" type="text" name="" value="@Model.data.my_car_attributes.Where(x => x.attr_id == 5).FirstOrDefault().value" placeholder="Warranty Remaining">
+                        }
+                        else
+                        {
+                            <input id="txtWarrantyRemMCU" type="text" name="" placeholder="Warranty Remaining">
+                        }
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="field">
+                        <span><img src="@Url.Content("~/assets/images/serivec-icon.png")" alt=""></span><label>Service Remaining</label>
+                        @if (Model.data.my_car_attributes.Where(x => x.attr_id == 6).ToList().Count > 0)
+                        {
+                            <input id="txtServiceRemMCU" type="text" value="@Model.data.my_car_attributes.Where(x => x.attr_id == 6).FirstOrDefault().value" name="" placeholder="Service Remaining">
+                        }
+                        else
+                        {
+                            <input id="txtServiceRemMCU" type="text" name="" placeholder="Service Remaining">
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="upload_container">
+                <div class="col-md-2 uploadInnerdiv" style="height:200px;">
+                    <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fufrontMCU" type="file" name=""></a>
+                    <br />
+                    <div class="uploadInnerDivSpan">
+                        <span class="uploadInnerspan">Front</span>
+                        <br />
+                        <span class="uploadedimagename"></span>
+                    </div>
+                    @if (Model.data.media.Where(x => x.title == "front").ToList().Count > 0)
+                    {
+                        <a href="javascript:;" style="background-image: url('@Model.data.media.Where(x => x.title == "front").FirstOrDefault().file_url')" class="uploadBtn"><i  onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "front").FirstOrDefault().id', this)">×</i></a>
+                    }
+                </div>
+                <div class="col-md-2 uploadInnerdiv" style="height:200px;">
+                    <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuBackMCU" type="file" name=""></a>
+                    <br />
+                    <div class="uploadInnerDivSpan">
+                        <span class="uploadInnerspan">Back</span>
+                        <br />
+                        <span class="uploadedimagename"></span>
+                    </div>
+                    @if (Model.data.media.Where(x => x.title == "back").ToList().Count > 0)
+                    {
+                        <a href="javascript:;" style="background-image: url('@Model.data.media.Where(x => x.title == "back").FirstOrDefault().file_url')" class="uploadBtn"><i onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "back").FirstOrDefault().id', this)">×</i></a>
+                    }
+                </div>
+                <div class="col-md-2 uploadInnerdiv" style="height:200px;">
+                    <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRightMCU" type="file" name=""></a>
+                    <br />
+                    <div class="uploadInnerDivSpan">
+                        <span class="uploadInnerspan">Right Side</span>
+                        <br />
+                        <span class="uploadedimagename"></span>
+                    </div>
+                    @if (Model.data.media.Where(x => x.title == "right").ToList().Count > 0)
+                    {
+                        <a href="javascript:;" style="background-image: url('@Model.data.media.Where(x => x.title == "right").FirstOrDefault().file_url')" class="uploadBtn"><i onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "right").FirstOrDefault().id', this)">×</i></a>
+                    }
+                </div>
+                <div class="col-md-2 uploadInnerdiv" style="height:200px;">
+                    <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuLeftMCU" type="file" name=""></a>
+                    <br />
+                    <div class="uploadInnerDivSpan">
+                        <span class="uploadInnerspan">Left Side</span>
+                        <br />
+                        <span class="uploadedimagename"></span>
+                    </div>
+                    @if (Model.data.media.Where(x => x.title == "left").ToList().Count > 0)
+                    {
+                        <a onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "left").FirstOrDefault().id', this)" href="javascript:;" style="background-image: url('@Model.data.media.Where(x => x.title == "left").FirstOrDefault().file_url')" class="uploadBtn"><i onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "left").FirstOrDefault().id', this)">×</i></a>
+                    }
+                </div>
+                <div class="col-md-2 uploadInnerdiv" style="height:200px;">
+                    <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuInteriorMCU" type="file" name=""></a>
+                    <br />
+                    <div class="uploadInnerDivSpan">
+                        <span class="uploadInnerspan">Interior</span>
+                        <br />
+                        <span class="uploadedimagename"></span>
+                    </div>
+                    @if (Model.data.media.Where(x => x.title == "interior").ToList().Count > 0)
+                    {
+                        <a href="javascript:;" style="background-image: url('@Model.data.media.Where(x => x.title == "interior").FirstOrDefault().file_url')" class="uploadBtn"><i onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "interior").FirstOrDefault().id', this)">×</i></a>
+                    }
+                </div>
+                <div class="col-md-2 uploadInnerdiv" style="height:200px;">
+                    <a href="javascript:;" class="uploadBtn uploadbtnAnchor"><span class="icon-upload"></span><input onchange="uploadImage(this)" accept="image/*" id="fuRegistrationCardMCU" type="file" name=""></a>
+                    <br />
+                    <div class="uploadInnerDivSpan">
+                        <span class="uploadInnerspan">Registration Card</span>
+                        <br />
+                        <span class="uploadedimagename"></span>
+                    </div>
+                    @if (Model.data.media.Where(x => x.title == "registration_card").ToList().Count > 0)
+                    {
+                        <a href="javascript:;" style="background-image: url('@Model.data.media.Where(x => x.title == "registration_card").FirstOrDefault().file_url')" class="uploadBtn"><i onclick="DeletethisMedia('@Model.data.media.Where(x => x.title == "registration_card").FirstOrDefault().id', this)">×</i></a>
+                    }
+                </div>
+            </div>
+
+            <div class="carNote">
+                <textarea name="" id="txtNotesMCU" placeholder="Additional notes (if any)">@Model.data.notes</textarea>
+                <div class="row text-right">
+                    <span>
+                        <input style="margin-top: .5%;" type="checkbox" class="chkTermsConditions" /> &nbsp; I have read and agreed with the term of use
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 text-right">
+                    <div class="loaderdiv" style="display:none; padding:10px;">
+                        <img style="margin-left:90%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                    </div>
+                    <input type="hidden" id="hdnMyCarUpdateID" value="@Model.data.id" />
+                    <input type="hidden" id="hdnDeletedMediaFiles" />
+                    <button type="submit" onclick="UpdateMyCar(this)" class="custBtn">Update Your Car</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

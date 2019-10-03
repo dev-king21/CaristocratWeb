@@ -1,0 +1,34 @@
+﻿@using Caristocrate.Common.Models
+@model GetMake.Response
+
+@if (Model != null)
+{
+    if (Model.data.Count > 0)
+    {
+        <div class="row">
+            <div class="list_head">
+                <h2>Select Brand</h2>
+            </div>
+        </div>
+        <div class="row listing">            
+            @foreach (var item in Model.data)
+            {
+                <div class="brandsLogo" id="@item.id" onclick="FilterbyBrandClick('@item.id', this)">
+                    <figure><a href="javascript:;" ><img src="@item.media.FirstOrDefault().file_url" alt=""></a></figure>
+                </div>
+            }
+        </div>        
+    }
+    else
+    {
+        <div class="row">
+            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+        </div>
+    }
+}
+else
+{
+    <div class="row">
+        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+    </div>
+}

@@ -1,0 +1,346 @@
+﻿@using Caristocrate.Common.Models
+@model CustTradeInByIDModel.Response
+@{
+    ViewData["Title"] = "My Evaluation";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "inner-page MyTradeIns versionthree";
+}
+<style type="text/css">
+    .showBtn {
+        min-width: 200px !important;
+    }
+
+    .banner_sec {
+        position: sticky !important;
+    }
+</style>
+
+<section class="banner_sec">
+    @if (Model.data.trade_against.media != null)
+    {
+        if (Model.data.trade_against.media.Count > 0)
+        {
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9 padding0">
+                        <div class="car_detail_slider4">
+                            @foreach (var subitem in Model.data.trade_against.media)
+                            {
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');"></figure>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="car_detail_slider_nav4">
+                            @foreach (var subitem in Model.data.trade_against.media)
+                            {
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');"></figure>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</section>
+
+
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">Home</a></li>
+                    <li><a href="@Url.Action("MyEvaluations", "Customer")">Evaluation Offers</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="main_sec">
+    <div class="container">
+        <div class="headBar">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="page-title">@Model.data.trade_against.car_model.brand.name @Model.data.trade_against.car_model.name</h2>
+                    <ul class="head_otns">
+                        <li>Model:  @Model.data.trade_against.year</li>
+                        @if (Model.data.trade_against.kilometer != null)
+                        {
+                            <li>@Model.data.trade_against.kilometer km</li>
+                        }
+                        @if (Model.data.trade_against.chassis != null)
+                        {
+                            <li>Chassis: @Model.data.trade_against.chassis</li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-4 right">
+                    @if (Model.data.trade_against.amount != null)
+                    {
+                        <h3 class="head_price">@Model.data.trade_against.currency @(Model.data.trade_against.amount != null ? Convert.ToDecimal(Model.data.trade_against.amount).ToString("C0").Replace("$", "") : "")</h3>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @*<div class="topOffers">
+
+                @if (Model != null)
+                {
+                    if (Model.data != null)
+                    {
+                        if (Model.data.trade_against != null)
+                        {
+                            if (Model.data.trade_against.top_bids != null)
+                            {
+                                if (Model.data.trade_against.top_bids.Count > 0)
+                                {
+                                    if (Model.data.trade_against.top_bids.FirstOrDefault().evaluation_details != null)
+                                    {
+                                        if (Model.data.trade_against.top_bids.FirstOrDefault().evaluation_details.Count > 0)
+                                        {
+                                            <h5>Here are top 5 offers for your vehicle</h5>
+
+                                            foreach (var item in Model.data.trade_against.top_bids.FirstOrDefault().evaluation_details)
+                                            {
+                                                <div class="row mb-4">
+                                                    <div class="col-md-4">
+                                                        <figure>
+                                                            <img src="@item.user.showroom_details.logo_url" alt="" class="img-fluid">
+                                                        </figure>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="content">
+                                                            <h2>@item.user.showroom_details.name</h2>
+                                                            <p class="offer_price">Best Offers <strong>@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "" )</strong></p>
+                                                            <ul class="offer_call">
+                                                                <li><label>Call</label> @item.user.showroom_details.phone</li>
+                                                                <li><label>Email</label> @item.user.showroom_details.email</li>
+                                                            </ul>
+                                                            <a href="javascript:;" class="callBtn" onclick="ShowDealerPhoneNumber('@item.user.showroom_details.phone')"><span class="icon-call2"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="row mb-4">
+                                                <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="row mb-4">
+                                            <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="row mb-4">
+                                        <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="row mb-4">
+                                    <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row mb-4">
+                                <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="row mb-4">
+                        <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Results</div>
+                    </div>
+                }
+            </div>*@
+
+        <div class="topOffers">
+
+            @if (Model != null)
+            {
+                if (Model.data != null)
+                {
+                    if (Model.data.is_expired == true)
+                    {
+                        if (Model.data.offer_details != null)
+                        {
+                            if (Model.data.offer_details.Count > 0)
+                            {
+                                <h5>Here are the top offers for your car</h5>
+
+                                @foreach (var item in Model.data.offer_details)
+                                {
+                                    <div class="row mb-4">
+                                        <div class="col-md-4">
+                                            <figure>
+                                                <img src="@(item.user.showroom_details != null ? item.user.showroom_details.logo_url : "")" alt="" class="img-fluid">
+                                            </figure>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="content">
+                                                <h2>@(item.user.showroom_details != null ? item.user.showroom_details.name : "")</h2>
+
+                                                @if (item.amount == null)
+                                                {
+                                                    <p>No offer Available</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="offer_price">Best Offer <strong>@item.currency @(item.amount != null ? Convert.ToDecimal(item.amount).ToString("C0").Replace("$", "") : "" )</strong></p>
+                                                }
+                                                    <ul class="offer_call">
+                                                        @*<li><label>Call</label> @(item.user.showroom_details != null ? item.user.showroom_details.phone : "")</li>
+                                                        <li><label>Email</label> @(item.user.showroom_details != null ? item.user.showroom_details.email : "")</li>*@
+                                                        <li><label>Call</label> <a onclick="ShowDealerPhoneNumber('@(item.user.showroom_details != null ? item.user.showroom_details.phone : "")', 2)" href="javascript:;" class="showBtn">Show Phone Number</a></li>
+                                                        <li><label>Email</label> <a onclick="ShowDealerPhoneNumber('@(item.user.showroom_details != null ? item.user.showroom_details.email : "")', 1)" href="javascript:;" class="showBtn">Show Email</a></li>
+                                                    </ul>
+                                                @*<a href="javascript:;" class="callBtn" onclick="ShowDealerPhoneNumber('@(item.user.showroom_details != null ? item.user.showroom_details.phone : "")')"><span class="icon-call2"></span></a>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="row mb-4">
+                                    <div style="text-align:center; width:100%; font-weight:bold;">No Offer Available</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row mb-4">
+                                <div style="text-align:center; width:100%; font-weight:bold;">No Offer Available</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div style="text-align:center; width:100%; font-weight:bold;">Waiting for Offer</div>
+                        </div>
+                    }
+                }
+            }
+
+        </div>
+
+
+    </div>
+</section>
+
+<div class="modal fade loginModal" id="ShowPhoneNumber" tabindex="-1" role="dialog" aria-labelledby="ShowPhoneNumber" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="head">
+                    <p style="background-color:black; height:30px;"></p>
+                </div>
+                <div class="content">
+                    <div class="form">
+                        <label style="width:100%; text-align:center; font-weight:bold; word-break:break-all;" class="DealerPhoneNo"></label>
+                    </div>
+                </div>
+                <div class="foot">
+                    <button data-dismiss="modal" aria-label="Close" class="custBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ShowDealerPhoneNumber(phoneno) {
+        $(".DealerPhoneNo").text(phoneno);
+        $('#ShowPhoneNumber').modal('show');
+    }
+
+    $(document).ready(function () {
+        var bannercount = $(".car_detail_slider4").find("figure").length;
+        if (bannercount > 1) {
+            $('.car_detail_slider4').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                dots: false,
+                centerMode: true,
+                centerPadding: '0',
+                asNavFor: '.car_detail_slider_nav4',
+                responsive: [
+                    {
+                        breakpoint: 1367,
+                        settings: {
+                            centerPadding: '0',
+                        }
+                    },
+                    {
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                        }
+                    }
+                ]
+            });
+
+
+        }
+
+        $('.car_detail_slider_nav4').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.car_detail_slider4',
+            dots: false,
+            centerMode: true,
+            arrows: true,
+            vertical: true,
+            centerPadding: '0',
+
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 1367,
+                    settings: {
+                        slidesToShow: 2,
+                        centerPadding: '0',
+                    }
+                },
+                {
+                    breakpoint: 1025,
+                    settings: {
+                        slidesToShow: 4,
+                        centerPadding: '0',
+                    }
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 2,
+                        vertical: false,
+                    }
+                }
+            ]
+        });
+    })
+</script>

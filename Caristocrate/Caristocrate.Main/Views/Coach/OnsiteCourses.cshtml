@@ -1,0 +1,759 @@
+﻿@using Caristocrate.Common.Models
+@model CoursesModel.ResponsebyID
+@{
+    ViewData["Title"] = "Onsite Course";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "online-course-page coach-pages onsitePage";
+}
+<style type="text/css">
+    #location {
+        height: 25vh;
+    }
+
+    .course_info .date p i {
+        max-width: 300px;
+    }
+
+    .evalute_form input.pncode.phone {
+        width: 75% !important;
+    }
+
+    #EnquiryPopup .title {
+        font-size: 27px;
+        color: #111033;
+        text-align: center;
+        margin: 0 0 50px;
+        padding: 0;
+    }
+
+    #EnquiryPopup .checkmark {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: #ffffff;
+    }
+
+    #EnquiryPopup .tickField {
+        margin: 0 15px;
+    }
+</style>
+<section class="banner_sec">
+    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/online-course.jpg")');">
+
+        <div class="course_ban_text">
+            <h1>Onsite Courses</h1>
+            <p>Home  /  Onsite Courses</p>
+        </div>
+
+    </figure>
+</section>
+
+<div class="onlineCourse">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="page-title">@Model.data.title</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 class="head_price">Price: @Model.data.currency @Model.data.price.ToString("C0").Replace("$", "")</h2>
+                    </div>
+                </div>
+
+                <div class="brdr-wid course_info">
+                    <div class="row">
+                        <div class="col-md-4 lang">
+                            <span class="icon-translate"></span>
+                            <p>Language <i>@Model.data.language</i></p>
+                        </div>
+
+                        <div class="col-md-4 date">
+                            <span class="icon-model-year"></span>
+                            <p>Date <i>@(Convert.ToDateTime(Model.data.date).ToString("MMMM dd, yyyy"))</i></p>
+                        </div>
+
+                        <div class="col-md-4 date">
+                            <span class="icon-clock"></span>
+                            <p>Time <i>@Model.data.time</i></p>
+                        </div>
+
+
+
+                        <hr>
+
+                        @*<div class="col-md-4 fee">
+                                <span class="icon-card"></span>
+                                <p>Fee <i>@Model.data.currency @Model.data.price.ToString("C0").Replace("$", "")</i></p>
+                            </div>*@
+                        <div class="col-md-4 date">
+                            <span class="icon-clock"></span>
+                            <p>Duration<i>@Model.data.duration</i></p>
+                        </div>
+
+
+                        <div class="col-md-8 date">
+                            <span class="icon-marker"></span>
+                            <p>Location <i title="@Model.data.location">@Model.data.location</i></p>
+                        </div>
+
+
+
+                        @*<div class="col-md-4 date">
+                                <span class="icon-clock"></span>
+                                <p>Total Duration<i>@Model.data.duration</i></p>
+                            </div>*@
+
+
+                    </div>
+                </div>
+
+                <div class="brdr-wid downBrochr">
+                    <div class="row">
+                        <div class="col-md-4 my-auto">
+                            <a href="javascript:;" class="downloadBrochere" data-toggle="modal" data-target="#downloadbroucherPopup"><span class="icon-download"></span> Download Brochure</a>
+                            @if (Model.data.media != null)
+                            {
+                                if (Model.data.media.Count > 0)
+                                {
+                                    if (Model.data.media.Where(x => x.media_type == 40) != null)
+                                    {
+                                        <input type="hidden" id="hdnBrochure" value="@Model.data.media.Where(x => x.media_type == 40).FirstOrDefault().file_url" />
+                                        <a id="aDownloadBrochure" download href="@Model.data.media.Where(x => x.media_type == 40).FirstOrDefault().file_url" target="_blank"></a>
+                                    }
+                                }
+                            }
+                        </div>
+                        <div class="col-md-8 text-right">
+                            <button data-toggle="modal" data-target="#EnquiryPopup" class="enrolBtn msg">Quick Enquiry</button>
+
+                            @if (ViewData["UserName"].ToString() != "")
+                            {
+                                if (ViewData["IsEnrolled"].ToString() == "0")
+                                {
+                                    <button onclick="Enroll(this)" class="enrolBtn">Enroll Now</button>
+                                }
+                            }
+                            else
+                            {
+                                <button data-toggle="modal" data-target="#exampleModalCenter" class="enrolBtn">Register Now</button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="brdr-wid course_dtl">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>Course Details</h2>
+                        </div>
+                        <div class="col-md-4 my-auto"><p class="update_date">Updated on @(Convert.ToDateTime(Model.data.created_at).ToString("MMMM dd, yyyy"))</p></div>
+                    </div>
+                    @Html.Raw(Model.data.description)
+                </div>
+                <input type="hidden" id="lat" value="@Model.data.latitude" />
+                <input type="hidden" id="lng" value="@Model.data.longitude" />
+                <div class="brdr-wid location" id="location">
+                    @*<img src="@Url.Content("~/assets/images/course-location.jpg")" alt="" class="img-fluid">*@
+                </div>
+
+                <div class="course_breif">
+                    <h2 class="large">About @Model.data.title</h2>
+                    @Html.Raw(Model.data.about == null ? Model.data.description : Model.data.about)
+                </div>
+                <div class="brdr-wid downBrochr">
+                    <div class="row">
+                        <div class="col-md-4 my-auto">
+                            <a href="javascript:;" class="downloadBrochere" data-toggle="modal" data-target="#downloadbroucherPopup"><span class="icon-download"></span> Download Brochure</a>
+                        </div>
+                        <div class="col-md-8 text-right"><button data-toggle="modal" data-target="#EnquiryPopup" class="enrolBtn msg">Request a Call Back</button><button data-toggle="modal" data-target="#EnquiryPopup" class="enrolBtn">Get More Info</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 frmne">
+                <div class="enquire_form clearfix">
+                    <ul class="form_tab_links">
+                        <li class="current"><a href="#aboutcourse">Enquire<span>about this course</span></a></li>
+                        <li><a href="#DownloadBrochure" class="downl">Download<span>Brochure</span></a></li>
+                    </ul>
+                    <div class="form_tab clearfix" id="aboutcourse" style="display: block;">
+                        <div class="field">
+                            <label>First Name and Last Name</label>
+                            <input id="txtNameOC" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Enter Name">
+                        </div>
+
+                        <div class="field">
+                            <label>Email Address</label>
+                            <input id="txtEmailOC" type="email" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" name="" placeholder="Enter Email Address">
+                        </div>
+
+                        <div class="field phone" id="PhoneNumberSecOC">
+                            <label>Phone / Mobile</label>
+                            <input id="txtPhoneOC" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" type="text" class="pncode" name="" placeholder="Number">
+                        </div>
+
+                        <div class="field">
+                            <label>Information you’re looking for...</label>
+                            <textarea id="txtInformationOC" name="" placeholder="I would like to know more about @Model.data.title"></textarea>
+                        </div>
+
+                        <div class="field tickField">
+                            <label class="custom-chck">By ticking this box you consent to receive emails about related jobs and career topics. <input id="chkEmailReceivedOC" type="checkbox"> <span class="checkmark"></span> </label>
+                        </div>
+
+                        <div class="field">
+                            <div class="loaderdiv2" style="display:none; margin-left:45%; padding:10px;">
+                                <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                            </div>
+                            <button onclick="EnquiryOnsiteCourse(this)" class="enrolBtn">Get More Info</button>
+                        </div>
+
+                    </div>
+                    <div class="form_tab clearfix" id="DownloadBrochure">
+                        <div class="field">
+                            <label>First Name and Last Name</label>
+                            <input id="txtNameDB" type="text" name="" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" placeholder="Enter Name">
+                        </div>
+
+                        <div class="field">
+                            <label>Email Address</label>
+                            <input id="txtEmailDB" type="email" name="" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" placeholder="Enter Email Address">
+                        </div>
+
+                        <div class="field phone" id="PhoneNumberSecDB">
+                            <label>Phone / Mobile</label>
+                            <input id="txtPhoneDB" type="text" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" class="pncode" name="" placeholder="Number">
+                        </div>
+
+                        <div class="field tickField">
+                            <label class="custom-chck">By ticking this box you consent to receive emails about related jobs and career topics. <input type="checkbox"> <span class="checkmark"></span> </label>
+                        </div>
+
+                        <div class="field">
+                            <div class="loaderdiv3" style="display:none; margin-left:45%; padding:10px;">
+                                <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                            </div>
+                            <button onclick="DownloadBrochureClick(this)" class="enrolBtn">Download Brochure</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal cardetail_popup" id="downloadbroucherPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="ownedDetail_sec">
+
+
+                    <div class="evaluate_sec">
+                        <div class="evalute_form">
+                            <h5 class="title">Download Your Brochure</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-user1"></span><input id="txtNameDBModal" type="text" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" name="" placeholder="Full Name"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-msg"></span><input id="txtEmailDBModal" type="text" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" name="" placeholder="Email Address"></div>
+                                </div>
+
+                                <div class="col-md-12" id="PhoneNumberSecDBModal">
+                                    <div class="icon_field">
+                                        <span class="icon-call icon"></span>
+                                        <input id="txtPhoneDBModal" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" type="text" class="pncode phone" name="" placeholder="Phone Number">
+                                    </div>
+                                </div>
+                                <div class="field tickField">
+                                    <label class="custom-chck">By ticking this box you consent to receive emails about related jobs and career topics. <input type="checkbox"> <span class="checkmark"></span> </label>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="loaderdiv4" style="display:none; margin-left:45%; padding:10px;">
+                                        <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                                    </div>
+                                    <button type="submit" onclick="DownloadBrochureModalClick(this)" class="custBtn">Download</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal cardetail_popup" id="EnquiryPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="ownedDetail_sec">
+                    <div class="evaluate_sec">
+                        <div class="evalute_form">
+                            <h5 class="title">Enquire about this course</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-user1"></span><input id="txtNameOCModal" type="text" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" name="" placeholder="Full Name"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-msg"></span><input id="txtEmailOCModal" type="text" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" name="" placeholder="Email Address"></div>
+                                </div>
+
+                                <div class="col-md-12" id="PhoneNumberSecOCModal">
+                                    <div class="icon_field">
+                                        <span class="icon-call icon"></span>
+                                        <input id="txtPhoneOCModal" type="text" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" class="pncode phone" name="" placeholder="Phone Number">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="icon_field"><textarea id="txtInformationOCModal" name="" placeholder="I would like to know more about @Model.data.title"></textarea></div>
+                                </div>
+                                <div class="field tickField">
+                                    <label class="custom-chck">By ticking this box you consent to receive emails about related jobs and career topics. <input type="checkbox"> <span class="checkmark"></span> </label>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="loaderdiv5" style="display:none; margin-left:45%; padding:10px;">
+                                        <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                                    </div>
+                                    <button type="submit" onclick="EnquiryOnsiteCourseModal(this)" class="custBtn">Get More Info</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="EvaluationForm" value="@ViewData["UserName"]" />
+
+<form id='paypalForm' action='https://www.paypal.com/cgi-bin/webscr' target="_blank" method='post'>
+    <input id='business' type='hidden' value='ocostache@dsmm.me' name='business'>
+    <input id='item_name' type='hidden' value='@Model.data.title' name='item_name'>
+    <input id='no_note' type='hidden' value='1' name='no_note'>
+    <input id='invoice' type='hidden' value='@("CourseID-" + Model.data.id.ToString())' name='invoice'>
+    <input id='cmd' type='hidden' value='_xclick' name='cmd'>
+    <input id='pp_amt' type='hidden' value='@((Model.data.price * 0.27).ToString("F2"))' name='amount'>
+    <input id='currency_code' type='hidden' value='USD' name='currency_code'>
+    <input id='paypalbtnSumbit' type='submit' value='submit' style="display:none" />
+</form>
+
+@*<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAY6cT8GjO16kEHu_9SGjdysAZAPA-wHec&callback=initMap"></script>*@
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlbWNuyJ5BoytdjBO3lqrR1kxZzwb0YC4&callback=initMap"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            if ('@ViewData["UserCountryCode"]' != null) {
+                if ('@ViewData["UserCountryCode"].ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@ViewData["UserCountryCode"].ToString()') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 10000);
+    });
+
+    function Enroll($this) {
+        $("#paypalbtnSumbit").click();
+
+        var data = {};
+        data.course_id = '@Model.data.id';
+        data.chapter_id = 0;
+        var _url = '@Url.Action("MarkUserChapterAssociation", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "User Chapter Association saved successfully") {
+
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                window.location.reload();
+            }
+        });
+
+    }
+
+    function EnquiryOnsiteCourseModal($this) {
+
+        var txtNameOC = $("#txtNameOCModal").val();
+        var txtEmailOC = $("#txtEmailOCModal").val();
+        var txtPhoneOC = $("#txtPhoneOCModal").val();
+        var PhoneNumberSecOC = $("#PhoneNumberSecOCModal").find(".selected-dial-code").text();
+        var txtInformationOC = $("#txtInformationOCModal").val();
+
+        var validationcount = 0;
+        if (txtNameOC == "") {
+            $("#txtNameOCModal").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtNameOCModal").css("border", "none"); }
+
+        if (txtEmailOC == "") {
+            $("#txtEmailOCModal").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailOCModal").css("border", "none"); }
+
+        if (txtPhoneOC == "") {
+            $("#txtPhoneOCModal").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneOCModal").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        if (!validatetoemail(txtEmailOC)) {
+            notify("Invalid email format ", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv5").show();
+
+        var data = {};
+        data.name = txtNameOC;
+        data.email = txtEmailOC;
+        data.country_code = PhoneNumberSecOC;
+        data.phone = txtPhoneOC;
+        data.message = txtInformationOC;
+        data.type = 40;
+
+
+
+
+
+        var _url = '@Url.Action("OnsiteCourseEnquiry", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "Contact Us saved successfully") {
+                    notify("Enquiry details submitted successfully", "success");
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv5").hide();
+
+                RestAllCarFields();
+            }
+        });
+    }
+
+    function DownloadBrochureModalClick($this) {
+
+        var txtNameOC = $("#txtNameDBModal").val();
+        var txtEmailOC = $("#txtEmailDBModal").val();
+        var txtPhoneOC = $("#txtPhoneDBModal").val();
+        var PhoneNumberSecOC = $("#PhoneNumberSecDBModal").find(".selected-dial-code").text();
+        var txtInformationOC = $("#txtInformationDB").val();
+
+        var validationcount = 0;
+        if (txtNameOC == "") {
+            $("#txtNameDBModal").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtNameDBModal").css("border", "none"); }
+
+        if (txtEmailOC == "") {
+            $("#txtEmailDBModal").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailDBModal").css("border", "none"); }
+
+        if (txtPhoneOC == "") {
+            $("#txtPhoneDBModal").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneDBModal").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        if (!validatetoemail(txtEmailOC)) {
+            notify("Invalid email format ", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv4").show();
+
+        var data = {};
+        data.name = txtNameOC;
+        data.email = txtEmailOC;
+        data.country_code = PhoneNumberSecOC;
+        data.phone = txtPhoneOC;
+        data.type = 60;
+
+
+
+
+
+        var _url = '@Url.Action("OnsiteCourseEnquiry", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "Contact Us saved successfully") {
+                    if ($("#hdnBrochure").length > 0) {
+                        var brochureURL = $("#hdnBrochure").val();
+                        if (brochureURL != "") {
+                            document.getElementById('aDownloadBrochure').click()
+                        }
+                    }
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv4").hide();
+                $("#downloadbroucherPopup").find(".close").click();
+                RestAllCarFields();
+            }
+        });
+    }
+
+    function DownloadBrochureClick($this) {
+
+        var txtNameOC = $("#txtNameDB").val();
+        var txtEmailOC = $("#txtEmailDB").val();
+        var txtPhoneOC = $("#txtPhoneDB").val();
+        var PhoneNumberSecOC = $("#PhoneNumberSecDB").find(".selected-dial-code").text();
+        var txtInformationOC = $("#txtInformationDB").val();
+
+        var validationcount = 0;
+        if (txtNameOC == "") {
+            $("#txtNameDB").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtNameDB").css("border", "none"); }
+
+        if (txtEmailOC == "") {
+            $("#txtEmailDB").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailDB").css("border", "none"); }
+
+        if (txtPhoneOC == "") {
+            $("#txtPhoneDB").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneDB").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        if (!validatetoemail(txtEmailOC)) {
+            notify("Invalid email format ", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv3").show();
+
+        var data = {};
+        data.name = txtNameOC;
+        data.email = txtEmailOC;
+        data.country_code = PhoneNumberSecOC;
+        data.phone = txtPhoneOC;
+        data.type = 60;
+
+
+
+
+
+        var _url = '@Url.Action("OnsiteCourseEnquiry", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "Contact Us saved successfully") {
+                    debugger;
+                    if ($("#hdnBrochure").length > 0) {
+                        var brochureURL = $("#hdnBrochure").val();
+                        if (brochureURL != "") {
+                            document.getElementById('aDownloadBrochure').click()
+                        }
+                    }
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv3").hide();
+
+                RestAllCarFields();
+            }
+        });
+    }
+
+    function EnquiryOnsiteCourse($this) {
+
+        var txtNameOC = $("#txtNameOC").val();
+        var txtEmailOC = $("#txtEmailOC").val();
+        var txtPhoneOC = $("#txtPhoneOC").val();
+        var PhoneNumberSecOC = $("#PhoneNumberSecOC").find(".selected-dial-code").text();
+        var txtInformationOC = $("#txtInformationOC").val();
+
+        var validationcount = 0;
+        if (txtNameOC == "") {
+            $("#txtNameOC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtNameOC").css("border", "none"); }
+
+        if (txtEmailOC == "") {
+            $("#txtEmailOC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtEmailOC").css("border", "none"); }
+
+        if (txtPhoneOC == "") {
+            $("#txtPhoneOC").css("border", "1px solid red");
+            validationcount++;
+        }
+        else { $("#txtPhoneOC").css("border", "none"); }
+
+        if (validationcount > 0) {
+            notify("Fill Required fileds", "danger");
+            return;
+        }
+
+        if (!validatetoemail(txtEmailOC)) {
+            notify("Invalid email format ", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdiv2").show();
+
+        var data = {};
+        data.name = txtNameOC;
+        data.email = txtEmailOC;
+        data.country_code = PhoneNumberSecOC;
+        data.phone = txtPhoneOC;
+        data.message = txtInformationOC;
+        data.type = 40;
+
+
+
+
+
+        var _url = '@Url.Action("OnsiteCourseEnquiry", "Coach")';
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                if (result == "Contact Us saved successfully") {
+                    notify("Enquiry details submitted successfully", "success");
+                }
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR)
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdiv2").hide();
+
+                RestAllCarFields();
+            }
+        });
+    }
+
+    function RestAllCarFields() {
+        $("#txtNameOC").val('');
+        $("#txtEmailOC").val('');
+        $("#txtPhoneOC").val('');
+        $("#txtInformationOC").val('');
+
+        $("#txtNameDB").val('');
+        $("#txtEmailDB").val('');
+        $("#txtPhoneDB").val('');
+        $("#txtInformationDB").val('');
+
+        $("#txtNameDBModal").val('');
+        $("#txtEmailDBModal").val('');
+        $("#txtPhoneDBModal").val('');
+        $("#txtInformationDBModal").val('');
+    }
+
+    function initMap() {
+
+        var lat = parseFloat(document.getElementById('lat').value);
+        var lng = parseFloat(document.getElementById('lng').value);
+        var uluru = { lat: lat, lng: lng };
+        var map = new google.maps.Map(document.getElementById('location'), {
+            center: {
+                lat: lat,
+                lng: lng,
+            },
+            zoom: 15,
+        })
+        var marker = new google.maps.Marker({ position: uluru, map: map });
+    }
+</script>

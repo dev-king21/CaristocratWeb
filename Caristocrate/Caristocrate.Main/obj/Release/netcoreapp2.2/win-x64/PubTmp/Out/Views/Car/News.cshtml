@@ -1,0 +1,748 @@
+﻿@using Caristocrate.Common.Models
+@model NewsModel.Response
+@{
+    ViewData["Title"] = ViewData["categoryName"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page";
+    int categoryid = Convert.ToInt32(ViewData["categoryID"].ToString());
+    int requestid = Convert.ToInt32(ViewData["requestid"].ToString());
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+<style type="text/css">
+
+    /*.slider-progress {
+        right:50%;
+    }
+
+    .slick-dots {
+        width:50% !important;
+    }*/
+
+    .Newschildlisting iframe {
+        min-height: 160px;
+        width: 25%;
+        border-radius: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+
+
+
+        @if (Model != null)
+        {
+            if (Model.data != null)
+            {
+                if (Model.data.Where(a => a.is_featured == 1).ToList().Count > 0)
+                {
+                    if (requestid == 0)
+                    {
+                        foreach (var item in Model.data.Where(a => a.category_id != 2 && a.category_id != 3 && a.is_featured == 1).OrderBy(x => Guid.NewGuid()).Take(10).Select((x, i) => new { Data = x, Index = i }))
+                        {
+                            try
+                            {
+
+                                string slugname = "";
+
+                                if (ViewData["slug"].ToString() == "auto-life")
+                                {
+                                    slugname = categories.data.FirstOrDefault().child_category.Where(a => a.id == item.Data.category_id).FirstOrDefault().slug;
+                                }
+                                else
+                                {
+                                    slugname = categories.data.FirstOrDefault().slug;
+                                }
+
+                                if (item.Data.media.FirstOrDefault().media_type == 20)
+                                {
+                                    <div class="slide">
+                                        <iframe width="100%" height="100%" src="@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : "")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                   
+                                    <div class="slide">
+                                        <div class="Bannersiblinganchor" style="display:none">
+                                            <a href="@(Url.Action("NewsbyID", "Car", new { slug = slugname, id = item.Data.slug }))"><h1><span>@item.Data.headline</span></h1></a>
+                                        </div>
+                                        <figure onclick="GotoNewsDetail(this)" class="img_wrap" style=" cursor:pointer; background-image: url('@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : "")');">
+                                            <div class="container">
+                                                <div class="banner_text">
+                                                    @*<h1><span>@item.name</span></h1>*@
+                                                    <h1><span>@item.Data.headline</span></h1>
+                                                    @*<p>@(Html.Raw(item.Data.description.Length > 200 ? item.Data.description.Substring(0, 200) + "..." : item.Data.description) )</p>*@
+                                                </div>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in Model.data.Where(a => a.is_featured == 1).OrderBy(x => Guid.NewGuid()).Take(10).Select((x, i) => new { Data = x, Index = i }))
+                        {
+                            try
+                            {
+
+                                if (item.Data.media.FirstOrDefault().media_type == 20)
+                                {
+                                    <div class="slide">
+                                        <iframe width="100%" height="100%" src="@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : "")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    
+
+                                    <div class="slide">
+                                        <div class="Bannersiblinganchor" style="display:none">
+                                            @if (ViewData["categoryID"].ToString() == "2")
+                                            {
+                                                <a href="@(Url.Action("CarEducationbyID", "Car", new { id = item.Data.slug }))"><h1><span>@item.Data.headline</span></h1></a>
+                                            }
+                                            else if (ViewData["categoryID"].ToString() == "3")
+                                            {
+                                                <a href="@(Url.Action("WomenOnlybyID", "Car", new { id = item.Data.slug }))"><h1><span>@item.Data.headline</span></h1></a>
+                                            }
+                                            test
+                                        </div>
+                                        <figure onclick="GotoNewsDetail(this)" class="img_wrap" style="cursor:pointer; background-image: url('@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : "")');">
+                                            <div class="container">
+                                                <div class="banner_text">
+                                                    <h1><span>@item.Data.headline</span></h1>
+                                                </div>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                else
+                {
+                    if (categories != null)
+                    {
+                        foreach (var item in categories.data.Where(x => x.id == categoryid).Take(1))
+                        {
+                            if (item.banner_images.Count > 0)
+                            {
+                                foreach (var subitem in item.banner_images)
+                                {
+                                    <div class="slide">
+                                        <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');">
+                                            <div class="container">
+                                                <div class="banner_text">
+                                                    <h1><span>@item.name</span></h1>
+                                                    <p>@item.subtitle</p>
+                                                </div>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="slide">
+                                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/women-slider.jpg")');">
+                                        <div class="container">
+                                            <div class="banner_text" style="display:none;">
+                                                <h1><span>Luxury Market</span></h1>
+                                                <p>Your luxury cars search ends here</p>
+                                            </div>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="slide">
+                            <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/banner-new.jpg")');">
+                                <div class="container">
+                                    <div class="banner_text" style="display:none;">
+                                        <h1><span>Luxury Market</span></h1>
+                                        <p>Your luxury cars search ends here</p>
+                                    </div>
+                                </div>
+                            </figure>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                if (categories != null)
+                {
+                    foreach (var item in categories.data.Where(x => x.id == categoryid).Take(1))
+                    {
+                        if (item.banner_images.Count > 0)
+                        {
+                            foreach (var subitem in item.banner_images)
+                            {
+                                if (subitem.media_type == 20)
+                                {
+                                    <div class="slide">
+                                        <iframe width="100%" height="100%" src="@(subitem.file_url != null ? subitem.file_url : "")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <div class="slide">
+                                        <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');">
+                                            <div class="container">
+                                                <div class="banner_text">
+                                                    <h1><span>@item.name</span></h1>
+                                                    <p>@item.subtitle</p>
+                                                </div>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div class="slide">
+                                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/women-slider.jpg")');">
+                                    <div class="container">
+                                        <div class="banner_text" style="display:none;">
+                                            <h1><span>Luxury Market</span></h1>
+                                            <p>Your luxury cars search ends here</p>
+                                        </div>
+                                    </div>
+                                </figure>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/banner-new.jpg")');">
+                            <div class="container">
+                                <div class="banner_text" style="display:none;">
+                                    <h1><span>Luxury Market</span></h1>
+                                    <p>Your luxury cars search ends here</p>
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            if (categories != null)
+            {
+                foreach (var item in categories.data.Where(x => x.id == categoryid).Take(1))
+                {
+                    if (item.banner_images.Count > 0)
+                    {
+                        foreach (var subitem in item.banner_images)
+                        {<div class="slide">
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "" )');">
+                                    <div class="container">
+                                        <div class="banner_text">
+                                            <h1><span>@item.name</span></h1>
+                                            <p>@item.subtitle</p>
+                                        </div>
+                                    </div>
+                                </figure>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="slide">
+                            <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/women-slider.jpg")');">
+                                <div class="container">
+                                    <div class="banner_text" style="display:none;">
+                                        <h1><span>Luxury Market</span></h1>
+                                        <p>Your luxury cars search ends here</p>
+                                    </div>
+                                </div>
+                            </figure>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/banner-new.jpg")');">
+                        <div class="container">
+                            <div class="banner_text" style="display:none;">
+                                <h1><span>Luxury Market</span></h1>
+                                <p>Your luxury cars search ends here</p>
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+
+
+
+
+    </div>
+    @if (Model != null)
+    {
+        if (Model.data != null)
+        {
+            if (Model.data.Where(a => a.is_featured == 1).ToList().Count > 1)
+            {
+                <div class="slider-progress">
+                    <div class="progress"></div>
+                </div>
+            }
+        }
+    }
+</div>
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                    <li><a href="javascript:;">@ViewData["categoryName"].ToString()</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="women_sec">
+    <div class="container">
+
+        <div class=" autoLife">
+            <h2>@ViewData["categoryName"].ToString()</h2>
+
+            @if (Model != null)
+            {
+                if (Model.data != null)
+                {
+                    if (Model.data.Where(a => a.is_featured == 0).ToList().Count > 0)
+                    {
+                        if (requestid == 0)
+                        {
+                            foreach (var item in Model.data.Where(a => a.category_id != 2 && a.category_id != 3 && a.is_featured == 0).Select((x, i) => new { Data = x, Index = i }))
+                            {
+                                try
+                                {
+                                    string slugname = "";
+                                    string categoryName = "";
+
+                                    if (ViewData["slug"].ToString() == "auto-life")
+                                    {
+                                        categoryName = categories.data.FirstOrDefault().child_category.Where(a => a.id == item.Data.category_id).FirstOrDefault().name;
+                                        slugname = categories.data.FirstOrDefault().child_category.Where(a => a.id == item.Data.category_id).FirstOrDefault().slug;
+                                    }
+                                    else
+                                    {
+                                        categoryName = categories.data.FirstOrDefault().name;
+                                        slugname = categories.data.FirstOrDefault().slug;
+                                    }
+
+                                    <div class="row mb-4 Newschildlisting" rowno="@(item.Index + 1)">
+                                        <div class="col-md-12">
+                                            <a href="@(Url.Action("NewsbyID", "Car", new { slug = ViewData["slug"].ToString(), id = item.Data.slug }))">
+                                                @if (item.Data.media != null)
+                                                {
+                                                    if (item.Data.media.FirstOrDefault().media_type == 20)
+                                                    {
+
+                                                        <iframe width="100%" height="100%" src="@item.Data.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                        //<figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().thumnail');"></figure>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (item.Data.media.Count > 0)
+                                                        {
+                                                            <figure class="img_wrap" style="background-image: url(@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : ""));"></figure>
+                                                        }
+                                                        else
+                                                        {
+                                                            <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                }
+                                            </a>
+                                            <div class="content">
+                                                @if (Context.Session.Keys.Count() > 0)
+                                                {
+                                                    <a href="javascript:;" onclick="MarkLke('@item.Data.id', 20, this)" class="@(item.Data.is_liked == true ? "heartBtn act" : "heartBtn")"><span class="icon-heart1"></span></a>
+                                                }
+
+                                                <a href="@(Url.Action("NewsbyID", "Car", new { slug = slugname, id = item.Data.slug }))"><h2>@item.Data.headline</h2></a>
+                                                <br />
+                                                @*<p>@(Html.Raw(item.Data.description.Length > 200 ? item.Data.description.Substring(0, 200) + "..." : item.Data.description) )</p>*@
+                                                <ul class="posted_dtl">
+                                                    <li style="border:1px solid black; font-weight:bold; padding-left:10px;">@categoryName</li> &nbsp;&nbsp;|&nbsp;
+                                                    <li><span class="icon-icon-6"></span>@(Convert.ToDateTime(item.Data.created_at).ToString("MMMM dd, yyyy"))</li>
+                                                    <li title="Views"><span class="icon-eye"></span> @item.Data.views_count</li>
+                                                    <li title="Likes" class="likecountli"><span class="icon-heart1"></span><p style="display:inline; font-size:14px;">@item.Data.like_count</p></li>
+                                                    <li title="Comments"><span class="icon-text"></span>@item.Data.comments_count</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                catch { }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in Model.data.Where(a => a.is_featured == 0).Select((x, i) => new { Data = x, Index = i }))
+                            {
+                                try
+                                {
+
+                                    <div class="row mb-4 Newschildlisting" rowno="@(item.Index + 1)">
+                                        <div class="col-md-12">
+
+
+
+                                            @if (ViewData["categoryID"].ToString() == "2")
+                                            {
+                                                <a href="@(Url.Action("CarEducationbyID", "Car", new { id = item.Data.slug }))">
+                                                    @if (item.Data.media != null)
+                                                    {
+                                                        if (item.Data.media.FirstOrDefault().media_type == 20)
+                                                        {
+
+                                                            <iframe width="100%" height="100%" src="@item.Data.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                            //<figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().thumnail');"></figure>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (item.Data.media.Count > 0)
+                                                            {
+                                                                <figure class="img_wrap" style="background-image: url(@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : ""));"></figure>
+                                                            }
+                                                            else
+                                                            {
+                                                                <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                    }
+                                                </a>
+                                            }
+                                            else if (ViewData["categoryID"].ToString() == "3")
+                                            {
+                                                <a href="@(Url.Action("WomenOnlybyID", "Car", new { id = item.Data.slug }))">
+                                                    @if (item.Data.media != null)
+                                                    {
+                                                        if (item.Data.media.FirstOrDefault().media_type == 20)
+                                                        {
+
+                                                            @*<iframe width="100%" height="100%" src="@item.Data.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*@
+                                                            <figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().thumnail');"></figure>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (item.Data.media.Count > 0)
+                                                            {
+                                                                <figure class="img_wrap" style="background-image: url(@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : ""));"></figure>
+                                                            }
+                                                            else
+                                                            {
+                                                                <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                    }
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@(Url.Action("NewsbyID", "Car", new { id = item.Data.slug }))">
+                                                    @if (item.Data.media != null)
+                                                    {
+                                                        if (item.Data.media.FirstOrDefault().media_type == 20)
+                                                        {
+
+                                                            @*<iframe width="100%" height="100%" src="@item.Data.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*@
+                                                            <figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().thumnail');"></figure>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (item.Data.media.Count > 0)
+                                                            {
+                                                                <figure class="img_wrap" style="background-image: url(@(item.Data.media.Count > 0 ? item.Data.media.FirstOrDefault().file_url : ""));"></figure>
+                                                            }
+                                                            else
+                                                            {
+                                                                <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <figure class="img_wrap" style="background-image: url('');"></figure>
+                                                    }
+                                                </a>
+                                            }
+
+
+                                            <div class="content">
+                                                @if (Context.Session.Keys.Count() > 0)
+                                                {
+                                                    <a href="javascript:;" onclick="MarkLke('@item.Data.id', 20, this)" class="@(item.Data.is_liked == true ? "heartBtn act" : "heartBtn")"><span class="icon-heart1"></span></a>
+                                                }
+
+
+                                                @if (ViewData["categoryID"].ToString() == "2")
+                                                {
+                                                    <a href="@(Url.Action("CarEducationbyID", "Car", new { id = item.Data.slug }))"><h2>@item.Data.headline</h2></a>
+                                                }
+                                                else if (ViewData["categoryID"].ToString() == "3")
+                                                {
+                                                    <a href="@(Url.Action("WomenOnlybyID", "Car", new { id = item.Data.slug }))"><h2>@item.Data.headline</h2></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@(Url.Action("NewsbyID", "Car", new { id = item.Data.slug }))"><h2>@item.Data.headline</h2></a>
+                                                }
+                                                <br />
+                                                @*<p>@(Html.Raw(item.Data.description.Length > 200 ? item.Data.description.Substring(0, 200) + "..." : item.Data.description) )</p>*@
+                                                <ul class="posted_dtl">
+                                                    <li><span class="icon-icon-6"></span>@(Convert.ToDateTime(item.Data.created_at).ToString("MMMM dd, yyyy"))</li>
+                                                    <li title="Views"><span class="icon-eye"></span> @item.Data.views_count</li>
+                                                    <li title="Likes" class="likecountli"><span class="icon-heart1"></span><p style="display:inline; font-size:14px;">@item.Data.like_count</p></li>
+                                                    <li title="Comments"><span class="icon-text"></span>@item.Data.comments_count</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                catch { }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="row">
+                        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row">
+                    <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                </div>
+            }
+
+
+
+        </div>
+        @if (Model != null)
+        {
+            if (Model.data != null)
+            {
+                if (Model.data.Count > 0)
+                {
+                    <div class="listing_page">
+                        <nav aria-label="Page navigation example" style="text-align: center;">
+                            <ul class="pagination">
+
+                                @{
+                                    int totalcount = Model.data.Where(a => a.is_featured == 0).ToList().Count;
+                                    if (requestid == 0)
+                                    {
+                                        totalcount = Model.data.Where(a => a.category_id != 2 && a.category_id != 3 && a.is_featured == 0).ToList().Count;
+                                    }
+                                    int loopcount = 0;
+                                    if (totalcount > 10)
+                                    {
+
+                                        while (totalcount > 10)
+                                        {
+                                            totalcount = totalcount - 10;
+                                            loopcount++;
+                                        }
+
+                                        if (totalcount > 0 && totalcount <= 10)
+                                        {
+                                            loopcount++;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        loopcount = 1;
+                                    }
+                                }
+
+                                @if (loopcount > 1)
+                                {
+                                    for (int i = 1; i <= loopcount; i++)
+                                    {
+                                        <li class="page-item"><a class="page-link CurrrentPage" maxrange="@(i * 10)" onclick="NewsDisplayPage(this, '@i', '@(i * 10)')" href="javascript:;">@i</a></li>
+                                    }
+                                }
+                                @*<li class="page-item"><a class="page-link" href="javascript:;">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:;">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:;">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:;">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:;">4</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:;">5</a></li>
+                                    <li class="page-item"><a class="page-link" href="javascript:;">Next</a></li>*@
+                            </ul>
+                        </nav>
+                    </div>
+
+                }
+            }
+        }
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".Newschildlisting").each(function () {
+            $(this).hide();
+        })
+
+        for (var i = 1; i <= 10; i++) {
+            $(".Newschildlisting").each(function () {
+                if ($(this).attr("rowno") == i) {
+                    $(this).show();
+                }
+            })
+        }
+    });
+
+    function GotoNewsDetail($this) {
+        var href = $($this).siblings().find("a").attr("href");
+        window.location.href = href;
+    }
+
+function MarkFavourite(id, type, $this) {
+
+        var text = $($this).text();
+
+        var data = {};
+        data.news_id = id;
+        data.type = type;
+
+        $.ajax({
+                type: 'GET',
+                url: '@Url.Action("MarkFavouriteNews", "Car")',
+                data: data,
+                success: function (data) {
+                    if (data == "success") {
+                        if ($($this).hasClass("act")) {
+                            notify("Marked favourite Successfully", "success");
+                            //$($this).removeClass("act")
+                        }
+                        else {
+                            notify("Marked Unfavourite Successfully", "success");
+                            //$($this).addClass("act")
+                        }
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Request has been submitted")
+                    }
+                    else {
+                        notify("Something went wrong while submitting request, Please try again", "danger");
+                        //$("#spanPSmessage").show();
+                        //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                    }
+                },
+            });
+    }
+
+    function MarkLke(id, type, $this) {
+
+        var text = $($this).text();
+        var likescount = parseInt($($this).parents(".content").find(".likecountli").find("p").text());
+
+        var data = {};
+        data.news_id = id;
+        data.type = type;
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("MarkFavouriteNews", "Car")',
+            data: data,
+            success: function (data) {
+                if (data == "success") {
+
+                    debugger;
+                    if ($($this).hasClass("act")) {
+                        //notify("Marked favourite Successfully", "success");
+                        $($this).parents(".content").find(".likecountli").find("p").text(likescount + 1);
+                    }
+                    else {
+                        //notify("Marked Unfavourite Successfully", "success");
+                        $($this).parents(".content").find(".likecountli").find("p").text(likescount - 1);
+                    }
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Request has been submitted")
+                }
+                else {
+                    notify("Something went wrong while submitting request, Please try again", "danger");
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                }
+            }, complete: function () {
+
+            }
+        });
+    }
+
+    function NewsDisplayPage($this, min, max) {
+
+        min = max - 9;
+
+        $(".Newschildlisting").each(function () {
+            $(this).hide();
+        })
+
+        for (var i = min; i <= max; i++) {
+            $(".Newschildlisting").each(function () {
+                if ($(this).attr("rowno") == i) {
+                    $(this).show();
+                }
+            })
+        }
+
+    }
+</script>

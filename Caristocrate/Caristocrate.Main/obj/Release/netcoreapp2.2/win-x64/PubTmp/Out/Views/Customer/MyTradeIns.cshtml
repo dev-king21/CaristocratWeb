@@ -1,0 +1,166 @@
+﻿@using Caristocrate.Common.Models
+@model CustTradeInModel.Response
+@{
+    ViewData["Title"] = "My Trade Ins";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewBag.BodyClass = "dashPages";
+    int categoryid = Convert.ToInt32(ViewData["categoryID"].ToString());
+}
+
+<section class="page_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li><a href="@Url.Action("MyAccount", "Customer")">Home</a></li>
+                    <li><a href="javascript:;">My Trade Ins</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="main_sec">
+    <div class="container">
+        <div class="headBar">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="page-title">My Trade Ins</h2>
+                </div>
+                <div class="col-md-4 my-auto right">
+                    <select id="ddlTradeInCategory" onchange="TradeInCategoryFilter(this)">
+                        <option value="0">All</option>
+                        <option value="28">Luxury New Cars</option>
+                        <option value="25">The Outlet Mall</option>
+                        <option value="26">Approved Pre-Owned</option>
+                        <option value="27">Classic Cars</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="topOffers Mytrade">
+            <div class="row">
+
+                @if (Model != null)
+                {
+                    if (Model.data != null)
+                    {
+                        if (Model.data.Count > 0)
+                        {
+                            foreach (var item in Model.data)
+                            {
+                                if (item.my_car != null)
+                                {
+                                    int offerrecieved = 0;
+                                    <div class="col-md-4 TradeinRecords" categoryid="@(item.my_car != null ? item.my_car.category_id : 0)">
+                                        <a target="_blank" href="@Url.Action("MyTradeInsbyID", "Customer", new { id = item.id })">
+                                            <div class="filter_carBox">
+                                                <figure class="img_wrap" style="background-image: url('@(item.my_car != null ? item.my_car.media.FirstOrDefault().file_url : "")');">
+                                                    @*@if (item.is_expired == true)
+        {*@
+                                                    @if (item.offer_details != null)
+                                                    {
+
+                                                        if (item.offer_details.Count > 0)
+                                                        {
+                                                            foreach (var offers in item.offer_details)
+                                                            {
+                                                                if (offers.amount != null)
+                                                                {
+                                                                    offerrecieved++;
+                                                                }
+                                                            }
+
+                                                            if (offerrecieved > 0)
+                                                            {
+                                                                <label class="status_label received">Offer Received</label>
+                                                            }
+                                                            else if (offerrecieved == 0 && item.is_expired == true)
+                                                            {
+                                                                <label class="status_label notAvailable">No offer Available</label>
+                                                            }
+                                                            else
+                                                            {
+                                                                <label class="status_label waiting">Waiting for Offer</label>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <label class="status_label waiting">Waiting for Offer</label>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="status_label waiting">Waiting for Offer</label>
+                                                    }
+                                                    @*}
+        else
+        {
+            <label class="status_label waiting">Waiting for Offer</label>
+        }*@
+
+                                                    @*<label class="status_label received">@item.my_car.status_text</label>*@
+                                                    <div class="car_dtl clearfix">
+                                                        <p>@item.my_car.name <span>@item.my_car.year </span></p>
+                                                        @*<p>@item.my_car.name <span>@item.my_car.year | <span>Model <strong>@item.my_car.car_model.name</strong></span> </span></p>*@
+                                                    </div>
+                                                    <h4>@(item.my_car.amount != null ? item.my_car.currency : "") @(item.my_car.amount != null ? Convert.ToDecimal(item.my_car.amount).ToString("C0").Replace("$", "") : "")</h4>
+                                                </figure>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                        }
+                    }
+                    else
+                    {
+                        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+                }
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#ddlTradeInCategory").val('@categoryid');
+        TradeInCategoryFilter($("#ddlTradeInCategory"))
+    })
+
+    function TradeInCategoryFilter($this) {
+        var id = $($this).val();
+
+        $(".TradeinRecords").each(function () {
+            $(this).hide();
+        })
+
+        if (id == 0) {
+            $(".TradeinRecords").each(function () {
+                $(this).show();
+            })
+        }
+        else {
+            $(".TradeinRecords").each(function () {
+                if ($(this).attr("categoryid") == id) {
+                    $(this).show();
+                }
+            })
+        }
+
+    }
+</script>

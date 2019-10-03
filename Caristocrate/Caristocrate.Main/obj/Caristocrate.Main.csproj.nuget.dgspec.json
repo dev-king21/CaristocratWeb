@@ -1,0 +1,136 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Main\\Caristocrate.Main.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Common\\Caristocrate.Common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Common\\Caristocrate.Common.csproj",
+        "projectName": "Caristocrate.Common",
+        "projectPath": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Common\\Caristocrate.Common.csproj",
+        "packagesPath": "C:\\Users\\Akash\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Common\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Akash\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.2"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.2": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    },
+    "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Main\\Caristocrate.Main.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Main\\Caristocrate.Main.csproj",
+        "projectName": "Caristocrate.Main",
+        "projectPath": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Main\\Caristocrate.Main.csproj",
+        "packagesPath": "C:\\Users\\Akash\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Main\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Akash\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.2"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.2": {
+            "projectReferences": {
+              "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Common\\Caristocrate.Common.csproj": {
+                "projectPath": "C:\\Users\\Akash\\Documents\\Visual Studio 2019\\Projects\\caristocrateweb\\Caristocrate\\Caristocrate.Common\\Caristocrate.Common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "dependencies": {
+            "Microsoft.AspNetCore.All": {
+              "target": "Package",
+              "version": "[2.0.8, )"
+            },
+            "Microsoft.AspNetCore.Session": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

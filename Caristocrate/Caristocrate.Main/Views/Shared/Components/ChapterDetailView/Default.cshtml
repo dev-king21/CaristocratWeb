@@ -1,0 +1,76 @@
+﻿@using Caristocrate.Common.Models
+@model ChaptersModel.ResponsebyID
+@{ 
+    ChaptersModel.Response chapters = ViewData["chapters"] as ChaptersModel.Response;
+    CoursesModel.ResponsebyID course = ViewData["course"] as CoursesModel.ResponsebyID;
+    UserChapterAssociation.Response userchapterassociation = ViewData["userchapterassociation"] as UserChapterAssociation.Response;
+}
+<div class="col-md-4">
+    <div class="course_sidebar">
+        <div class="head">
+            <h2>@course.data.title</h2>
+            <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @ViewData["totalprogress"].ToString()%" aria-valuenow="@ViewData["totalprogress"].ToString()" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <span class="progress_percen">@ViewData["totalprogress"].ToString()% Complete</span>
+        </div>
+        <h2 class="second">@Model.data.title</h2>
+
+        <ul class="course_list">
+            @if (chapters != null)
+            {
+                if (chapters.data != null)
+                {
+                    if (chapters.data.Count > 0)
+                    {
+                        foreach (var item in chapters.data.OrderByDescending(x => x.created_at))
+                        {                            
+                            if (item.id == Model.data.id)
+                            {
+                                <li onclick="GetChapterDetail('@item.id', '@item.course_id')" class="active"><span class="icon-play"></span><p>@item.title</p> <i>(@item.duration)</i></li>
+                            }
+                            else
+                            {
+                                <li onclick="GetChapterDetail('@item.id', '@item.course_id')"><span class="icon-play"></span><p>@item.title</p> <i>(@item.duration)</i></li>
+                            }
+                        }
+                    }
+                }
+            }
+        </ul>
+    </div>
+</div>
+<div class="col-md-8">
+    <h2 class="page-title">@Model.data.title</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="course_timing">
+                <li><span class="icon-clock"></span>@Model.data.duration</li>
+                <li><span class="icon-translate"></span> English</li>
+            </ul>
+            <p>@Model.data.subtitle</p>
+        </div>
+    </div>
+
+    <div class="brdr-wid course_video_wrap">        
+        <div class="video_holder" style="height:50vh;">            
+            <iframe width="100%" height="100%" src="@Model.data.link" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="course_nav">
+        <div class="row">
+            <div class="col-md-6">
+                <a onclick="MovePrevChapter()" href="javascript:;"><span class="icon-arrow-left1"></span> Previous Lacture</a>
+            </div>
+            <div class="col-md-6 text-right">
+                <a onclick="MoveNextChapter()" href="javascript:;">Complete and Continue <span class="icon-arrow-right1"></span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="course_dtl">
+        <h2 class="sm">Description</h2>
+        <p>@Html.Raw(Model.data.description)</p>
+    </div>
+
+</div>

@@ -1,0 +1,359 @@
+﻿@using Caristocrate.Common.Models
+@model GetCarDetail.Response
+@{
+    ViewData["Title"] = "Reviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page versionthree";
+    ReviewAspects.Response reviewaspects = ViewData["REviewAspects"] as ReviewAspects.Response;
+}
+
+<style type="text/css">
+    .ratingLI.hover {
+        color: #ffba00 !important;
+    }
+</style>
+
+
+<section class="banner_sec">
+    @if (Model.data.media != null)
+    {
+        if (Model.data.media.Count > 0)
+        {
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9 padding0">
+                        <div class="car_detail_slider4">
+                            @foreach (var item in Model.data.media)
+                            {
+                                <figure class="img_wrap" style="background-image: url('@item.file_url');"></figure>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="car_detail_slider_nav4">
+                            @foreach (var item in Model.data.media)
+                            {
+                                <figure class="img_wrap" style="background-image: url('@item.file_url');"></figure>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</section>
+
+@*<section class="banner_sec">
+        <figure class="img_wrap" style="background-position:50% 50%; background-image: url('@Model.data.media.FirstOrDefault().file_url');">
+            <div class="container">
+                <div class="banner_text">
+                    <h1><span></span></h1>
+                    <p></p>
+                </div>
+            </div>
+        </figure>
+    </section>*@
+
+<section class="reviews_details">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head Reviewheading">
+                    <h2>@Model.data.name</h2>
+                    <div class="rating Ratingchildlisting">
+                        <input id="input-id" name="input-name" value="@Model.data.average_rating" type="number" hoverEnabled=0 class="rating postedRatingInput" min=0 max=5 step=0.1 data-size="lg">
+                        @*@{
+
+                                decimal ratingcount1 = Math.Round(Model.data.average_rating);
+                                for (int j = 1; j <= ratingcount1; j++)
+                                {<i class="fa fa-star fill"></i>}
+                                for (int j = 1; j <= 5 - ratingcount1; j++)
+                                {<i class="fa fa-star"></i>}
+                            }*@
+                        <p class="postedRating">(@Model.data.average_rating.ToString("F1")/5)</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.data.is_reviewed == 0)
+        {
+            <div class="row clickrate reviewpostSection Ratingchildlisting">
+                <div class="col-md-12">
+                    <h3>Click to Rate</h3>
+                </div>
+                <input type="hidden" value="@Model.data.id" id="hdnCarID" />
+                <div class="col-md-12">
+                    <ul>
+                        @foreach (var item in reviewaspects.data)
+                        {
+                            <li class="ratingStartsMainLI col-md-6" aspectid="@item.id">
+                                <h6>@item.title</h6>
+                                <div class="rating">
+                                    @*<input id="input-id" name="input-name" type="number" hoverEnabled=0 class="rating" min=0 max=5 step=0.1 data-size="lg">*@
+                                    <i class="fa fa-star ratingLI" orderno="1"></i>
+                                    <i class="fa fa-star ratingLI" orderno="2"></i>
+                                    <i class="fa fa-star ratingLI" orderno="3"></i>
+                                    <i class="fa fa-star ratingLI" orderno="4"></i>
+                                    <i class="fa fa-star ratingLI" orderno="5"></i>
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+            <div class="row commentSec reviewpostSection">
+                <div class="col-md-12">
+                    <h3>Detailed Review (optional)</h3>
+                    <div class="form-group">
+                        <textarea id="txtReviewDesc" placeholder="What other shoppers should know before buying this car"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="loaderdiv" style="display:none; padding:10px;">
+                            <img style="margin-left:90%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                        </div>
+                        <button onclick="PostReview(this)">Submit</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<div style="display:none">
+    <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="btnShowLoginReview">Login</a>
+</div>
+<input type="hidden" id="EvaluationForm" value="@ViewData["UserName"]" />
+
+<section class="consumers_reviews">
+    <div class="container">
+        <div class="row" id="CarReviewsSection">
+            <div class="loaderdiv" style="width:100%;"><img style="margin-left:50%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" /></div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    $(document).ready(function () {
+
+        GetReviews('@Model.data.id');
+
+        /* 1. Visualizing things on Hover - See next part for action on click */
+        $('.ratingLI').on('mouseover', function () {
+            var onStar = parseInt($(this).attr('orderno'), 10); // The star currently mouse on
+            // Now highlight all the stars that's not after the current hovered star
+            $(this).parents(".rating").find('.ratingLI').each(function (e) {
+                if (e < onStar) {
+                    $(this).addClass('hover');
+                }
+                else {
+                    $(this).removeClass('hover');
+                }
+            });
+
+        }).on('mouseout', function () {
+            $(this).parents(".rating").find('.ratingLI').each(function (e) {
+                $(this).removeClass('hover');
+            });
+        });
+
+
+        /* 2. Action to perform on click */
+        $('.ratingLI').on('click', function () {
+            var onStar = parseInt($(this).attr('orderno'), 10); // The star currently selected
+            var stars = $(this).parents(".rating").find('.ratingLI');
+
+            for (i = 0; i < stars.length; i++) {
+                $(stars[i]).removeClass('fill');
+            }
+
+            for (i = 0; i < onStar; i++) {
+                $(stars[i]).addClass('fill');
+            }
+        });
+
+
+        var bannercount = $(".car_detail_slider4").find("figure").length;
+        if (bannercount > 1) {
+            $('.car_detail_slider4').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                dots: false,
+                centerMode: true,
+                centerPadding: '0',
+                asNavFor: '.car_detail_slider_nav4',
+                responsive: [
+                    {
+                        breakpoint: 1367,
+                        settings: {
+                            centerPadding: '0',
+                        }
+                    },
+                    {
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                        }
+                    }
+                ]
+            });
+
+
+        }
+
+        $('.car_detail_slider_nav4').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.car_detail_slider4',
+            dots: false,
+            centerMode: true,
+            arrows: true,
+            vertical: true,
+            centerPadding: '0',
+
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 1367,
+                    settings: {
+                        slidesToShow: 2,
+                        centerPadding: '0',
+                    }
+                },
+                {
+                    breakpoint: 1025,
+                    settings: {
+                        slidesToShow: 4,
+                        centerPadding: '0',
+                    }
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 2,
+                        vertical: false,
+                    }
+                }
+            ]
+        });
+
+    });
+
+
+    function responseMessage(msg) {
+        $('.success-box').fadeIn(200);
+        $('.success-box div.text-message').html("<span>" + msg + "</span>");
+    }
+
+    function GetReviews(carid) {
+        $('.loading').fadeIn();
+        @*var loaderhtml = '<div class="loaderdiv" style="width:100%;"><img style="margin-left:50%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" /></div>'
+        $('#CarReviewsSection').html(loaderhtml);*@
+        var data = {};
+        data.carID = carid;
+
+        $('#CarReviewsSection').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("CarReviews", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#CarReviewsSection').html(data);
+
+                $(".listingrating").rating();
+
+                var overallcarRatings = $("#hdnOverallCarReviews").val();
+                if (overallcarRatings != "0") {
+                    overallcarRatings = parseFloat(overallcarRatings).toFixed(1);
+                    $(".Reviewheading").find(".postedRating").text("(" + overallcarRatings + "/5)");
+                    $(".Reviewheading").find(".postedRatingInput").val(overallcarRatings);
+
+                    $(".Reviewheading").find(".postedRatingInput").rating('destroy');
+                    $(".Reviewheading").find(".postedRatingInput").rating();
+                    $(".Reviewheading").find(".caption").hide();
+                    $(".Reviewheading").find(".rating-animate").css("display", "inline-block");
+                }
+            }, complete: function () {
+                $('.loading').fadeOut('');
+            }
+        });
+    }
+
+    function PostReview($this) {
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLoginReview").trigger("click");
+            return;
+        }
+
+        $($this).hide()
+        $(".loaderdiv").show()
+
+        var json = "";
+        var array = [];
+
+        var output = {}
+
+        debugger;
+
+        $(".ratingStartsMainLI").each(function () {
+            var startscount = $(this).find(".rating").find(".fill").length.toString();
+
+            if (startscount == 0) {
+                notify("Give atleast 1 star rating for each aspect", "danger");
+                return;
+            }
+
+            //var startscount = $(this).find(".rating-input").val();
+            var aspectid = $(this).attr("aspectid");
+            output = {};
+            output[aspectid] = startscount;
+            array.push(output);
+        })
+
+        json = JSON.stringify(array);
+        //json = json.toString().replace(/\\"/g, '"').replace(/"/g, '\\"');
+
+        var carid = $("#hdnCarID").val();
+        var desc = $("#txtReviewDesc").val();
+
+
+
+        var data = {};
+
+        data.car_id = carid;
+        data.rating = array;
+        data.review_message = desc;
+
+        json = JSON.stringify(data);
+        console.log(json)
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'POST',
+            data: { request: json },
+            url: '@Url.Action("PostReview", "Car")',
+            success: function (data) {
+                if (data == "success") {
+                    $(".reviewpostSection").each(function () {
+                        $(this).remove();
+                    });
+
+                    GetReviews(carid);
+
+                    notify("Reviews Successfully Submitted", "success")
+                }
+            },
+            complete: function () {
+                $($this).show()
+                $(".loaderdiv").hide()
+            }
+        });
+    }
+</script>

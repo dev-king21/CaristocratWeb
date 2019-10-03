@@ -1,0 +1,15 @@
+﻿@using Caristocrate.Common.Models
+@model GetCars.Response
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+            foreach (var item in Model.data.Where(x => x.review_count > 0).OrderByDescending(a => a.review_count).Take(10))
+            {
+                <li><a href="@Url.Action("ReviewsbyID","Car", new { brand = item.car_model.brand.slug, model = item.car_model.slug, carid = item.slug })" title="@item.name"><span class="icon-arrow-right1"></span> @(item.name.Length > 100 ? item.name.Substring(0, 100) + "..." : item.name ) <font>(@item.review_count)</font></a></li>
+            }
+        }
+    }
+}

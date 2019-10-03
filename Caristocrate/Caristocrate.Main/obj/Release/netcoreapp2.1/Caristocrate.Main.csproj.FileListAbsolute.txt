@@ -1,0 +1,14 @@
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Main.deps.json
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Main.runtimeconfig.json
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Main.runtimeconfig.dev.json
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Main.dll
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Main.pdb
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Common.dll
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\bin\Release\netcoreapp2.1\Caristocrate.Common.pdb
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.csprojAssemblyReference.cache
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.csproj.CoreCompileInputs.cache
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.AssemblyInfoInputs.cache
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.AssemblyInfo.cs
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.csproj.CopyComplete
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.dll
+C:\Users\Akash\Documents\Visual Studio 2019\Projects\caristocrateweb\Caristocrate\Caristocrate.Main\obj\Release\netcoreapp2.1\Caristocrate.Main.pdb

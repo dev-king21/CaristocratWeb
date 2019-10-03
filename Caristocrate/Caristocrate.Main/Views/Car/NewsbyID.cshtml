@@ -1,0 +1,543 @@
+﻿@using Caristocrate.Common.Models
+@model NewsbyIDModel.Response
+@{
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+    ViewData["Title"] = categories.data.Where(a => a.id == Model.data.category_id).ToList().Count > 0 ? categories.data.Where(a => a.id == Model.data.category_id).FirstOrDefault().name : categories.data.Where(a => a.id == 1).FirstOrDefault().child_category.Where(a => a.id == Model.data.category_id).FirstOrDefault().name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page";
+    NewsModel.Response Newsobj = ViewData["Newsobj"] as NewsModel.Response;
+}
+
+
+@section HeadMeta
+    {
+
+    <meta property="og:title" content="@Model.data.headline" />
+    <meta property="og:image" content="@Model.data.media.FirstOrDefault().file_url" />
+    <meta property="og:image:width" content="150" />
+    <meta property="og:image:height" content="150" />
+
+    @if (Model.data != null)
+    {
+        if (Model.data.meta != null)
+        {
+            if (Model.data.meta.Count > 0)
+            {
+                foreach (var item in Model.data.meta)
+                {
+                    if (item.title != null && item.description != null)
+                    {
+                        if (item.title != "" && item.description != "")
+                        {
+                            <meta name="@item.title" content="@item.description">
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+}
+
+<style type="text/css">
+    /*.move-sld .slick-track {
+        width: 100% !important;
+    }*/
+
+    .blogBox iframe {
+        min-height: 210px;
+    }
+</style>
+
+@*<section class="banner_sec">
+        <figure class="img_wrap" style="background-image: url(@(Model.data.media.Count > 0 ? Model.data.media.FirstOrDefault().file_url : ""));">
+        </figure>
+    </section>*@
+
+<div class="slider-wrapper banner_sec" id="slick-1">
+    <div class="slider">
+        @if (Model != null)
+        {
+            if (Model.data != null)
+            {
+                if (Model.data.media.Count > 0)
+                {
+                    foreach (var subitem in Model.data.media)
+                    {
+                        if (subitem.media_type == 20)
+                        {
+                            <div class="slide">
+                                <iframe width="100%" height="100%" src="@subitem.file_url" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="slide">
+                                <figure class="img_wrap" style="background-image: url('@(subitem.file_url != null ? subitem.file_url : "")');">
+                                    <div class="container">
+                                        <div class="banner_text" style="display:none;">
+                                            <h1>@subitem.title</h1>
+                                        </div>
+                                    </div>
+                                </figure>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="slide">
+                        <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                            <div class="container">
+                                <div class="banner_text" style="display:none;">
+                                    <h1>Welcome To<span>Caristocrat</span></h1>
+                                </div>
+                            </div>
+                        </figure>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="slide">
+                    <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                        <div class="container">
+                            <div class="banner_text" style="display:none;">
+                                <h1>Welcome To<span>Caristocrat</span></h1>
+                            </div>
+                        </div>
+                    </figure>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide">
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/Home-Slider-02.jpg")');">
+                    <div class="container">
+                        <div class="banner_text" style="display:none;">
+                            <h1>Welcome To<span>Caristocrat</span></h1>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        }
+
+
+    </div>
+    @if (Model.data.media.Count > 1)
+    {
+        <div class="slider-progress">
+            <div class="progress"></div>
+        </div>
+    }
+</div>
+
+<div class="women_sec">
+    <div class="container">
+
+        <div class="page_head row clearfix">
+            <div class="col-md-8">
+                <h2 class="page-title">@Model.data.headline</h2>
+
+            </div>
+            <div class="col-md-4 my-auto action_bar">
+                @*@if (Context.Session.Keys.Count() > 0)
+                {
+                    <a href="javascript:;"><span class="icon-star-full"></span> Favourite</a>
+                }*@
+                @*@if (Context.Session.Keys.Count() > 0)
+                {*@
+                <a href="javascript:;" onclick="MarkLke('@Model.data.id', 20, this)"><i class="fa fa-heart" aria-hidden="true"></i><p style="display:inline">@(Model.data.is_liked == false ? "Like" : "Unlike")</p></a>
+                <a href="javascript:;" onclick="MarkFavourite('@Model.data.id', 30, this)"><span class="icon-star-full"></span><p style="display:inline">@(Model.data.is_favorite == false ? "Favorite" : "Unfavourite")</p></a>
+                <a href="javascript:;"><span class="icon-share1"></span> Share</a>
+                @*}*@
+
+                @*<a href="javascript:;"><span class="icon-share1"></span> Share</a>*@
+            </div>
+            <div style="display:none">
+                <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="btnShowLoginFav">Login</a>
+            </div>
+        </div>
+        <div class="social_row">
+            <ul>
+                <li><span class="icon-calender"></span> @(Convert.ToDateTime(Model.data.created_at).ToString("MMMM dd, yyyy"))</li>
+                <li><span class="icon-eye1"></span> @Model.data.views_count Views</li>
+                <li><span class="icon-heart"></span><p style="display:inline" class="likescount">@Model.data.like_count</p> Likes</li>
+                <li><span class="icon-msg1"></span><p style="display:inline" class="commentscount">@Model.data.comments_count</p> Comments</li>
+            </ul>
+        </div>
+        <p class="women_page_info">@(Html.Raw(Model.data.description))</p>
+        <br />
+        @if(Model.data.related_car !=null)
+        { 
+        <object data="https://www.caristocrat.me/admin/api/resize/@Model.data.related_car" type="application/pdf">
+            <iframe src="https://docs.google.com/viewer?url=https://www.caristocrat.me/admin/api/resize/@Model.data.related_car&embedded=true"  width="100%" height="700"></iframe>
+        </object>
+        }
+
+
+
+        @if (Model.data.source != null && Model.data.source_image_url != null)
+        {
+            if (Model.data.source != "" && Model.data.source_image_url != "")
+            {
+                <div class="link_box clearfix">
+                    <figure class="img_wrap" style="background-image: url(@Model.data.source_image_url);"></figure>
+                    <div class="content">
+                        <h3>For More Information Visit</h3>
+                        <a href="@Model.data.source" target="_blank">@Model.data.source</a>
+                    </div>
+                </div>
+            }
+        }
+
+
+        <div class="comment_container">
+            <div class="user_comments">
+                <h2>Comments</h2>
+                <ul id="NewsCommentSection"></ul>
+            </div>
+
+            <div class="post_comments">
+                <h2>Leave a Comment</h2>
+                <div class="row">
+                    @*<div class="col-md-6">
+                        <div class="icon_field">
+                            <span class="icon-user1"></span>
+                            <input type="text" name="" placeholder="Full Name">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="icon_field">
+                            <span class="icon-email"></span>
+                            <input type="text" name="" placeholder="Email Address">
+                        </div>
+                    </div>*@
+                    <div class="col-md-12">
+                        <div class="icon_field">
+                            <span class="icon-email"></span>
+                            <input id="txtNewsComments" type="text" name="" placeholder="Write a comment">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="loaderdivcomment" style="display:none; padding:10px;">
+                            <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+                        </div>
+                        <button type="submit" onclick="SubmitComments(this);" class="custBtn">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style="display:none">
+            <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter" class="btnShowLoginComments">Login</a>
+        </div>
+
+        <section class="blog_sec morenewssection">
+            @if (Newsobj != null)
+            {
+                if (Newsobj.data != null)
+                {
+                    if (Newsobj.data.Count > 0)
+                    {
+                        if (Newsobj.data.Where(x => x.id != Model.data.id).ToList().Count > 0)
+                        {
+
+                            <div class="row head">
+                                <div class="col-md-12">
+                                    @if (Model.data.category_id == 2 || Model.data.category_id == 3)
+                                    {
+                                        <h3 class="title_blog" style="text-transform:capitalize">More News</h3>
+                                    }
+                                    else
+                                    {
+                                        <h3 class="title_blog" style="text-transform:capitalize">More @(categories.data.Where(a => a.id == Model.data.category_id).ToList().Count > 0 ? categories.data.Where(a => a.id == Model.data.category_id).FirstOrDefault().name : categories.data.Where(a => a.id == 1).FirstOrDefault().child_category.Where(a => a.id == Model.data.category_id).FirstOrDefault().name)</h3>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row move-sld">
+                                @foreach (var item in Newsobj.data.Where(a => a.id != Model.data.id && a.category_id != 2 && a.category_id != 3).ToList())
+                                {
+
+                                    string slugname = categories.data.Where(a => a.id == Model.data.category_id).ToList().Count > 0 ? categories.data.Where(a => a.id == Model.data.category_id).FirstOrDefault().slug : categories.data.Where(a => a.id == 1).FirstOrDefault().child_category.Where(a => a.id == Model.data.category_id).FirstOrDefault().slug;
+
+                                    <div class="col-md-4 moreNewsslidebox">
+                                        <a href="@(Url.Action("NewsbyID", "Car", new { slug = slugname, id = item.slug }))">
+                                            <div class="blogBox">
+                                                @if (item.media.Count > 0)
+                                                {
+                                                    if (item.media.FirstOrDefault().media_type == 20)
+                                                    {
+                                                        <iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                        //<figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().thumnail');"></figure>
+                                                    }
+                                                    else
+                                                    {
+                                                        <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');"></figure>
+                                                    }
+                                                }
+                                                <h2>@(Html.Raw(item.headline.Length > 50 ? item.headline.Substring(0, 50) + "..." : item.headline))</h2>
+                                                @*<p>@(Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description))</p>*@
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                                @foreach (var item in Newsobj.data.Where(a => a.id != Model.data.id && a.category_id == 3).ToList())
+                                {
+                                    <div class="col-md-4 moreNewsslidebox">
+                                        <a href="@(Url.Action("WomenOnlybyID", "Car", new { id = item.slug }))">
+                                            <div class="blogBox">
+                                                @if (item.media.FirstOrDefault().media_type == 20)
+                                                {
+                                                    @*<iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*@
+                                                    <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().thumnail');"></figure>
+                                                }
+                                                else
+                                                {
+                                                    <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');"></figure>
+                                                }
+                                                <h2>@(Html.Raw(item.headline.Length > 50 ? item.headline.Substring(0, 50) + "..." : item.headline))</h2>
+                                                @*<p>@(Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description))</p>*@
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                                @foreach (var item in Newsobj.data.Where(a => a.id != Model.data.id && a.category_id == 2).ToList())
+                                {
+                                    <div class="col-md-4 moreNewsslidebox">
+                                        <a href="@(Url.Action("CarEducationbyID", "Car", new { id = item.slug }))">
+                                            <div class="blogBox">
+                                                @if (item.media.FirstOrDefault().media_type == 20)
+                                                {
+                                                    <iframe width="100%" height="100%" src="@item.media.FirstOrDefault().file_url.Replace("autoplay=1", "autoplay=0").Replace("loop=1", "loop=0")" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                   // <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().thumnail');"></figure>
+                                                }
+                                                else
+                                                {
+                                                    <figure class="img_wrap" style="background-image: url('@item.media.FirstOrDefault().file_url');"></figure>
+                                                }
+                                                <h2>@(Html.Raw(item.headline.Length > 50 ? item.headline.Substring(0, 50) + "..." : item.headline))</h2>
+                                                @*<p>@(Html.Raw(item.description.Length > 150 ? item.description.Substring(0, 150) + "..." : item.description))</p>*@
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+
+                        }
+                    }
+                }
+            }
+        </section>
+        <input type="hidden" id="EvaluationForm" value="@ViewData["UserName"]" />
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(window).bind("load", function () {
+        setTimeout(function () {
+            if ($(".morenewssection").find(".moreNewsslidebox").length > 3) {
+                $('.move-sld').slick({
+                    dots: false,
+                    arrows: true,
+                    infinite: true,
+                    speed: 300,
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    autoplaySpeed: 2500,
+                    responsive: [
+                        {
+                            breakpoint: 1030,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 650,
+                            settings: {
+                                slidesToShow: 1,
+                                dots: true,
+                                arrows: false,
+                                slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
+            }
+        }, 2000)
+    });
+
+    $(document).ready(function () {
+
+        BindCOmments();
+    });
+
+    function BindCOmments() {
+
+        var loaderhtml = '<div class="loaderdiv" style="width:100%;"><img style="margin-left:50%;" src="@Url.Content("~/assets/images/ajax-loader.gif")" /></div>'
+        $('#NewsCommentSection').html(loaderhtml);
+
+        var data = {};
+            data.newsID= '@Model.data.id'
+
+        $('#NewsCommentSection').html('');
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'GET',
+            data: data,
+            url: '@Url.Action("NewsComments", "Car")',
+            type: 'GET',
+            success: function (data) {
+                $('#NewsCommentSection').html(data);
+            },
+        });
+    }
+
+    function SubmitComments($this) {
+
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLoginComments").trigger("click");
+            return;
+        }
+
+        var comments = $("#txtNewsComments").val();
+
+        if (comments == "") {
+            notify("Write some comments", "danger");
+            return;
+        }
+
+        $($this).hide();
+        $(".loaderdivcomment").show();
+
+        var data = {};
+        data.news_id = '@Model.data.id'
+        data.comment_text = comments;
+
+
+        $.ajax({
+            dataType: "html",
+            async: true,
+            type: 'POST',
+            data: data,
+            url: '@Url.Action("SubmitNewsComments", "Car")',
+            success: function (data) {
+                if (data == "success") {
+                    notify("Comment submitted successfully", "success");
+                    var commentscount = parseInt($(".commentscount").text());
+                    commentscount = commentscount + 1;
+                    $('.commentscount').text(commentscount);
+                    $("#txtNewsComments").val("");
+                    BindCOmments();
+                }
+                else {
+                    notify("Something went wrong while submitting request, Please try again", "danger");
+                }
+            },
+            complete: function (jqXHR, status) {
+                $($this).show();
+                $(".loaderdivcomment").hide();
+            }
+        });
+    }
+
+    function MarkFavourite(id, type, $this) {
+
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLoginFav").trigger("click");
+            return;
+        }
+
+        var text = $($this).text();
+
+        var data = {};
+        data.news_id = id;
+        data.type = type;
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("MarkFavouriteNews", "Car")',
+            data: data,
+            success: function (data) {
+                if (data == "success") {
+                    if (text == "Favorite") {
+                        notify("Marked favourite Successfully", "success");
+                        $($this).find("p").text("UnFavorite")
+                    }
+                    else {
+                        notify("Marked Unfavourite Successfully", "success");
+                        $($this).find("p").text("Favorite")
+                    }
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Request has been submitted")
+                }
+                else {
+                    notify("Something went wrong while submitting request, Please try again", "danger");
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                }
+            }, complete: function () {
+
+            }
+        });
+    }
+
+
+    function MarkLke(id, type, $this) {
+
+        var islogin = $("#EvaluationForm").val();
+        if (islogin == "") {
+            $(".btnShowLoginFav").trigger("click");
+            return;
+        }
+
+        var text = $($this).text();
+        var likescount = parseInt($(".likescount").text());
+
+        var data = {};
+        data.news_id = id;
+        data.type = type;
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("MarkFavouriteNews", "Car")',
+            data: data,
+            success: function (data) {
+                if (data == "success") {
+                    if (text == "Like") {
+                        //notify("Marked favourite Successfully", "success");
+                        $(".likescount").text(likescount + 1);
+                        $($this).find("p").text("Unlike")
+                    }
+                    else {
+                        //notify("Marked Unfavourite Successfully", "success");
+                        $(".likescount").text(likescount - 1);
+                        $($this).find("p").text("Like")
+                    }
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Request has been submitted")
+                }
+                else {
+                    notify("Something went wrong while submitting request, Please try again", "danger");
+                    //$("#spanPSmessage").show();
+                    //$("#spanPSmessage").text("Something went wrong while submitting request, Please try again");
+                }
+            }, complete: function () {
+
+            }
+        });
+    }
+
+</script>

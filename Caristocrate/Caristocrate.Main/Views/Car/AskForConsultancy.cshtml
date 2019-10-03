@@ -1,0 +1,527 @@
+﻿@using Caristocrate.Common.Models
+@model SettingModel.Response
+@{
+    ViewData["Title"] = "Ask For Consultancy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "inner-page preownDetail";
+    CategoryModel.Response categories = ViewData["categories"] as CategoryModel.Response;
+}
+
+
+<style type="text/css">
+    #ValidationMessage {
+        text-align: center;
+        color: black;
+        animation: ValidationMessage 5s 1;
+        -webkit-animation: ValidationMessage 5s 1;
+        animation-fill-mode: forwards;
+        animation-delay: 10s;
+        -webkit-animation-delay: 5s; /* Safari and Chrome */
+        -webkit-animation-fill-mode: forwards;
+    }
+
+        #ValidationMessage span {
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 15px;
+            color: red;
+        }
+
+    @@keyframes ValidationMessage {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @@-webkit-keyframes ValidationMessage {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+     @@media (max-width:1024px) {
+   iframe {
+      height:100% !important;
+   width:100%;
+  }
+</style>
+<div class ="container"style="height:55%; width:100%">
+    <div class="video-container1">
+        <div class="embed-responsive embed-responsive-16by9" style="align-items:center">
+            <iframe class="embed-responsive-item" src="https://www.youtube-nocookie.com/embed/iAa6Xks6S7w??rel=0?version=3&amp;autoplay=1&amp;controls=1&amp;&amp;showinfo=0&amp;loop=1&#8203;" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+        </div>
+    </div>
+    </div>
+
+<div class="container"><div class="row-fluid"><div class="span12"><div><div class="row-fluid"><div class="span4"><div class="widgetContainer"><div class="iconContainer text-center"><span class="ti-server 2  icon-white or-icon-2x"></span></div></div><div class="widgetContainer"><div class="textContainer"><h4 class="ql-align-center">One Stop Shop</h4><p class="ql-align-center">CCP provides you with all the information you need to know about car buying/leasing or trade-in process. We are a "friend in need."&nbsp;</p></div></div></div><div class="span4"><div class="widgetContainer"><div class="iconContainer text-center"><span class="ion-ios-people 2  icon-white or-icon-2x"></span></div></div><div class="widgetContainer"><div class="textContainer"><h4 class="ql-align-center">Experience and Expertise</h4><p class="ql-align-center">CCP has over 3 years of experience in successfully negotiating the car prices, and is making the car buying process fun for YOU!</p></div></div></div><div class="span4"><div class="widgetContainer"><div class="iconContainer text-center"><span class="ion-cash 2  icon-white or-icon-2x"></span></div></div><div class="widgetContainer"><div class="textContainer"><h4 class="ql-align-center">Lowest Price Guarantee</h4><p class="ql-align-center">CCP guarantees the lowest selling price for the car you want, in the same time frame, and geographic area. CCP has saved clients' thousands of dollars while getting the best deal on their car purchases.</p></div></div></div></div></div></div></div></div>
+
+
+<div class="strc1inlineContent" style="width:100%;position:relative;top:0;bottom:0" id="comp-jme4n1sdinlineContent">
+    <style id="comp-jme4n1sd-mesh-styles">
+
+        #comp-jme4n1sdinlineContent {
+            height: auto;
+            width: 100%;
+            position: relative;
+        }
+
+        #comp-jme4n1sdinlineContent-gridWrapper {
+            pointer-events: none;
+        }
+
+        #comp-jme4n1sdinlineContent-gridContainer {
+            position: static;
+            display: grid;
+            height: auto;
+            width: 100%;
+            min-height: auto;
+            grid-template-rows: min-content min-content min-content min-content 1fr;
+            grid-template-columns: 100%;
+        }
+
+        #comp-jme4n1sk {
+            position: relative;
+            margin: 37px 0px 25px calc((100% - 980px) * 0.5);
+            left: 228px;
+            grid-area: 1 / 1 / 2 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1sp {
+            position: relative;
+            margin: 0px 0px 43px calc((100% - 980px) * 0.5);
+            left: 475px;
+            grid-area: 2 / 1 / 3 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1sz {
+            position: relative;
+            margin: 0px 0px 28px calc((100% - 980px) * 0.5);
+            left: 158px;
+            grid-area: 3 / 1 / 4 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jmfmu2l6 {
+            position: relative;
+            margin: 34px 0px 64px calc((100% - 980px) * 0.5);
+            left: 173px;
+            grid-area: 3 / 1 / 4 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1ta {
+            position: relative;
+            margin: 0px 0px 18px calc((100% - 980px) * 0.5);
+            left: 90px;
+            grid-area: 4 / 1 / 5 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1tf {
+            position: relative;
+            margin: 0px 0px 37px calc((100% - 980px) * 0.5);
+            left: 117px;
+            grid-area: 5 / 1 / 6 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4pj6z {
+            position: relative;
+            margin: 0px 0px 28px calc((100% - 980px) * 0.5);
+            left: 430px;
+            grid-area: 3 / 1 / 4 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4r6yu {
+            position: relative;
+            margin: 28px 0px 56px calc((100% - 980px) * 0.5);
+            left: 449px;
+            grid-area: 3 / 1 / 4 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1tl {
+            position: relative;
+            margin: 0px 0px 18px calc((100% - 980px) * 0.5);
+            left: 353px;
+            grid-area: 4 / 1 / 5 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1tr {
+            position: relative;
+            margin: 0px 0px 60px calc((100% - 980px) * 0.5);
+            left: 390px;
+            grid-area: 5 / 1 / 6 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4s6am {
+            position: relative;
+            margin: 0px 0px 28px calc((100% - 980px) * 0.5);
+            left: 698px;
+            grid-area: 3 / 1 / 4 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4z1za {
+            position: relative;
+            margin: 28px 0px 57px calc((100% - 980px) * 0.5);
+            left: 713px;
+            grid-area: 3 / 1 / 4 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1u2 {
+            position: relative;
+            margin: 0px 0px 18px calc((100% - 980px) * 0.5);
+            left: 632px;
+            grid-area: 4 / 1 / 5 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1u8 {
+            position: relative;
+            margin: 0px 0px 37px calc((100% - 980px) * 0.5);
+            left: 648px;
+            grid-area: 5 / 1 / 6 / 2;
+            justify-self: start;
+            align-self: start;
+        }
+
+        #comp-jme4n1sdcenteredContent {
+            position: relative;
+        }
+
+        #comp-jme4n1sdinlineContent-gridContainer > * {
+            pointer-events: auto;
+        }
+
+        #comp-jme4n1sdinlineContent-gridContainer > [id$="-rotated-wrapper"] {
+            pointer-events: none;
+        }
+
+            #comp-jme4n1sdinlineContent-gridContainer > [id$="-rotated-wrapper"] > * {
+                pointer-events: auto;
+            }
+    </style><div id="comp-jme4n1sdinlineContent-gridWrapper" data-mesh-internal="true">
+        <div id="comp-jme4n1sdinlineContent-gridContainer" data-mesh-internal="true">
+            <div data-packed="true" style="width: 527px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1sk">
+                <h2 style="text-align:center;" class="font_2"><span class="color_11">SERVICES</span></h2>
+            </div><div data-border-width="3" style="width: 36px; height: 5px; visibility: inherit;" class="style-jme4n1sq2" id="comp-jme4n1sp"></div><div data-svg-id="8463f60718194af748c49dddbe45b668_svgshape.v1.HollowCircle.svg" data-svg-type="shape" data-display-mode="fit" data-strokewidth="2" data-viewbox="0 0 200 200" data-preserve-viewbox="ignore" style="top:;bottom:;left:;right:;width:125px;height:125px;position:" class="style-jme4n1t1" id="comp-jme4n1sz">
+                <div id="comp-jme4n1szlink" class="style-jme4n1t1link">
+                    <div style="stroke-width:2;fill-opacity:0;stroke:rgba(255, 255, 255, 1);stroke-opacity:1;fill:#1D2CF3" class="style-jme4n1t1_comp-jme4n1sz style-jme4n1t1_non-scaling-stroke style-jme4n1t1svg" id="comp-jme4n1szsvg">
+                        <svg preserveAspectRatio="xMidYMid meet" data-bbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="-1.6260162601626007 -1.6260162601626007 203.2520325203252 203.2520325203252" role="img">
+                            <g>
+                                <path d="M200 100c0 55.228-44.772 100-100 100S0 155.228 0 100 44.772 0 100 0s100 44.772 100 100z"></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div><div style="width: 94px; height: 55px;" title="" data-is-responsive="false" data-display-mode="fill" data-content-padding-horizontal="0" data-content-padding-vertical="0" data-exact-height="55" class="ca1" id="comp-jmfmu2l6"><div style="width: 94px; height: 55px;" id="comp-jmfmu2l6link" class="ca1link"><div class="ca1img" id="comp-jmfmu2l6img"><wix-image id="comp-jmfmu2l6imgWixImageElement" style="width:94px;height:55px;position:relative;top:0;left:0" data-style="" data-has-bg-scroll-effect="" data-image-info="{&quot;imageData&quot;:{&quot;type&quot;:&quot;Image&quot;,&quot;id&quot;:&quot;dataItem-jmfmu2n9&quot;,&quot;metaData&quot;:{&quot;pageId&quot;:&quot;c1dmp&quot;,&quot;isPreset&quot;:false,&quot;schemaVersion&quot;:&quot;2.0&quot;,&quot;isHidden&quot;:false},&quot;title&quot;:&quot;&quot;,&quot;uri&quot;:&quot;bf6994_5afd74fd8fdb494d91a99d0710e85e8f~mv2.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;width&quot;:113,&quot;height&quot;:70,&quot;alt&quot;:&quot;new car icon.png&quot;,&quot;crop&quot;:{&quot;x&quot;:0,&quot;y&quot;:1,&quot;width&quot;:113,&quot;height&quot;:69},&quot;name&quot;:&quot;new car icon.png&quot;,&quot;displayMode&quot;:&quot;fill&quot;},&quot;containerId&quot;:&quot;comp-jmfmu2l6&quot;,&quot;displayMode&quot;:&quot;fill&quot;}" data-src="https://static.wixstatic.com/media/bf6994_5afd74fd8fdb494d91a99d0710e85e8f~mv2.png/v1/crop/x_0,y_1,w_113,h_69/fill/w_141,h_83,al_c,lg_1,q_80/new%20car%20icon.webp" data-is-svg="false"><img id="comp-jmfmu2l6imgimage" style="object-position:50% 50%;width:94px;height:55px;object-fit:cover" alt="new car icon.png" data-type="image" itemprop="image" src="https://static.wixstatic.com/media/bf6994_5afd74fd8fdb494d91a99d0710e85e8f~mv2.png/v1/crop/x_0,y_1,w_113,h_69/fill/w_141,h_83,al_c,lg_1,q_80/new%20car%20icon.webp"></wix-image></div></div></div><div data-packed="true" style="width: 261px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1ta"><p class="font_7" style="line-height:1.1em; text-align:center;"><span class="color_11">NEW CARS</span></p></div><div data-packed="true" style="width: 207px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1tf">
+                <p class="font_8" style="font-size:17px; line-height:1.4em; text-align:center;">
+                    <span class="color_11">
+                        New Car Lease,<br>
+                        New Car Purchase
+                    </span>
+                </p>
+
+                <p class="font_8" style="font-size:17px; line-height:1.4em; text-align:center;">
+                    <span class="color_11">&amp; Home Delivery</span><br>
+                    &nbsp;
+                </p>
+            </div><div data-svg-id="8463f60718194af748c49dddbe45b668_svgshape.v1.HollowCircle.svg" data-svg-type="shape" data-display-mode="fit" data-strokewidth="2" data-viewbox="0 0 200 200" data-preserve-viewbox="ignore" style="top:;bottom:;left:;right:;width:125px;height:125px;position:" class="style-jme4n1t1" id="comp-jme4pj6z">
+                <div id="comp-jme4pj6zlink" class="style-jme4n1t1link">
+                    <div style="stroke-width:2;fill-opacity:0;stroke:rgba(255, 255, 255, 1);stroke-opacity:1;fill:#1D2CF3" class="style-jme4n1t1_comp-jme4pj6z style-jme4n1t1_non-scaling-stroke style-jme4n1t1svg" id="comp-jme4pj6zsvg">
+                        <svg preserveAspectRatio="xMidYMid meet" data-bbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="-1.6260162601626007 -1.6260162601626007 203.2520325203252 203.2520325203252" role="img">
+                            <g>
+                                <path d="M200 100c0 55.228-44.772 100-100 100S0 155.228 0 100 44.772 0 100 0s100 44.772 100 100z"></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div><div style="width: 87px; height: 69px;" title="" data-is-responsive="false" data-display-mode="fill" data-content-padding-horizontal="0" data-content-padding-vertical="0" data-exact-height="69" class="ca1" id="comp-jme4r6yu"><div style="width: 87px; height: 69px;" id="comp-jme4r6yulink" class="ca1link"><div class="ca1img" id="comp-jme4r6yuimg"><wix-image id="comp-jme4r6yuimgWixImageElement" style="width:87px;height:69px;position:relative;top:0;left:0" data-style="" data-has-bg-scroll-effect="" data-image-info="{&quot;imageData&quot;:{&quot;type&quot;:&quot;Image&quot;,&quot;id&quot;:&quot;dataItem-jme4r71w&quot;,&quot;metaData&quot;:{&quot;pageId&quot;:&quot;c1dmp&quot;,&quot;isPreset&quot;:false,&quot;schemaVersion&quot;:&quot;2.0&quot;,&quot;isHidden&quot;:false},&quot;title&quot;:&quot;&quot;,&quot;uri&quot;:&quot;bf6994_94529896d1054bda99f536970ec1b61d~mv2.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;width&quot;:113,&quot;height&quot;:91,&quot;alt&quot;:&quot;used car icon.png&quot;,&quot;name&quot;:&quot;used car icon.png&quot;,&quot;displayMode&quot;:&quot;fill&quot;},&quot;containerId&quot;:&quot;comp-jme4r6yu&quot;,&quot;displayMode&quot;:&quot;fill&quot;}" data-src="https://static.wixstatic.com/media/bf6994_94529896d1054bda99f536970ec1b61d~mv2.png/v1/fill/w_131,h_104,al_c,lg_1,q_80/used%20car%20icon.webp" data-is-svg="false"><img id="comp-jme4r6yuimgimage" style="object-position:50% 50%;width:87px;height:69px;object-fit:cover" alt="used car icon.png" data-type="image" itemprop="image" src="https://static.wixstatic.com/media/bf6994_94529896d1054bda99f536970ec1b61d~mv2.png/v1/fill/w_131,h_104,al_c,lg_1,q_80/used%20car%20icon.webp"></wix-image></div></div></div><div data-packed="true" style="width: 278px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1tl"><p class="font_7" style="line-height:1.1em; text-align:center;"><span class="color_11">PRE-OWNED CARS</span></p></div><div data-packed="true" style="width: 202px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1tr">
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">Pre-Owned&nbsp;</span></span><span><span class="color_11">L</span></span><span><span class="color_11">ease,</span></span></p>
+
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">Pre-Owned Purchase</span></span></p>
+
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">&amp; Trade-Ins</span></span></p>
+            </div><div data-svg-id="8463f60718194af748c49dddbe45b668_svgshape.v1.HollowCircle.svg" data-svg-type="shape" data-display-mode="fit" data-strokewidth="2" data-viewbox="0 0 200 200" data-preserve-viewbox="ignore" style="top:;bottom:;left:;right:;width:125px;height:125px;position:" class="style-jme4n1t1" id="comp-jme4s6am">
+                <div id="comp-jme4s6amlink" class="style-jme4n1t1link">
+                    <div style="stroke-width:2;fill-opacity:0;stroke:rgba(255, 255, 255, 1);stroke-opacity:1;fill:#1D2CF3" class="style-jme4n1t1_comp-jme4s6am style-jme4n1t1_non-scaling-stroke style-jme4n1t1svg" id="comp-jme4s6amsvg">
+                        <svg preserveAspectRatio="xMidYMid meet" data-bbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="-1.6260162601626007 -1.6260162601626007 203.2520325203252 203.2520325203252" role="img">
+                            <g>
+                                <path d="M200 100c0 55.228-44.772 100-100 100S0 155.228 0 100 44.772 0 100 0s100 44.772 100 100z"></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div><div style="width: 94px; height: 68px;" title="" data-is-responsive="false" data-display-mode="fill" data-content-padding-horizontal="0" data-content-padding-vertical="0" data-exact-height="68" class="ca1" id="comp-jme4z1za"><div style="width: 94px; height: 68px;" id="comp-jme4z1zalink" class="ca1link"><div class="ca1img" id="comp-jme4z1zaimg"><wix-image id="comp-jme4z1zaimgWixImageElement" style="width:94px;height:68px;position:relative;top:0;left:0" data-style="" data-has-bg-scroll-effect="" data-image-info="{&quot;imageData&quot;:{&quot;type&quot;:&quot;Image&quot;,&quot;id&quot;:&quot;dataItem-jme4z22c&quot;,&quot;metaData&quot;:{&quot;pageId&quot;:&quot;c1dmp&quot;,&quot;isPreset&quot;:false,&quot;schemaVersion&quot;:&quot;2.0&quot;,&quot;isHidden&quot;:false},&quot;title&quot;:&quot;&quot;,&quot;uri&quot;:&quot;bf6994_d615eb16a2cc4badba87b6cf5255e390~mv2.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;width&quot;:113,&quot;height&quot;:82,&quot;alt&quot;:&quot;auto care icon.png&quot;,&quot;name&quot;:&quot;auto care icon.png&quot;,&quot;displayMode&quot;:&quot;fill&quot;},&quot;containerId&quot;:&quot;comp-jme4z1za&quot;,&quot;displayMode&quot;:&quot;fill&quot;}" data-src="https://static.wixstatic.com/media/bf6994_d615eb16a2cc4badba87b6cf5255e390~mv2.png/v1/fill/w_141,h_102,al_c,lg_1,q_80/auto%20care%20icon.webp" data-is-svg="false"><img id="comp-jme4z1zaimgimage" style="object-position:50% 50%;width:94px;height:68px;object-fit:cover" alt="auto care icon.png" data-type="image" itemprop="image" src="https://static.wixstatic.com/media/bf6994_d615eb16a2cc4badba87b6cf5255e390~mv2.png/v1/fill/w_141,h_102,al_c,lg_1,q_80/auto%20care%20icon.webp"></wix-image></div></div></div><div data-packed="true" style="width: 257px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1u2"><p class="font_7" style="line-height:1.1em; text-align:center;"><span class="color_11">AUTO CARE</span></p></div><div data-packed="true" style="width: 222px; pointer-events: none; visibility: inherit;" class="txtNew" id="comp-jme4n1u8">
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">Maintenance,</span></span></p>
+
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">Repairs &amp; Cleaning</span></span></p>
+
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">Discounted Rentals </span></span></p>
+
+                <p class="font_8" style="line-height:1.4em; text-align:center;"><span><span class="color_11">&amp; Exotic Rentals</span></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @* The code for the category banner
+                <section class="banner_sec">
+                    @*<figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/preowned-banner.jpg")');">
+                        </figure>
+
+            ********************    The above code is separately commented *****************
+
+
+            @if (categories != null)
+            {
+                foreach (var item in categories.data.Where(x => x.slug == "the-consultant"))
+                {
+                    foreach (var subitem in item.child_category.Where(a => a.slug == "ask-for-consultancy").Take(1))
+                    {
+                        <figure class="img_wrap" style="background-image: url('@subitem.media.FirstOrDefault().file_url');">
+                            <div class="container">
+                                <div class="banner_text">
+                                    <h1><span>@subitem.name</span></h1>
+                                    <p>@subitem.subtitle</p>
+                                </div>
+                            </div>
+                        </figure>
+                    }
+                }
+            }
+            else
+            {
+                <figure class="img_wrap" style="background-image: url('@Url.Content("~/assets/images/preowned-banner.jpg")');">
+                    <div style="display:none" class="container">
+                        <div class="banner_text">
+                            <h1><span>Luxury Market</span></h1>
+                            <p>Your luxury cars search ends here</p>
+                        </div>
+                    </div>
+                </figure>
+            }
+
+        </section>*@
+
+    <section class="page_nav">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <ul>
+                        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                        <li><a href="javascript:;">Ask for Consultancy</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="ownedDetail_sec">
+        <div class="container">
+            <div class="head">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2 class="page-title"> Your Personal Car Advisor</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evaluate_sec">
+                <div class="btns_parent">
+                    <a href="javascript:;" onclick="ConsultancyToggle(this, 10)" class="custBtn current">Ask for Consultancy</a>
+                    <a href="javascript:;" onclick="ConsultancyToggle(this, 20)" class="custBtn">Personal Shopper</a>
+                </div>
+
+                <div class="container">
+                    <form enctype="multipart/form-data" method="post" action="@Url.Action("AskForConsultancy","Car")">
+                        <div class="evalute_form">
+                            <div class="row">
+                                <input type="hidden" id="hdnConsultancyType" name="hdnConsultancyType" value="10" />
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-user1"></span><input required id="txtName" type="text" value="@(ViewData["UserName"] != null ? ViewData["UserName"] : "")" name="txtName" placeholder="Full Name"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="icon_field"><span class="icon-msg"></span><input required type="email" id="txtEmail" value="@(ViewData["UserEmail"] != null ? ViewData["UserEmail"] : "")" name="txtEmail" placeholder="Email Address"></div>
+                                </div>
+                                <div class="col-md-12" id="PSPhoneCodeFIeld">
+                                    <div class="icon_field">
+                                        <span class="icon-call icon"></span>
+                                        <input class="selected-dial-code" type="hidden" id="txtPhoneCode" required name="txtPhoneCode" placeholder="+971">
+                                        <input type="text" class="pncode phone" id="txtPhoneNo" name="txtPhoneNo" value="@(ViewData["UserPhoneNo"] != null ? ViewData["UserPhoneNo"] : "")" required placeholder="Phone Number">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="custBtn" onclick="printIt()">submit request</button>
+                                    @if (ViewData["Message"].ToString() != "")
+                                    {
+
+                                        <div class="password_success" id="ValidationMessage"><img src="@Url.Content("~/assets/images/check.png")" alt="">We have received your details. one of our experts will be in touch with your shortly!</div>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+
+                        @if (Model != null)
+                        {
+                            if (Model.data != null)
+                            {
+                                if (Model.data.Count > 0)
+                                {
+                                    if (Model.data.FirstOrDefault().personal_shopper != null)
+                                    {
+                                        <div class="page-info" id="descAskforConsultancy">
+
+                                            @Html.Raw(Model.data.FirstOrDefault().ask_for_consultancy)
+                                        </div>
+
+                                        <div class="page-info" id="descPersonalShopper" style="display:none;">
+
+                                            @Html.Raw(Model.data.FirstOrDefault().personal_shopper)
+                                        </div>
+
+                                    }
+                                }
+                            }
+                        }
+
+                        @*OLD PLACE FOR THE <FORM> CODE*@
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </section>
+
+
+
+    <script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        if ('@ViewData["Message"].ToString()' != '') {
+            notify("We have received your details. one of our experts will be in touch with your shortly!", "success")
+
+               // gtag('send', 'event', 'Ask For Consultancy', 'Form Submission', 'Consultancy Request');
+
+
+        }
+
+        $(".pncode").on("countrychange", function (e, countryData) {
+            $("#txtPhoneCode").val("+" + countryData.dialCode)
+        });
+
+        setTimeout(function () {
+            if ('@ViewData["UserCountryCode"]' != null) {
+                debugger;
+                if ('@ViewData["UserCountryCode"].ToString()' != "") {
+                    $(".country-list").find(".country").each(function () {
+                        if ($(this).attr("data-dial-code") == '@ViewData["UserCountryCode"].ToString()') {
+                            var countrycode = $(this).attr("data-country-code")
+                            $(".pncode").intlTelInput("setCountry", countrycode);
+                            return;
+                        }
+                    })
+                }
+            }
+        }, 10000);
+
+    })
+
+    function ConsultancyToggle($this, type) {
+
+        $(".btns_parent").find("a.custBtn").each(function () {
+            $(this).removeClass("current")
+        })
+
+        $($this).addClass("current");
+        $("#hdnConsultancyType").val(type);
+
+        if (type == 10) {
+            $("#descAskforConsultancy").show();
+            $("#descPersonalShopper").hide();
+
+        }
+        else {
+            $("#descAskforConsultancy").hide();
+            $("#descPersonalShopper").show();
+
+        }
+
+    }
+
+
+    </script>
+    <script type="text/javascript">
+        function printIt() {
+            if (document.getElementById('hdnConsultancyType').value == 10) {
+                gtag('event', 'Ask For Consultancy', {
+                    'event_category': 'Form Submission',
+                    'event_label': 'Consultancy Request'
+                });
+            }
+            else {
+                gtag('event', 'Ask For Consultancy', {
+                    'event_category': 'Form Submission',
+                    'event_label': 'Personal Shopper'
+                });
+            }
+
+
+        }
+    </script>

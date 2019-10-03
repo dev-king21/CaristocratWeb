@@ -1,0 +1,610 @@
+@media (min-width:1366px) and (max-width:1440px){
+    
+	.inner-page.versionthree .banner_sec .car_detail_slider_nav figure {width: 100% !important; height: 100px; min-height: 100px;}
+	
+	.inner-page.versionthree .banner_sec .car_detail_slider_nav {height: 100%; padding: 0 15px;}
+	.inner-page.versionthree .banner_sec .car_detail_slider_nav4 figure {width: 97% !important; height: 150px; min-height: 150px;    margin-bottom: 0;}	
+	.inner-page.versionthree .banner_sec .car_detail_slider_nav4 {height: 100%; padding: 0 15px;}
+    .inner-page.versionthree .banner_sec .car_detail_slider_nav, .inner-page.versionthree .banner_sec .car_detail_slider_nav4 {width: 354px !important;}
+	.inner-page.versionthree .banner_sec .slick-prev {right: 130%;}
+	.inner-page.versionthree .banner_sec .slick-next {right: 114%;}
+	.slider-progress {  left: 8.5%;}
+    .reviewPage .search_sec #amount {margin: 0 0 0px;}
+    .reviewPage .search_parent label {
+        margin: 0px 0 0;
+    }
+    .banner_sec {height: 65vh !important;}
+    .reviewPage .select_parent select {
+        padding: 10px 0;
+        height: 40px;
+        font-size: 14px;
+    }
+    .reviewPage .search_sec h2 {
+        color: #1f1f1f;
+        font-size: 18px;
+        margin: 0 0 16px;
+    }
+    .reviewPage .search_sec {
+        padding: 0 0 0px;
+        bottom: 20px;
+        width: 100%;
+    }
+    .reviewPage h1 {
+        bottom: 53%;
+        font-size: 36px;
+    }
+        .MyTradeIns .profile_nav {
+        top: 163px;
+    }
+    .banner_sec .banner_text { bottom: 80px;}
+    .car_tabs a {font-size: 12px; padding: 10px 16px;}
+    .topBar a {font-size: 14px; }
+  /* .mainNav ul li a {font-size: 14px; padding: 15px 20px;}
+    */
+	.mainNav ul li a {font-size: 14px; padding: 15px 18px;}
+    .mainNav ul li.dropMenu > a:after {top: 17px;}
+    .mainNav .subMenu {top: 52px;}
+    .banner_sec figure {min-height: 65vh;}
+    .search_sec {min-height: 700px;}
+    .carGrids .img_wrap {min-height: 100vh;}
+    .carGrids .content p {font-size: 16px;}
+    .carGrids .content h2 {font-size: 50px;}
+    .inner-page .banner_sec figure {min-height: 65vh; height: 65vh; }
+    .inner-page .banner_sec .car_detail_slider_nav {    height: 325px;bottom: 50px;}
+	.inner-page .banner_sec .car_detail_slider_nav4{    height: 325px;bottom: 50px;}
+    .ownedDetail_sec .head .page-title {font-size: 30px;}
+    .car_price span {font-size: 18px; line-height: 1px;}
+    .accor_box h2 {font-size: 20px;}
+    .expendBox > p {font-size: 15px; font-weight: 500;}
+    .feature_list p small {font-size: 14px;}
+    .full_dtl h2, .similer_sec h2 {font-size: 22px;}
+    .vendorBox .content p {font-weight: 500;}
+    .productionRow span {font-size: 16px;}
+    .flags_parent ul li p {font-size: 16px;}
+    .flags_parent ul li h2 {font-size: 16px;}
+    .flags_parent ul li .img_wrap {width: 62px; height: 62px;}
+    .icon_field input, .icon_field textarea { font-weight: 500;}
+    .icon_field input, .icon_field textarea {padding: 9px 10px 15px 40px;}
+    .evalute_form .select_parent select { font-weight: 500;}
+    .range_slider_row h3 {font-size: 20px;}
+    .range_slider_row {margin: 0 0 25px;}
+    .range_slider_row .irs--flat .irs-min, .range_slider_row .irs--flat .irs-max {font-size: 16px;}
+    .range_slider_row .irs--flat .irs-line, .range_slider_row .irs--flat .irs-bar {height: 5px;}
+    .range_slider_row .irs--flat .irs-handle {width: 22px; height: 22px; top: 14px; box-shadow: 2px 1px 16px #dedede;}
+    .summary_total_box h4 {font-size: 22px;}
+    .summary_total_box table tr td {font-size: 18px; padding: 2px 0; }
+    .summary_total_box table tr:last-child td {font-size: 20px;}
+    .call_widget h3 {font-size: 35px;margin: 12px 0;}     
+    .call_widget .lightBtn:last-child {margin: 0 0 0 20px;  }
+    .page-info {font-size: 16px;font-weight: 500;}
+    .page-title {font-size: 24px;}
+    .user_comments p, .women_page_info {font-size: 16px; font-weight: 500;}
+    .women_sec .blog_sec .title_blog, .comment_container h2 {font-size: 25px;}
+    .blogBox h2 {font-size: 16px;}
+    .profile_nav ul li a {font-size: 13px;padding: 12px 25px;}
+    .profile_nav ul li.dropMenu > a:after {top: 12px;}
+    .ownedDetail_sec .head .car_price {font-size: 30px;}
+    .full_dtl p.des-info {font-weight: 500; font-size: 16px;}
+	.sticky_header .stikyNav ul li a {font-size: 12px;padding: 21px 7px;}
+	.sticky_header .stikyNav ul li.dropMenu > a:after { right: -4px; top: 21px;}
+	.sticky_header .topRight ul li {font-size: 12px;}
+	.sticky_header .topRight ul li a {font-size: 12px;}
+	.topRight .langBox select {font-size: 12px;}
+    .header .logo {margin: 2px 0;}
+    .header .logo img { width: 100%; height: auto;max-width: 30%;}
+	/*.sticky_header .logo img { width: 160px; margin: 19px 0 0px;}*/
+    .sticky_header .logo img {    width: 100%; margin: 2px 0 0px; height: auto; max-width: 76%;}
+    .formFoot select {font-size: 14px;margin: 0; width: 50px;}
+    .formFoot .select_parent:after {right: -5px;}
+    .review_list article p {font-size: 16px;}
+    .review_list article h3 {font-size: 18px;}
+    .review_list h2 {font-size: 22px;}
+    .review_list .rating i {font-size: 20px;}
+    .searchBar.show {top: 45px; left: 75px;}
+    .range_slider_row .irs--flat .irs-single {top: -5px; font-size: 12px; color: #6b6b6b;}
+    .listing_page ul.pagination li a.page-link {font-size: 14px;}
+	.coach-pages .firstSec img { margin: 0 0 0 -145px;}
+	.coach-pages .secSec img {margin: 0 -155px 0 0px;}
+	.coach-pages .secSec article {padding: 10% 0 10% 28%;}
+	.coach-pages .secSec article h2 {font-size:26px;}
+	.coach-pages .secSec article p {font-size: 16px;}
+	.coach-pages .secSec article h3 {font-size: 22px;}
+	.coach-pages .secSec { overflow-x: hidden;}
+	
+	.coach-pages .firstSec article h2 {font-size: 26px;}
+	.coach-pages .firstSec article h3 {font-size: 22px;}
+	.coach-pages .firstSec article p { font-size: 16px;}
+	.coach-pages .blog_sec .head h3 {font-size: 28px;}
+	.coach-pages .blog_sec .head h5 { font-size: 22px;}
+	
+	.coach-pages .blogBox h2 {font-size: 24px;}
+    .autoLife .content h2 {font-size: 16px; margin: 20px 0;}
+    .autoLife .content p {font-size: 13px;}
+	.posted_dtl li:first-child {font-size: 12px;}
+    .women_sec { padding: 2% 0;}
+    .autoLife h2 {margin: 0 0 35px; font-size: 25px;}
+    .noti_list .content h3 {font-size: 18px;}
+    .reviews_details h2 {font-size: 25px;}    
+    .clickrate h3 {font-size: 20px; font-weight: 600;}
+    .commentSec h3 {font-size: 20px; font-weight: 600;}  
+    .clickrate ul li span { font-size: 16px;} 
+    .consumers_reviews h2 {font-size: 20px; font-weight:600;}
+    .review_block article h4 { font-size: 14px;  margin: 30px 0 0;}
+    .review_block .lastrow ul li span {/*font-size: 13px;*/ }
+    .review_block article .rating i {font-size: 20px;}
+    .review_block article .rating i {font-size: 20px;}
+    .review_block article .rating span {/*font-size: 14px;*/}
+    .review_block .lastrow ul li .rating i {font-size: 21px;}
+    span.hlighted {font-size: 12px;padding: 5px 10px;}
+    .resultTable tbody tr td {font-size: 12px;}
+    .list_head h2 {font-size: 20px;}
+    .result_sec .list_head p {font-size: 16px;}
+    .banner_text h1 {line-height: 55px; font-size: 45px;}
+    .banner_text h1 span {font-size: 65px;}
+    .inner-page .banner_text h1 span { font-size: 50px;}
+    .banner_text p {font-size: 18px;}
+    .course_dtl p {font-size: 14px;line-height: 25px;}
+    h2.large {font-size: 22px;}
+    .course_dtl h2 {font-size: 22px;}
+    .course_dtl span {font-size: 11px;}
+    .coach-pages .head_price {font-size: 20px;}
+    .course_video_wrap h2 {font-size: 22px;}
+    .course_video_wrap p {font-size: 14px;}
+    .enrolBtn {font-size: 16px;}
+    .courseDtl p {font-size: 14px; font-weight: normal;}
+    .course_timing li {font-size: 12px;padding: 0 5px;}
+    .coach-pages .page-title {margin: 0 0 12px;}
+    .course_list li p {font-size: 14px;}
+    .share_popup article h2 {font-size: 22px;}
+	.share_popup article p { font-size: 15px; margin: 7px 0;}
+	.share_popup article ul li a { padding: 7px 0; font-size: 16px; height: 42px;}
+	.share_popup article ul li a i {font-size: 20px;}
+	.share_popup figure {height: 300px;}
+	.share_popup article ul { margin: 20px 0 0;}
+	.share_popup.report .modal-content { padding: 30px;}
+	.share_popup.report h2 {font-size: 22px;}
+	.share_popup.report p { font-size: 16px; padding: 10px 0px 20px;}
+	.share_popup.report .card-header { padding: 4px 8px;}
+	.share_popup.report .card-header h5 button {font-size: 14px;}
+	.share_popup.report .card-header h5 button i { margin-right: 6px;font-size: 18px;}
+	.share_popup.report .form-group textarea {height: 100px;}
+	.search_results_sec h3 {font-size: 30px;}
+	.search_results_sec .block h4 { font-size: 26px;}
+	.search_results_sec .block p { margin: 10px 0;font-size: 15px;}
+	.search_results_sec .block a {font-size: 15px;}
+	
+	
+}
+@media (min-width:1200px) and (max-width:1300px){
+	
+	.sticky_header .stikyNav ul li a {font-size: 11px;padding: 20px 10px;}
+	/*.sticky_header .stikyNav ul li a {font-size: 11px;padding: 17px 7px;}*/
+	20px 10px
+}
+
+    
+@media (min-width:768px) and (max-width:1024px){
+	
+.mainNav .closebtn {display: block;right:10px;position: absolute;top: 0px;font-size: 50px;color: #3c3c3c;}
+.header .fa-bars {display: block;font-size: 24px;padding: 0px;z-index: 9;cursor: pointer;float: right;margin: 5px 0px 15px;color: #3c3c3c;position: absolute;    top: 30px !important;right: auto;width: 40px;    left: 17px;}
+.mainNav {transition: 0.5s; position: fixed;top: 0;height: 100%;left: -100%;width: 100%;padding: 70px 0 0 0;z-index: 99;}
+.mainNav ul li {display: block;}	
+.mainNav ul li a {padding: 11px 15px;}	
+.mainNav .subMenu {position: relative;top: 0;width: 100%;padding: 5px 0;display: none;opacity: 1;visibility: visible;}
+.mainNav.show {left: 0;}	
+	.banner_text h1 {font-size: 35px;line-height: 42px;}
+	.banner_text h1 span { font-size: 35px; line-height: 42px;}
+	.header .logoBar { padding: 10px 0;}
+	.topRight { padding-right: 0 !important;}
+	.topRight .loginBox {  margin: 10px 0 0px;}
+	.header .logo { margin: 20px 0 0;}
+	
+.banner_sec {z-index: 99;position: relative;}	
+.banner_sec figure { min-height: 400px; height: 400px;}	
+.inner-page .banner_sec figure {height: 400px;min-height:400px;}
+.hidesmall {display: none;}	
+.header .logo img {max-width: 30%;}
+.mainNav ul li.dropMenu > a:after { top: 13px; display: none; }	
+.mainNav ul li i {position: absolute;right: 0;top: 15px;display: block;}
+.features_sec h2 {font-size: 13px;}	
+.features_sec p {font-size: 14px;margin: 10px 0 0;}	
+.search_parent {padding: 15px 20px 15px;}	
+.searchHead h3 {font-size: 18px;}
+.searchHead .tabs_links ul li a { font-size: 12px;padding: 5px 6px;}	
+.formFoot label {font-size: 16px;}
+.formFoot select { font-size: 16px;}	
+.formFoot button {padding: 10px 22px;}	
+.search_sec {min-height: 500px;}	
+.cars_slider {background: #000;min-height: 680px;margin-bottom: 40px;}	
+.car_tabs a {font-size: 12px;padding: 10px 15px; font-weight: 300;}	
+.arrowParent {margin: -30px 0px 0 0;}	
+.blog_sec { margin-bottom: 50px;}	
+.blog_sec .title_blog {font-size: 36px;}	
+.carGrids .img_wrap {min-height: 500px;}	
+.carGrids .content {left: -200%;}	
+.carGrids .content {padding: 0 20px;}
+.carGrids .img_wrap:hover .content { left: 0;}
+.newsletterBox {margin: 30px 0 0 0}	
+.mobileFilter {display: block;}
+.closeFilter {display: block;}	
+.sideBar {position: fixed;top: 0;background: #fff;left: -100%;padding: 60px 20px 30px;width: 100%;z-index: 99999;height: 100%;overflow-y: scroll;transition: 0.5s;}	
+.sideBar.act {left: 0;}	
+.page_nav {margin: 15px 0;}
+.list_head h2 {float: none;font-size: 18px;text-align: center;margin: 0 0 10px;}
+.listing_page ul.pagination li a.page-link {font-size: 12px;padding: 0rem .5rem;}
+.listing_page ul.pagination {margin: 0px 0;}
+.btns_parent .custBtn {width: 29.5%;padding: 12px 10px;font-size: 12px;margin: 0 3px;}	
+.ownedDetail_sec .head .page-title {font-size: 24px;}	
+.ownedDetail_sec .head .car_price {font-size: 24px;}	
+.accor_box h2 {font-size: 20px;}	
+.flags_parent ul li {width: 32%;margin: 0 0 40px;text-align: center;}	
+.flags_parent ul li .content {margin: 10px 0 0;}	
+
+.user_comments .content { width: 80%; }
+.inner-page .banner_sec figure { height: 400px; min-height: 400px; }
+.btns_parent.carDetails .custBtn:nth-child(1) {padding: 6px 11px;}
+
+	
+
+.sticky_header {display: none !important;}  
+.slider-progress {display: none !important}
+.select_regn_popup ul {margin:60px 0px 0;}
+.slider-wrapper.banner_sec .slick-dots {display: none !important}
+.select_regn_popup ul li .custom-chck {margin-bottom: 20px;font-size: 13px;}
+.select_regn_popup ul li { width:25%;}  
+.select_regn_popup h3 {font-size:18px;margin:30px 0 0;} 
+.inner-page .banner_sec figure {height:400px !important;min-height: 400px !important;}  
+.autoLife .content {width: 100%;margin:0 0 0 0px;}
+.autoLife figure.img_wrap {width:100%;} 
+.autoLife .content h2 {font-size:18px;margin: 10px 0 0;}    
+.autoLife h2 {margin: 0 0 20px;font-size: 24px;font-weight: bold;}  
+    
+.brandsLogo {width: 148px;height: 140px;margin: 0 auto 8px;}    
+.brandsLogo figure img {top: 68px;} 
+#GetFilteredCars .listing {text-align: center;} 
+.inner-page .banner_sec .car_detail_slider_nav figure {width: 70px !important;height: 70px !important;min-height: 70px !important;} 
+.inner-page .banner_sec .car_detail_slider_nav { bottom: 100px;right: 0;width: 100px;  height: 180px;}  
+	
+.inner-page .banner_sec .car_detail_slider_nav4 figure {width: 70px !important;height: 70px !important;min-height: 70px !important;} 
+.inner-page .banner_sec .car_detail_slider_nav4 { bottom: 100px;right: 0;width: 100px;  height: 180px;}  
+.car_price span {line-height: initial;} 
+.expendBox .feature_list li { padding: 9px 10px;width: 32.7%;vertical-align: top;min-height: 80px;border: solid 1px #ecedef !important;}    
+.feature_list p {font-size: 12px;}
+.feature_list p small {font-size: 14px;}  
+	
+.box_section .flags_parent { margin: 20px 0 0;}
+.box_section .flags_parent ul li {width: 24%;} 
+.flags_parent .slick-dots li {width: auto !important;margin: 0 4px 0 !important;}   
+.list_parent .filter_carBox article { padding: 0px 10px;}   
+.list_parent .filter_carBox .car_dtl { margin: 4px 0 5px;}  
+.list_parent .filter_carBox .car_dtl p { font-size: 18px; width: 100%; text-align: left;}   
+.list_parent .filter_carBox h4 { left: 10px;bottom: 30px; right: auto;font-size: 14px;}
+.similer_sec h2 { font-size: 20px;}
+.review_list h2 {font-size: 20px;margin: 0 0 30px;}
+.review_list { margin: 20px 0 0;}
+.review_list article { width: 62%; margin: 0 0 0 10px;}
+.review_list article p {font-size: 12px;}
+.sideBar h3 {font-size: 18px; margin: 0px 0 20px; font-weight: bold;}
+.full_dtl h2, .similer_sec h2 {font-size: 20px;}
+.summary_total_box table tr td { font-size: 14px;}
+.summary_total_box table tr:last-child td { font-size: 16px;}
+.summary_total_box h4 {font-size: 20px;}
+.range_slider_row h3 { font-size: 20px;}
+.range_slider_row .irs--flat .irs-min, .range_slider_row .irs--flat .irs-max { font-size: 16px;}
+.range_slider_row .irs--flat .irs-min, .range_slider_row .irs--flat .irs-max { top: 35px !important;}
+.evalute_form .intl-tel-input .flag-container {width: 80px;}
+.evalute_form input.pncode.phone {width: 65%;padding-left: 35px !important;}
+.coach-pages .banner_sec figure {min-height: 360px;}
+.coach-pages .firstSec img {margin: 20px 0;width: 100%;}
+.coach-pages .firstSec article h2 {font-size: 24px;}
+.coach-pages .firstSec article h3 {font-size: 20px;margin: 10px 0;}
+.coach-pages .firstSec article p { font-size: 14px;}
+.coach-pages .secSec article {padding: 20px 0 0 0%;}
+.coach-pages .secSec article h2 {font-size: 24px;}
+.coach-pages .secSec article h3 { font-size: 20px; margin: 10px 0;}
+.coach-pages .secSec article p { font-size: 14px;}
+.coach-pages .secSec img { margin: 20px 0 0; width: 100%;}
+.coach-pages .blog_sec { padding: 20px 0;}
+.coach-pages .blog_sec .head h3 { font-size: 24px; margin: 0 0 10px;}
+.coach-pages .blog_sec .head h5 { font-size: 14px;}
+.coach-pages .blog_sec .head { margin-bottom: 30px;}
+.coach-pages .blogBox h2 {font-size: 24px;}
+.coach-pages .mainNav { background: #ffffff;}
+.coach-pages .mainNav ul li a {color: #686868;}
+.about_sec.mainSec {padding: 20px 0;}
+.page_title {font-size: 24px;}
+.about_sec p {line-height: 21px;font-size: 14px;}
+.reviewPage .search_sec {padding: 0 0 0;bottom: -10px;width: 95%;left: 0;margin: 0 auto;right: 0;position: relative;}
+.reviewPage .search_sec h2 { font-size: 16px; margin: 0 0 6px;}
+.reviewPage .select_parent select {padding: 10px 0;height: 42px; font-size: 14px;}
+.slide { height: 400px;}
+.slider-wrapper {height: 400px;}
+.slider	{ height: 400px;}
+.inner-page .slide {height: 400px;}
+.inner-page .slider-wrapper {height: 400px;}
+.inner-page .slider {height: 400px;}
+.inner-page.versionthree .banner_sec .car_detail_slider_nav, .inner-page.versionthree .banner_sec .car_detail_slider_nav4 {width: 100% !important;}
+.banner_sec { height: 398px !important;}	
+.coach-pages .firstSec {padding: 20px 0;}
+	
+	
+	
+}
+
+
+@media only screen and (device-width:1024px) {
+	
+.mobileFilter {display: none;}
+.closeFilter {display: none;}	
+.sideBar {position: inherit;top: 0;background: #fff;left: 0;padding: 60px 20px 30px;width: 100%;z-index: 99999;height: 100%;overflow-y: inherit;transition: 0.5s;}	
+.sideBar.act {left: 0;}	
+.page_nav {margin: 15px 0;}
+.list_head h2 {float: left;font-size: 18px;text-align: center;margin: 0 0 10px;}
+.listing_page ul.pagination li a.page-link {font-size: 12px;padding: 0rem .5rem;}
+.listing_page ul.pagination {margin: 0px 0;}
+.sideBar .custBtn {padding: 8px 19px;margin-right: 0px;}
+.sideBar h3 {font-size: 20px;}	
+.banner_sec .banner_text {padding: 0 30px;}
+
+.hidesmall { display: block; }
+.header .fa-bars { top: 30px; left: 10px; font-size: 35px; }
+.carGrids .content h2 { font-size: 40px; }
+.carGrids .content p br { display: none; }
+.carGrids .content p { font-size: 16px; word-break: break-word; }
+
+}
+
+@media only screen and (device-width:768px) {
+
+.blogBox figure { min-height: 120px; }
+.blogBox h2 { font-size: 16px; margin: 10px 0; }
+.header { position: relative; }
+.inner-page .banner_sec figure { height: 400px; min-height: 400px; }
+.page_head .page-title { font-size: 23px; }
+.topRight { padding-right: 50px; }
+.header .fa-bars { top: 40px; }
+.car_parent { padding-left: 15px; }
+
+}
+
+
+@media (min-width:320px) and (max-width:767px){
+
+.car_detail_slider4.slick-initialized.slick-slider {width: 100% !important;}
+	
+.result_sec .container { max-width: 100%; }
+.header { position: relative; }
+.mainNav .closebtn {display: block;right:10px;position: absolute;top: 0px;font-size: 50px;color: #3c3c3c;}
+.header .fa-bars {display: block;font-size: 24px;padding: 13px;z-index: 9;cursor: pointer;float: right;margin: 5px 0px 15px;color: #3c3c3c;position: absolute;top: 5px;right: 0;}
+.mainNav {transition: 0.5s; position: fixed;top: 0;height: 100%;left: -100%;width: 100%;padding: 70px 0 0 0;z-index: 99; overflow:auto;  }
+.mainNav ul li {display: block;}	
+.mainNav ul li a {padding: 11px 15px;}	
+.mainNav .subMenu {position: relative;top: 0;width: 100%;padding: 5px 0;display: none;opacity: 1;visibility: visible;}
+.mainNav.show {left: 0;}	
+.header .logo img {
+    width: auto;
+    height: auto;
+}
+.topRight {text-align: center;    max-width: 100%;}	
+.mainNav ul li.dropMenu > a:after { top: 13px;display: none;}	
+.mainNav ul li i {position: absolute;right: 0;top: 15px;display: block;}
+.header .logoBar { padding: 25px 0;}	
+.header .logo { margin: 0 0 20px;}	
+.banner_sec figure { min-height: 500px;}	
+.inner-page .banner_sec figure {height:500px;min-height:500px;}
+.linksParent .quick_links li a { font-size: 14px;margin: 0px 0 10px;}
+.banner_sec .banner_text { width: 100%; padding: 0 20px;}	
+.banner_text h1 { font-size: 25px;margin: 0 0 10px 0; line-height: 20px;}	
+.banner_text h1 span {font-size: 53px;}	
+.banner_text p {font-size: 15px;}	
+
+.badge { top: 12px; right: 5px; padding: 5px 9px; font-size: 11px;}
+.features_sec { padding: 36px 0 10px;}	
+.search_parent {padding: 15px 20px 15px;}	
+.searchHead h3 {font-size: 18px;margin: 0 0 10px;}	
+.searchHead .tabs_links ul li a {font-size: 12px;padding: 5px 9px;}	
+.formFoot {margin-top: 15px;}	
+.formFoot label {font-size: 14px;}	
+.formFoot select {font-size: 14px;}	
+.formFoot button {font-size: 14px;float: none;padding: 8px 22px;}	
+.search_sec { min-height: auto; padding: 6% 0 10%;overflow-x: hidden;}	
+.car_parent {padding-left: 0;padding-right: 30px;}	
+.cars_slider { padding: 0 20px;background: #000;margin: 0 0 30px;overflow-x: hidden;}	
+.arrowParent {margin: 20px 10px 0 0;text-align: right;}	
+.car_tabs a {font-size: 12px; padding: 6px 11px;margin: 0 0 12px;}	
+.blog_sec .title_blog {letter-spacing: -5px; font-size: 30px;text-align: center;}	
+.blogBox {margin-bottom: 20px;}	
+.carGrids .img_wrap {min-height: 330px;}	
+.carGrids .content {left: 0;padding: 0 15px;}	
+.carGrids .content h2 { letter-spacing: -5px; margin: 0 0 10px 0px;font-size: 35px;}	
+.carGrids .content p {font-size: 16px;}	
+.carGrids .img_wrap:hover .content {left: 0;}	
+.banner_sec {z-index: 99;position: relative;}
+.carGrids { margin: 20px 0 0;}	
+.blog_sec { margin-bottom: 20px;}	
+.mobMenuFot {display: none;}
+.footer h3 i {display: inline-block;float: right;margin: 7px 0 0;}
+.newsletterBox p { margin: 20px 0 0;}	
+.newsletterBox h3 {font-size: 16px;}	
+.footer h3.showMob {display: block;}	
+.newsletterBox h3 i {margin: 0;}	
+.copyright_sec { margin: 30px 0 0;}
+.copyright_sec p, .copyright_sec p a {font-size: 11px;}
+.footer {padding: 20px 0 0;}	
+.copyright_sec ul li a {font-size: 12px;}	
+.newsletterBox .field {margin: 20px 0 20px;}	
+.hidesmall {display: none;}		
+.mobileFilter {display: block;}
+.closeFilter {display: block;}	
+.sideBar {position: fixed;top: 0;background: #fff;left: -100%;padding: 60px 20px 30px;width: 100%;z-index: 99999;height: 100%;overflow-y: scroll;transition: 0.5s;}	
+.sideBar.act {left: 0;}	
+.page_nav {margin: 15px 0;}
+.list_head h2 {float: none;font-size: 18px;text-align: center;margin: 0 0 10px;}
+.listing_page ul.pagination li a.page-link {font-size: 12px;padding: 0rem .5rem;}
+.listing_page ul.pagination {margin: 0px 0;}	
+	
+.ownedDetail_sec .head .page-title {font-size: 20px;}	
+.ownedDetail_sec .head .car_price {font-size: 18px;    float: left;}	
+.btns_parent .custBtn:nth-child(1) {margin-left: auto;}
+.btns_parent .custBtn {width: auto;margin: 0 0 10px;display: inline-block;padding: 10px 10px;font-size: 12px;}	
+.accor_box h2 {font-size: 18px;}	
+.expendBox > p {font-size: 14px;}	
+.feature_list.first {border-right: 0px solid #eee;max-width: 100%;border-bottom: 1px solid #eee;margin: 0px 0 10px;padding: 0 0 10px;}	
+.productionRow span {font-size: 16px;}	
+.flags_parent ul li {width: 49%;margin: 0 0 40px;text-align: center;}	
+.flags_parent ul li h2 {font-size: 16px;}	
+.flags_parent ul li p {font-size: 14px;}	
+.flags_parent ul li .content {margin: 10px 0 0;}	
+.expendBox .flags_parent {padding: 30px 10px;}	
+.vendorBox .custBtn {padding: 13px 10px;}	
+
+.page-title {font-size: 24px;}
+.page-info {font-size: 16px;margin: 10px 0 0;}	
+
+.page_head .page-title { margin: 0 0 15px; }
+.page_head .action_bar { text-align: left; margin-bottom: 15px; }
+.page_head .action_bar a { margin-right: 15px; margin-left: 0px; }
+
+
+.filter_carBox .car_dtl p span {text-align: left;}
+.comment_container h2 { font-size: 22px; }
+.uploadBtn { width: 50px; height: 50px; }
+.uploadBtn span { line-height: 50px; }
+.imgs_container ul li { width: 50px; height: 50px; }
+.sticky_header .stikyNav {  display: none !important;}
+.multiSelect.select_parent { width: 96%; margin-bottom: 10px;}
+	
+.slider-wrapper.banner_sec {height:auto;}	
+.slider-wrapper.banner_sec .slide {height:auto;}	
+.banner_sec figure {height: 400px;min-height:inherit;}
+.inner-page .banner_sec .slider {height: 30vh;}
+.select_regn_popup {width: 310px;height:auto;padding: 0 0 30px;}
+.sticky_header {display: none !important;}	
+.slider-progress {display: none !important}
+.select_regn_popup ul {margin:60px 0px 0;}
+.slider-wrapper.banner_sec .slick-dots {display: none !important}
+.select_regn_popup ul li .custom-chck {margin-bottom: 20px;font-size: 13px;}
+.select_regn_popup ul li { width:25%;}	
+.select_regn_popup h3 {font-size:18px;margin:30px 0 0;}	
+.inner-page .banner_sec figure {height:400px !important;min-height: 400px !important;}	
+.autoLife .content {width: 100%;margin:0 0 0 0px;}
+.autoLife figure.img_wrap {width:100%;}	
+.autoLife .content h2 {font-size:18px;margin: 10px 0 0;}	
+.autoLife h2 {margin: 0 0 20px;font-size: 24px;font-weight: bold;}	
+	
+.brandsLogo {width: 148px;height: 140px;margin: 0 auto 8px;}	
+.brandsLogo figure img {top: 68px;}	
+#GetFilteredCars .listing {text-align: center;}	
+.inner-page .banner_sec .car_detail_slider_nav figure {width: 70px !important;height: 70px !important;min-height: 70px !important;}	
+.inner-page .banner_sec .car_detail_slider_nav { bottom: 0;right: 0;width: 100px;  height: 180px;}	
+	
+.inner-page .banner_sec .car_detail_slider_nav4 figure {width: 70px !important;height: 70px !important;min-height: 70px !important;}	
+.inner-page .banner_sec .car_detail_slider_nav4 { bottom: 0;right: 0;width: 100px;  height: 180px;}
+	
+.car_price span {line-height: initial;}	
+.expendBox .feature_list li { padding: 9px 10px;width: 32.7%;vertical-align: top;min-height: 80px;border: solid 1px #ecedef !important;}	
+.feature_list p {font-size: 12px;}
+.feature_list p small {font-size: 14px;}	
+.box_section .flags_parent ul li {width: 49%;margin: 20px 0;}
+.flags_parent .slick-dots li {width: auto !important;margin: 0 4px 0 !important;}	
+.list_parent .filter_carBox article { padding: 0px 10px;}	
+.list_parent .filter_carBox .car_dtl { margin: 4px 0 5px;}	
+.list_parent .filter_carBox .car_dtl p { font-size: 18px; width: 100%; text-align: left;}	
+.list_parent .filter_carBox h4 { left: 10px;bottom: 30px; right: auto;font-size: 14px;}
+.similer_sec h2 { font-size: 20px;}
+.review_list h2 {font-size: 20px;margin: 0 0 30px;}
+.review_list { margin: 20px 0 0;}
+.review_list article { width: 62%; margin: 0 0 0 10px;}
+.review_list article p {font-size: 12px;}
+.sideBar h3 {font-size: 18px; margin: 0px 0 20px; font-weight: bold;}
+.full_dtl h2, .similer_sec h2 {font-size: 20px;}
+.summary_total_box table tr td { font-size: 14px;}
+.summary_total_box table tr:last-child td { font-size: 16px;}
+.summary_total_box h4 {font-size: 20px;}
+.range_slider_row h3 { font-size: 20px;}
+.range_slider_row .irs--flat .irs-min, .range_slider_row .irs--flat .irs-max { font-size: 16px;}
+.range_slider_row .irs--flat .irs-min, .range_slider_row .irs--flat .irs-max { top: 35px !important;}
+.evalute_form .intl-tel-input .flag-container {width: 80px;}
+.evalute_form input.pncode.phone {width: 65%;padding-left: 35px !important;}
+.coach-pages .banner_sec figure {min-height: 360px;}
+.coach-pages .firstSec img {margin: 20px 0;width: 100%;}
+.coach-pages .firstSec article h2 {font-size: 24px;}
+.coach-pages .firstSec article h3 {font-size: 20px;margin: 10px 0;}
+.coach-pages .firstSec article p { font-size: 14px;}
+.coach-pages .secSec article {padding: 20px 0 0 0%;}
+.coach-pages .secSec article h2 {font-size: 24px;}
+.coach-pages .secSec article h3 { font-size: 20px; margin: 10px 0;}
+.coach-pages .secSec article p { font-size: 14px;}
+.coach-pages .secSec img { margin: 20px 0 0; width: 100%;}
+.coach-pages .blog_sec { padding: 20px 0;}
+.coach-pages .blog_sec .head h3 { font-size: 24px; margin: 0 0 10px;}
+.coach-pages .blog_sec .head h5 { font-size: 14px;}
+.coach-pages .blog_sec .head { margin-bottom: 30px;}
+.coach-pages .blogBox h2 {font-size: 24px;}
+.coach-pages .mainNav { background: #ffffff;}
+.coach-pages .mainNav ul li a {color: #686868;}
+.about_sec.mainSec {padding: 20px 0;}
+.page_title {font-size: 24px;}
+.about_sec p {line-height: 21px;font-size: 14px;}
+.reviewPage .search_sec {padding: 0 0 0;bottom: -10px;width: 95%;left: 0;margin: 0 auto;right: 0;position: relative;}
+.reviewPage .search_sec h2 { font-size: 16px; margin: 0 0 6px;}
+.reviewPage .select_parent select {padding: 10px 0;height: 42px; font-size: 14px;}
+.user_wid {border-left: 0px solid #eaeaea;padding: 20px 0 0 0;margin-left: 0;}
+.inner-page.versionthree .banner_sec .car_detail_slider_nav, .inner-page.versionthree .banner_sec .car_detail_slider_nav4 {width: 100% !important;height: 120px;padding: 5px !important;position: inherit;}
+	
+.inner-page.versionthree .banner_sec .car_detail_slider_nav figure, .inner-page.versionthree .banner_sec .car_detail_slider_nav4 figure {width: 150px !important;height: 80px !important;min-height: 80px !important;}
+.virtualTabs ul li { margin: 0 20px;}
+.banner_sec {height: auto !important;}
+
+.dtl-action-btns ul li {margin: 0 12px 0 0;}
+.page_nav ul {text-align: left;margin: 10px 0 0;}
+.btns_parent.carDetails .custBtn:nth-child(1) {margin-left: 0px;width: auto;font-size: 26px;padding: 0px 25px;vertical-align: top;}
+.share_popup {
+width: 100%;}
+.share_popup.report .modal-content {padding: 20px;}
+.share_popup.report .card-header h5 button {font-size: 14px;white-space: inherit;}
+.share_popup.report .card-header h5 button i {display: block;margin: 0 0 3px;}
+.share_popup figure {	height: 173px;}
+.share_popup article h2 {font-size: 20px;}
+.share_popup article p { font-size: 14px;}
+.share_popup article ul li a { padding: 10px 0;font-size: 11px; height: 43px;}
+.share_popup article ul li { width: 49%;padding: 0 0px;margin-right: 0; margin-bottom: 7px;}
+.commentSec h3 {font-size: 20px;}
+.similer_sec { margin: 20px 0 0;}
+.review_list .rating { margin: 0px 0px 30px;}
+.review_list article h3 {font-size: 17px;}
+.ownedDetail_sec { padding: 0 0 0px;}
+	
+	
+	
+}
+
+
+
+
+@media (min-width:568px) and (max-width:736px){
+	
+
+.inner-page .banner_sec figure { height: 300px; min-height: 300px; }
+.user_comments .content { margin: 20px 0 0; width: 100%; }
+.topRight { max-width: 50%; margin: 0 auto; }
+
+	
+}
+
+@media (min-width:320px) and (max-width:414px){
+
+	
+.inner-page .banner_sec figure {height: 200px !important;min-height: 200px !important;}
+.link_box .content  { margin: 30px 0 0 0; }
+.user_comments .content { width: 100%; margin: 20px 0 0; }
+.topRight {max-width: 100%; margin: 0 auto; }
+
+.banner_sec .banner_text { bottom: 20px; }
+.inner-page .banner_text h1 { line-height: 35px; }
+.inner-page .banner_text h1 span { font-size: 22px; line-height: 25px; }
+.evalute_form .select_parent select { padding: 7px 10px 15px 30px; }
+
+	
+	
+}

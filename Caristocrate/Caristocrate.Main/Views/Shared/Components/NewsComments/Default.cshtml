@@ -1,0 +1,28 @@
+﻿@using Caristocrate.Common.Models
+@model CommentsModel.Response
+
+@if (Model != null)
+{
+    if (Model.data != null)
+    {
+        if (Model.data.Count > 0)
+        {
+            foreach (var item in Model.data)
+            {
+                <li class="clearfix">
+                    <figure class="img_wrap" style="background-image: url(@item.user.details.image_url);"></figure>
+                    <div class="content">
+                        <h3 class="user_name">@item.user.name <span class="comment_date">@(Convert.ToDateTime(item.created_at).ToString("MMMM dd, yyyy"))</span></h3>
+                        <p>@item.comment_text</p>
+                    </div>
+                </li>
+            }
+        }
+        else
+        { <div style="text-align:center; width:100%; font-weight:bold;">Be the first to comment on this Article.</div>}
+    }
+    else
+    { <div style="text-align:center; width:100%; font-weight:bold;">Be the first to comment on this Article.</div>}
+}
+else
+{ <div style="text-align:center; width:100%; font-weight:bold;">Be the first to comment on this Article.</div>}

@@ -1,0 +1,184 @@
+﻿@using Caristocrate.Common.Models
+@model GetCars.Response
+@{ int totalrecords = 0; }
+@if (Model != null)
+{
+    if (Model.data.Count > 0)
+    {
+        <div class="row">
+            <div class="list_head">
+                <h2 id="SearchedCategoryName"></h2>
+                <div class="listview gridBtns">
+                    <a href="javascript:;" class="gridBtn act"><span class="icon-gird"></span></a>
+                    <a href="javascript:;" class="listBtn"><span class="icon-menu"></span></a>
+                    <div class="select_parent">
+                        <select id="ddlFilteredCarSorting" onchange="FilterCarSorting(this)">
+                            <option value="1">Newest to Oldest</option>
+                            <option value="2">Oldest to Newest</option>
+                            <option value="3">Lowest Price</option>
+                            <option value="4">Highest Price</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<section class="search_row">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="field">
+                                <span class="icon-search"></span>
+                                <input type="text" id="txtCarFilteredSearch" name="" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>*@
+
+        <div class="row listing" id="CarListingSection">
+
+
+            @foreach (var item in Model.data.Where(a => a.is_featured == 1).OrderBy(x => Guid.NewGuid()).Take(6).Select((x, i) => new { Data = x, Index = i }))
+            {
+                totalrecords++;
+                try
+                {
+
+                    <div class="col-md-6 bx FeaturedCarListing childlisting" carname="@item.Data.name" sortno="@(item.Index + 1)" price="@item.Data.amount" rowno="@(totalrecords)">
+                        <a href="@(item.Data.category.id == 28 ? Url.Action("CarDetail", "Car", new { brand = item.Data.car_model.brand.slug, model = item.Data.car_model.slug, id = item.Data.slug }) : Url.Action("PreOwnedCarDetail", "Car", new { brand = item.Data.car_model.brand.slug, model = item.Data.car_model.slug, id = item.Data.slug }))">
+                            <div class="filter_carBox">
+                                <figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().file_url');">
+                                    @if (item.Data.is_featured == 1)
+                                    {
+                                        <div class="sale">Featured</div>
+                                    }
+                                </figure>
+                                <article>
+                                    <div class="car_dtl clearfix">
+                                        <p>
+                                            @item.Data.name
+                                            <span>
+                                                @if (item.Data.category.id == 26 || item.Data.category.id == 27)
+                                                {
+                                                    <span style="display:inline-block">@item.Data.kilometer KM&nbsp;|</span>
+                                                }
+                                                @item.Data.year
+                                            </span>
+                                        </p>
+                                    </div>
+
+                                    <h4>@item.Data.currency @(item.Data.amount != null ? Convert.ToDecimal(item.Data.amount).ToString("C0").Replace("$", "") : "") </h4>
+
+                                </article>
+                            </div>
+                        </a>
+                    </div>
+
+
+                }
+                catch
+                {
+
+                }
+                
+            }
+            @foreach (var item in Model.data.Where(a => a.is_featured == 0).Select((x, i) => new { Data = x, Index = i }))
+            {
+                totalrecords++;
+                try
+                {
+
+                    <div class="col-md-6 bx childlisting" carname="@item.Data.name" sortno="@(item.Index + 1)" price="@item.Data.amount" rowno="@(totalrecords)">
+                        <a href="@(item.Data.category.id == 28 ? Url.Action("CarDetail", "Car", new { brand = item.Data.car_model.brand.slug, model = item.Data.car_model.slug, id = item.Data.slug }) : Url.Action("PreOwnedCarDetail", "Car", new { brand = item.Data.car_model.brand.slug, model = item.Data.car_model.slug, id = item.Data.slug }))">
+                            <div class="filter_carBox">
+                                <figure class="img_wrap" style="background-image: url('@item.Data.media.FirstOrDefault().file_url');">
+                                    @if (item.Data.is_featured == 1)
+                                    {
+                                        <div class="sale">Featured</div>
+                                    }
+                                </figure>
+                                <article>
+                                    <div class="car_dtl clearfix">
+                                        <p>
+                                            @item.Data.name
+                                            <span>
+                                                @if (item.Data.category.id == 26 || item.Data.category.id == 27)
+                                                {
+                                                    <span style="display:inline-block">@item.Data.kilometer KM&nbsp;|</span>
+                                                }
+                                                @item.Data.year
+                                            </span>
+                                        </p>
+                                    </div>
+
+                                    <h4>@item.Data.currency @(item.Data.amount != null ? Convert.ToDecimal(item.Data.amount).ToString("C0").Replace("$", "") : "")</h4>
+
+                                </article>
+                            </div>
+                        </a>
+                    </div>                    
+
+                }
+                catch
+                {
+
+                }
+                
+            }
+
+        </div>
+
+        <nav aria-label="Page navigation example" style="text-align: center;">
+            <ul class="pagination">
+                @*<li class="page-item"><a class="page-link PreviousPage" href="javascript:;">Previous</a></li>*@
+
+                @{
+
+                    int loopcount = 0;
+                    if (totalrecords > 30)
+                    {
+
+                        while (totalrecords > 30)
+                        {
+                            totalrecords = totalrecords - 30;
+                            loopcount++;
+                        }
+
+                        if (totalrecords > 0 && totalrecords <= 30)
+                        {
+                            loopcount++;
+                        }
+
+                    }
+                    else
+                    {
+                        loopcount = 1;
+                    }
+                }
+
+                @if (loopcount > 1)
+                {
+                    for (int i = 1; i <= loopcount; i++)
+                    {
+                        <li class="page-item FilteredCarNav"><a class="page-link CurrrentPage" maxrange="@(i * 30)" onclick="DisplayPage(this, '@i', '@(i * 30)')" href="javascript:;">@i</a></li>
+                    }
+                }
+                @*<li class="page-item"><a class="page-link NextPage" href="javascript:;">Next</a></li>*@
+
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <div class="row">
+            <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+        </div>
+    }
+}
+else
+{
+    <div class="row">
+        <div style="text-align:center; width:100%; font-weight:bold;">No Record Found</div>
+    </div>
+}

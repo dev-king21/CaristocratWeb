@@ -1,0 +1,147 @@
+﻿@using Caristocrate.Common.Models;
+@{
+
+    Layout = null;
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    RegionsModel.Response getRegionsobj = ViewData["getRegionsobj"] as RegionsModel.Response;
+}
+
+<div class="container">
+    <div class="search_parent">
+        <div class="searchHead clearfix">
+            <h3>Search for your favorite cars</h3>
+            <div class="tabs_links">
+                <ul id="mainSearchUL">
+                    <li class="current"><a href="javascript;:" onclick="setCategoryID(this, 28)">Luxury New Cars</a></li>
+                    <li><a href="javascript;:" onclick="setCategoryID(this, 25)">Outlet Mall</a></li>
+                    <li><a href="javascript;:" onclick="setCategoryID(this, 26)">Approved Pre-Owned</a></li>
+                    <li><a href="javascript;:" onclick="setCategoryID(this, 27)">Classic Cars</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <form class="form_container" method="post" action="@Url.Action("Search","Home")" enctype="multipart/form-data" id="form1">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <select id="ddlMake" name="ddlMake" onchange="GetModels(this)">
+                            <option value="0">Filter by brand</option>
+                            @if (getMake.success == true)
+                            {
+                                foreach (var item in getMake.data.ToList())
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="select_parent">
+                        <select id="ddlModel" name="ddlModel">
+                            <option value="0">Filter by model</option>
+                            @if (getModel.success == true)
+                            {
+                                foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                                {
+                                    <option value="@item.id" brandID="@item.brand.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <p>
+                        <label for="amount">Budget</label>
+                        @*<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">*@
+                        <input name="txtBudgetRange" type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        <input name="txtMinBudget" id="txtMinBudget" type="hidden" />
+                        <input name="txtMaxBudget" id="txtMaxBudget" type="hidden" />
+                    </p>
+
+                    <div id="slider-range" class="marginTp"></div>
+                </div>
+                <input type="hidden" name="txtCategoryID" id="txtCategoryID" value="28" />
+            </div>
+            <div class="row formFoot">
+                <div class="col-md-6 my-auto">
+                    @*<label>Search Cars In</label>*@
+                    <div class="select_parent multiSelect">
+                        <select id="ddlRegions" name="ddlRegions" multiple="" class="label ui selection fluid dropdown">
+                            <option value="">Search Cars In</option>
+                            @if (getRegionsobj.success == true)
+                            {
+                                foreach (var item in getRegionsobj.data.ToList())
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <button type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+<script src='@Url.Content("/assets/js/jquery-2.1.1.min.js")'></script>
+<script src='@Url.Content("~/assets/js/xlib.js")'></script>
+<script src='@Url.Content("~/assets/js/countryCode.js")'></script>
+<script src='@Url.Content("~/assets/js/bootstrap-notify.min.js")'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src=" https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
+<script src='@Url.Content("~/assets/js/script.js")'></script>
+
+<script>
+
+    $(function () {
+
+        var minbudget = 0;
+        var maxbudget = 0;
+
+        $("#slider-range").slider({
+            range: true,
+            min: 10000,
+            max: 5000000,
+            step: 10000,
+            values: [10000, 5000000],
+            slide: function (event, ui) {
+
+                minbudget = ui.values[0];
+                maxbudget = ui.values[1];
+
+                $("#txtMinBudget").val(minbudget);
+                $("#txtMaxBudget").val(maxbudget);
+
+                minbudget = formatcurrency(minbudget);
+                maxbudget = formatcurrency(maxbudget);
+              
+                $("#amount").val("AED " + minbudget + " - " + maxbudget);
+            }
+        });
+
+        minbudget = $("#slider-range").slider("values", 0);
+        maxbudget = $("#slider-range").slider("values", 1);
+
+        $("#txtMinBudget").val(minbudget);
+        $("#txtMaxBudget").val(maxbudget);  
+
+        minbudget = formatcurrency(minbudget);
+        maxbudget = formatcurrency(maxbudget);
+
+        $("#amount").val("AED " + minbudget + " - " + maxbudget);            
+    });
+
+
+
+
+</script>

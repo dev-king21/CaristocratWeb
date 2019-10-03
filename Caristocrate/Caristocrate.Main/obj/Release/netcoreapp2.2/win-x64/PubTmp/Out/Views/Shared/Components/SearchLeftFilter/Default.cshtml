@@ -1,0 +1,581 @@
+﻿@using Caristocrate.Common.Models;
+@model GetCars.Request
+@{
+
+    Layout = null;
+    GetMake.Response getMake = ViewData["GetMake"] as GetMake.Response;
+    GetModel.Response getModel = ViewData["GetModel"] as GetModel.Response;
+    CarType.Response CarTypeobj = ViewData["CarTypeobj"] as CarType.Response;
+    RegionsModel.Response getRegionsobj = ViewData["getRegionsobj"] as RegionsModel.Response;
+    VersionsModel.Response getVersionsobj = ViewData["getVersionsobj"] as VersionsModel.Response;
+}
+
+<a href="javascript:;" class="mobileFilter"><i class="fa fa-filter"></i> Advance Filter</a>
+<div class="sideBar">
+    <a href="javascript:;" class="closeFilter"><i class="fa fa-close"></i></a>
+    <h3>Choose Market</h3>
+    <ul>
+        <li><strong>Luxury Market</strong></li>
+        <li style="display:none">
+            <label class="custom-chck">
+                All Luxury Cars
+                <input type="radio" name="radiocategory" id="radioALL" class="radiocategory" value="0"> <span class="checkmark"></span>
+            </label>
+        </li>
+        <li>
+            @if (Model.categoryID == 28)
+            {
+                @*<input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="28">
+                    <label class="custom-chck">Luxury New Cars</label>*@
+
+                <label class="custom-chck">Luxury New Cars <input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="28"> <span class="checkmark"></span> </label>
+            }
+            else
+            {
+                <label class="custom-chck">Luxury New Cars <input type="radio" class="radiocategory" name="radiocategory" value="28"> <span class="checkmark"></span> </label>
+                @*<input type="radio" class="radiocategory" name="radiocategory" value="28">
+                    <label class="custom-chck">Luxury New Cars</label>*@
+            }
+        </li>
+        <li>
+            @if (Model.categoryID == 25)
+            {
+                @*<input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="25">
+                    <label class="custom-chck">The Outlet Mall</label>*@
+                <label class="custom-chck">
+                    The Outlet Mall
+                    <input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="25"> <span class="checkmark"></span>
+                </label>
+            }
+            else
+            {
+                @*<input type="radio" class="radiocategory" name="radiocategory" value="25">
+                    <label class="custom-chck">The Outlet Mall</label>*@
+                <label class="custom-chck">
+                    The Outlet Mall
+                    <input type="radio" class="radiocategory" name="radiocategory" value="25"> <span class="checkmark"></span>
+                </label>
+            }
+
+        </li>
+        <li>
+            @if (Model.categoryID == 26)
+            {
+                @*<input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="26">
+                    <label class="custom-chck">Approved Pre-Owned</label>*@
+                <label class="custom-chck">
+                    Approved Pre-Owned
+                    <input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="26"> <span class="checkmark"></span>
+                </label>
+            }
+            else
+            {
+                @*<input type="radio" class="radiocategory" name="radiocategory" value="26">
+                    <label class="custom-chck">Approved Pre-Owned</label>*@
+                <label class="custom-chck">
+                    Approved Pre-Owned
+                    <input type="radio" class="radiocategory" name="radiocategory" value="26"> <span class="checkmark"></span>
+                </label>
+            }
+
+        </li>
+        <li>
+            @if (Model.categoryID == 27)
+            {
+                @*<input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="27">
+                    <label class="custom-chck">Classic Cars</label>*@
+                <label class="custom-chck">
+                    Classic Cars
+                    <input checked="checked" type="radio" name="radiocategory" class="radiocategory" value="27"> <span class="checkmark"></span>
+                </label>
+            }
+            else
+            {
+                @*<input type="radio" class="radiocategory" name="radiocategory" value="27">
+                    <label class="custom-chck">Classic Cars</label>*@
+                <label class="custom-chck">
+                    Classic Cars
+                    <input type="radio" class="radiocategory" name="radiocategory" value="27"> <span class="checkmark"></span>
+                </label>
+            }
+
+        </li>
+    </ul>
+
+    <h3>Apply Filters</h3>
+    <ul>
+        <li>
+            <div class="select_parent">
+                <select id="ddlMake" onchange="GetModels(this)">
+                    <option value="0">Filter by brand</option>
+                    @if (getMake.success == true)
+                    {
+                        foreach (var item in getMake.data.ToList())
+                        {
+                            if (Model.makeID == item.id.ToString())
+                            {
+                                <option selected="selected" value="@item.id">@item.name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </li>
+        <li>
+            <div class="select_parent">
+                <select id="ddlModel" onchange="GetVersions(this);">
+                    <option value="0">Filter by model</option>
+                    @if (getModel.success == true)
+                    {
+                        foreach (var item in getModel.data.Where(a => a.brand != null).ToList())
+                        {
+                            if (Model.modelID == item.id.ToString())
+                            {
+                                <option selected="selected" brandID="@item.brand.id" value="@item.id">@item.name</option>
+                            }
+                            else
+                            {
+                                <option brandID="@item.brand.id" value="@item.id">@item.name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </li>
+        <li class="versionFiltersection">
+            <div class="select_parent">
+                <select id="ddlVersion">
+                    <option value="0">Filter by Version</option>
+                </select>
+            </div>
+        </li>
+        <li class="SegmentFiltersection">
+            <div class="select_parent">
+                <select id="ddlSegment" onchange="OnSegmentChange(this)">
+                    <option value="0">Filter by segment</option>
+                    @if (CarTypeobj.success == true)
+                    {
+
+                        foreach (var item in CarTypeobj.data.Where(a => a.slug == "best-saloon-cars" || a.slug == "top-luxury-suv" || a.slug == "best-convertible-cars" || a.slug == "luxury-sports-cars" || a.slug == "best-electrical-cars").ToList())
+                        {
+
+                            if (Model.CarType == item.id.ToString())
+                            {
+                                <option selected="selected" value="@item.id">@item.name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </li>
+
+        <li class="SubSegmentFiltersection">
+            <div class="select_parent SubSegmentDiv">
+                <select id="ddlSubSegment">
+                    <option value="0">Filter by Sub Segment</option>
+                </select>
+            </div>
+            <div class="loaderdivsubsegment" style="display:none; padding:10px;">
+                <img src="@Url.Content("~/assets/images/ajax-loader.gif")" />
+            </div>
+        </li>
+
+        @*<li class="regionFilterSection">
+                <div class="select_parent multiSelect">
+                    <select id="ddlRegions" name="ddlRegions" multiple="" class="label ui selection fluid dropdown">
+                        <option value="">Filter by Country</option>
+                        @if (getRegionsobj.success == true)
+                        {
+                            foreach (var item in getRegionsobj.data.ToList())
+                            {
+                                if (Model.Region != null)
+                                {
+                                    if (Model.Region != "")
+                                    {
+                                        foreach (string regions in Model.Region.Split(',').ToList())
+                                        {
+                                            if (regions == item.id.ToString())
+                                            {
+                                                <option selected="selected" value="@item.id">@item.name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </li>*@
+
+        <li class="dealersection">
+            <strong>Dealer Type: </strong>
+        </li>
+        <li class="dealersection">
+            <div class="radio">
+                <input id="radio-1" name="radio" type="radio" class="dealerradio" value="10">
+                <label for="radio-1" class="radio-label">Official Dealer</label>
+            </div>
+
+        </li>
+        <li class="dealersection">
+            <div class="radio">
+                <input id="radio-2" name="radio" type="radio" class="dealerradio" value="20">
+                <label for="radio-2" class="radio-label">Market Dealer</label>
+            </div>
+        </li>
+
+        <li class="margin30 PriceRangeSection">
+            <p>
+                <label for="amount">Price Range</label>
+                <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+
+                <input name="txtMinBudget" id="txtMinBudget" type="hidden" />
+                <input name="txtMaxBudget" id="txtMaxBudget" type="hidden" />
+            </p>
+
+            <div id="slider-range"></div>
+        </li>
+
+        <li class="margin30 YearRangeSection">
+            <p>
+                <label for="year">Model Year</label>
+                <input type="text" id="year" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </p>
+
+            <div id="year-range"></div>
+        </li>
+
+        <li class="margin30 MileageRangeSection">
+            <p>
+                <label for="km">Mileage</label>
+                <input type="text" id="km" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </p>
+
+            <div id="km-range"></div>
+        </li>
+    </ul>
+
+    <div class="btns">
+        <button class="custBtn" id="btnApplyFilter" onclick="btnApplyFilter()">Apply</button>
+        <button class="custBtn reset" onclick="ResetAllFields()">Reset</button>
+    </div>
+
+    <input type="hidden" value="0" id="hdnYearSorting" />
+</div>
+
+<script src='@Url.Content("/assets/js/jquery-2.1.1.min.js")'></script>
+<script src='@Url.Content("~/assets/js/xlib.js")'></script>
+<script src='@Url.Content("~/assets/js/bootstrap-notify.min.js")'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src=" https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
+<script src='@Url.Content("~/assets/js/script.js")'></script>
+<script src='@Url.Content("~/assets/js/accounting.min.js")'></script>
+<script>
+
+    $(document).ready(function () {
+
+        var minimumbudget = 0;
+        var maximumbudget = 0;
+
+        var minBudget = 10000, maxBudget = 5000000;
+        minBudget = '@Model.minPrice'
+        maxBudget = '@Model.maxPrice'
+
+        if (minBudget == 0 && maxBudget == 0) {
+            minBudget = 10000;
+            maxBudget = 5000000;
+        }
+
+        minBudget = parseInt(minBudget)
+        maxBudget = parseInt(maxBudget)
+
+        $("#slider-range").slider({
+            range: true,
+            min: 10000,
+            max: 5000000,
+            step: 10000,
+            values: [minBudget, maxBudget],
+            slide: function (event, ui) {
+
+                minimumbudget = ui.values[0];
+                maximumbudget = ui.values[1];
+
+                $("#txtMinBudget").val(minimumbudget);
+                $("#txtMaxBudget").val(maximumbudget);
+
+                minimumbudget = formatcurrency(minimumbudget);
+                maximumbudget = formatcurrency(maximumbudget);
+
+                $("#amount").val("AED " + minimumbudget + " - " + maximumbudget);
+            }
+        });
+
+        minimumbudget = $("#slider-range").slider("values", 0);
+        maximumbudget = $("#slider-range").slider("values", 1);
+
+        $("#txtMinBudget").val(minimumbudget);
+        $("#txtMaxBudget").val(maximumbudget);
+
+        minimumbudget = formatcurrency(minimumbudget);
+        maximumbudget = formatcurrency(maximumbudget);
+
+        $("#amount").val("AED " + minimumbudget + " - " + maximumbudget);
+    });
+
+    $(document).ready(function () {
+        var currentTime = new Date()
+        var minYear = 2010, maxYear = currentTime.getFullYear();
+        minYear = '@Model.minYear'
+        maxYear = '@Model.maxYear'
+
+        if (minYear == 0 && maxYear == 0) {
+            minYear = 2010;
+            maxYear = currentTime.getFullYear();
+        }
+
+        minYear = parseInt(minYear)
+        maxYear = parseInt(maxYear)
+
+        $("#year-range").slider({
+            range: true,
+            min: 2010,
+            max: currentTime.getFullYear(),
+            values: [minYear, maxYear],
+            slide: function (event, ui) {
+                $("#year").val(ui.values[0] + " - " + ui.values[1]);
+            }
+        });
+        $("#year").val($("#year-range").slider("values", 0) +
+            " - " + $("#year-range").slider("values", 1));
+    });
+
+    $(document).ready(function () {
+
+        var minKM = 0, maxKM = 100000;
+        minKM = '@Model.minKM'
+        maxKM = '@Model.maxKM'
+
+        if (minKM == 0 && maxKM == 0) {
+            minKM = 0;
+            maxKM = 100000;
+        }
+
+        minKM = parseInt(minKM)
+        maxKM = parseInt(maxKM)
+
+        $("#km-range").slider({
+            range: true,
+            min: 0,
+            max: 100000,
+            values: [minKM, maxKM],
+            slide: function (event, ui) {
+                $("#km").val(ui.values[0] + " km " + " - " + ui.values[1] + " km");
+            }
+        });
+        $("#km").val($("#km-range").slider("values", 0) + " km " +
+            " - " + $("#km-range").slider("values", 1) + " km");
+    });
+
+
+    $(document).ready(function () {
+
+
+        ShowFields('@Model.categoryID')
+
+        $('.radiocategory').on('click', function () {
+            var id = $(this).val();
+            ShowFields(id)
+        })
+
+
+    });
+
+    function ShowFields(id) {
+       
+        if (id == 0) {
+            $(".SegmentFiltersection").show();
+            $(".SubSegmentFiltersection").show();
+            $(".PriceRangeSection").show();
+            $(".YearRangeSection").show();
+            $(".MileageRangeSection").show();
+            $(".versionFiltersection").show();
+            $(".dealersection").each(function () {
+                $(this).show();
+            });
+        }
+        else if (id == 28) {
+            $(".SegmentFiltersection").show();
+            $(".SubSegmentFiltersection").show();
+            $(".PriceRangeSection").show();
+            $(".versionFiltersection").show();
+            $(".YearRangeSection").hide();
+            $(".MileageRangeSection").hide();
+            $(".dealersection").each(function () {
+                $(this).hide();
+            });
+
+            var minKM = 0, maxKM = 100000;
+            var currentTime = new Date()
+            var minYear = 2010, maxYear = currentTime.getFullYear();
+
+            $("#year-range").slider({
+                range: true,
+                min: minYear,
+                max: maxYear,
+                values: [minYear, maxYear],
+                slide: function (event, ui) {
+                    $("#year").val(ui.values[0] + " - " + ui.values[1]);
+                }
+            });
+            $("#year").val($("#year-range").slider("values", 0) +
+                " - " + $("#year-range").slider("values", 1));
+
+            $("#km-range").slider({
+                range: true,
+                min: minKM,
+                max: maxKM,
+                values: [minKM, maxKM],
+                slide: function (event, ui) {
+                    $("#km").val(ui.values[0] + " km " + " - " + ui.values[1] + " km");
+                }
+            });
+            $("#km").val($("#km-range").slider("values", 0) + " km " +
+                " - " + $("#km-range").slider("values", 1) + " km");
+
+            btnApplyFilter();
+            
+        }
+        else if (id == 25) {
+            $(".SegmentFiltersection").hide();
+            $(".SubSegmentFiltersection").hide();
+            $(".PriceRangeSection").show();
+            $(".YearRangeSection").show();
+            $(".MileageRangeSection").hide();
+            $(".versionFiltersection").hide();
+            $("#ddlSegment").val(0)
+            $("#ddlVersion").val(0)
+            $(".dealersection").each(function () {
+                $(this).show();
+            });
+
+            var minKM = 0, maxKM = 100000;
+            $("#km-range").slider({
+                range: true,
+                min: minKM,
+                max: maxKM,
+                values: [minKM, maxKM],
+                slide: function (event, ui) {
+                    $("#km").val(ui.values[0] + " km " + " - " + ui.values[1] + " km");
+                }
+            });
+            $("#km").val($("#km-range").slider("values", 0) + " km " +
+                " - " + $("#km-range").slider("values", 1) + " km");
+
+            var currentTime = new Date()
+            var minYear = 2010, maxYear = currentTime.getFullYear();
+
+            $("#year-range").slider({
+                range: true,
+                min: minYear,
+                max: maxYear,
+                values: [minYear, maxYear],
+                slide: function (event, ui) {
+                    $("#year").val(ui.values[0] + " - " + ui.values[1]);
+                }
+            });
+            $("#year").val($("#year-range").slider("values", 0) +
+                " - " + $("#year-range").slider("values", 1));
+
+            btnApplyFilter();
+        }
+        else if (id == 26) {
+            $("#ddlSegment").val(0)
+            $(".SegmentFiltersection").hide();
+            $(".SubSegmentFiltersection").hide();
+            $(".PriceRangeSection").show();
+            $(".YearRangeSection").show();
+            $(".MileageRangeSection").show();
+            $(".versionFiltersection").hide();
+            $("#ddlVersion").val(0)
+            $(".dealersection").each(function () {
+                $(this).show();
+            });
+            var currentTime = new Date()
+            var minYear = 2010, maxYear = currentTime.getFullYear();
+
+            $("#year-range").slider({
+                range: true,
+                min: minYear,
+                max: maxYear,
+                values: [minYear, maxYear],
+                slide: function (event, ui) {
+                    $("#year").val(ui.values[0] + " - " + ui.values[1]);
+                }
+            });
+            $("#year").val($("#year-range").slider("values", 0) +
+                " - " + $("#year-range").slider("values", 1));
+
+            btnApplyFilter();
+        }
+        else if (id == 27) {
+            $("#ddlSegment").val(0)
+            $(".SegmentFiltersection").hide();
+            $(".SubSegmentFiltersection").hide();
+            $(".PriceRangeSection").show();
+            $(".YearRangeSection").show();
+            $(".MileageRangeSection").show();
+            $(".versionFiltersection").hide();
+            $("#ddlVersion").val(0)
+            $(".dealersection").each(function () {
+                $(this).show();
+            });
+
+            var currentTime = new Date()
+            var minYear = 1920, maxYear = 2010;
+
+            $("#year-range").slider({
+                range: true,
+                min: minYear,
+                max: maxYear,
+                values: [minYear, maxYear],
+                slide: function (event, ui) {
+                    $("#year").val(ui.values[0] + " - " + ui.values[1]);
+                }
+            });
+            $("#year").val($("#year-range").slider("values", 0) +
+                " - " + $("#year-range").slider("values", 1));
+
+            btnApplyFilter();
+        }
+        else {
+            $(".SegmentFiltersection").show();
+            $(".SubSegmentFiltersection").show();
+            $(".PriceRangeSection").show();
+            $(".YearRangeSection").show();
+            $(".MileageRangeSection").show();
+            $(".versionFiltersection").show();
+
+            $(".dealersection").each(function () {
+                $(this).show();
+            });
+
+            btnApplyFilter();
+        }
+    }
+</script>

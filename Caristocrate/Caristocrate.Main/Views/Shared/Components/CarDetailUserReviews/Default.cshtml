@@ -1,0 +1,74 @@
+﻿@using Caristocrate.Common.Models
+@{
+    ReviewsModel.Response Reviewsobj = ViewData["Reviewsobj"] as ReviewsModel.Response;
+    decimal average_rating = Convert.ToDecimal(ViewData["average_rating"].ToString());
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>
+                User Reviews
+                <span style="font-size:16px;">
+                    @*@if (Context.Session.Keys.Count() > 0 && Model.data.is_reviewed == 0)
+                        {*@
+                    <br />
+                    <a href="@Url.Action("ReviewsbyID", "Car", new { brand = ViewData["brand"].ToString(), model = ViewData["model"].ToString(), carid = ViewData["slug"].ToString() })">Add Review</a>
+                    @*}*@
+                </span>
+            </h2>
+
+        </div>
+        <div class="col-md-4">
+
+            @{
+                decimal ratingcount = Math.Round(average_rating);
+
+                <div class="rating">
+                    @for (int j = 1; j <= ratingcount; j++)
+                    {<i class="fa fa-star fill"></i>}
+                    @for (int j = 1; j <= 5 - ratingcount; j++)
+                    {<i class="fa fa-star"></i>}
+
+                    <span>(@average_rating.ToString("F1")/5)</span>
+                    <br />
+                    <span>Total Review(s) (@Reviewsobj.data.Count)</span>
+                </div>
+
+
+            }
+        </div>
+        @if (Reviewsobj != null)
+        {
+            if (Reviewsobj.data != null)
+            {
+                if (Reviewsobj.data.Count > 0)
+                {
+                    foreach (var item in Reviewsobj.data)
+                    {
+                        <div class="col-md-12">
+                            <figure style="background-image: url(@item.user_details.image_url);"></figure>
+                            <article>
+                                <h3>
+                                    @item.user_details.user_name
+                                    @*<span>20 min</span>*@
+                                </h3>
+                                <div class="rating">
+                                    @{
+                                        decimal ratingcount2 = Math.Round(item.average_rating);
+                                        for (int j = 1; j <= ratingcount2; j++)
+                                        {<i class="fa fa-star fill"></i>}
+                                        for (int j = 1; j <= 5 - ratingcount2; j++)
+                                        {<i class="fa fa-star"></i>}
+                                    }
+                                    (@item.average_rating.ToString("F1")/5)
+                                </div>
+                                <p>@item.review_message</p>
+                            </article>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+</div>
